@@ -1,0 +1,3 @@
+rootProject.name = 'accelon16'
+
+include ':app'
