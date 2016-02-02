@@ -1,52 +1,55 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- */
-'use strict';
-import React, {
-  AppRegistry,
-  Component,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+var React=require("react-native");
+var {
+  View,Text,Image,StyleSheet,
+  StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform
+} =React;
 
-class accelon16 extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+var orientationMixin=require("./src/layout/orientation");
+var Landscape=require("./src/layout/landscape");
+var Portrait=require("./src/layout/portrait");
+var Screen=require("./src/layout/screen");
+var main=React.createClass({
+  mixins:[orientationMixin]
+  ,getInitialState:function(){
+    return {isLandscape:-1,fullscreen:false};
+  }
+  ,toggleFullScreen:function(){
+    var full=!this.state.fullscreen;
+    this.setState({fullscreen:full});
+    if (Platform.OS==="ios") StatusBarIOS.setHidden(full);
+    else if(typeof StatusBarAndroid!=="undefind"){ //defined in index.android.ios
+      full?StatusBarAndroid.hideStatusBar():StatusBarAndroid.showStatusBar();
+    }
+  }
+  ,tapcount:0
+  ,inTabBar:function(x,y) {
+    if (this.state.isLandscape) {
+      return x+49>Screen.height;
+    } else {
+      return y+49>Screen.height;
+    }
+  }
+  ,onTouchEnd:function(e){
+    if (this.inTabBar(e.nativeEvent.pageX,e.nativeEvent.pageY)) {
+      this.tapcount=0;
+      return;
+    }
+    clearTimeout(this.timer);
+    this.timer=setTimeout(function(){
+      this.tapcount=0;
+    }.bind(this),300);
+    this.tapcount++;
+    if(this.tapcount>1) {
+      this.toggleFullScreen();
+      this.tapcount=0;
+    }
+  }
+  ,render:function(){
+    var layout=this.state.isLandscape?Landscape:Portrait;
+    return React.createElement(View,{onLayout:this.onLayout,style:{flex:1},onTouchEnd:this.onTouchEnd},
+      React.createElement(layout,{fullscreen:this.state.fullscreen})
     );
   }
-}
+})
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
-AppRegistry.registerComponent('accelon16', () => accelon16);
+AppRegistry.registerComponent('accelon16', () => main);
