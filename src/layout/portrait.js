@@ -2,11 +2,10 @@ var React=require("react-native");
 var {
 	View,Text,Image,StyleSheet,
 	StatusBarIOS,Dimensions,
-	LayoutAnimation,PixelRatio,Platform
+	LayoutAnimation,PixelRatio,Platform,PropTypes
 } =React;
 
 var TabNav=require("./tabnav");
-var defaulttabs=require("./tabs");
 
 var tabBarHeight=49;
 var tabBorderWidth=1;
@@ -15,7 +14,11 @@ if (Platform.OS==="ios") {
 }
 
 var Portrait=React.createClass({
-	getInitialState:function(){
+	propTypes:{
+		body:PropTypes.element.isRequired,
+		menu:PropTypes.array.isRequired
+	}	
+	,getInitialState:function(){
 		return {panelFlex:0,tabBarHeight:tabBarHeight};
 	}
 	,updateTab:function(tab,fullscreen){
@@ -30,26 +33,27 @@ var Portrait=React.createClass({
 	,onTabSelected:function(tab){
 		this.updateTab(tab,this.props.fullscreen);
 	}
-	,componentWillReceiveProps:function(nextProps){
+	,componentWillReceiveProps:function(nextProps,nextState){
 		if (nextProps.fullscreen!==this.props.fullscreen){
 			this.updateTab(this.state.selectedTab,nextProps.fullscreen);
 		}
+		if (nextProps.menu!==this.props.menu) {
+			nextState.selectedTab=null;
+		}		
 	}
 	,renderTab:function(){
 		if (this.state.tabBarHeight) {
 			return (
 				<View  style={{flex:this.state.panelFlex}} >
-				<TabNav portrait={true} tabs={defaulttabs()} onTabSelected={this.onTabSelected}/>
+				<TabNav portrait={true} tabs={this.props.menu} onTabSelected={this.onTabSelected}/>
 				</View>
 				);
 		}
 	}
 	,render:function(){
 		return 	(
-			<View style={{flex:1}} >
-			
-			<View style={styles.maintext}><Text>Vasfsasadfasfsdf
-					dfafdadfsadfadsfsadfsadsafd</Text></View>
+			<View style={{flex:1}}>
+			<View style={{flex:6}}>{this.props.body}</View>
 			{this.renderTab()}
 			</View>
 		)
@@ -57,7 +61,8 @@ var Portrait=React.createClass({
 	
 });
 var styles=StyleSheet.create({
-	maintext:{backgroundColor:'blue',flex:6}
+	maintext:{backgroundColor:'silver',flex:6}
+	,sceneStyle:{backgroundColor:'gray'}
 })	
 
 

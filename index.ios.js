@@ -4,50 +4,34 @@ var {
   StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform
 } =React;
 
-var orientationMixin=require("./src/layout/orientation");
-var Landscape=require("./src/layout/landscape");
-var Portrait=require("./src/layout/portrait");
-var Screen=require("./src/layout/screen");
+var mainmenu=require("./src/menu/mainmenu");
+var sentencemenu=require("./src/menu/sentencemenu");
+var SelectableText=require("./src/components/selectabletext");
+var Flippable=require("./src/layout/flippable");
+var sentences=[
+  "abc abc abcd ",
+  "xyz xyz xyz"
+]
 var main=React.createClass({
-  mixins:[orientationMixin]
-  ,getInitialState:function(){
-    return {isLandscape:-1,fullscreen:false};
+  getInitialState:function(){
+    return {menu:mainmenu,mode:null,menuobj:null};
   }
-  ,toggleFullScreen:function(){
-    var full=!this.state.fullscreen;
-    this.setState({fullscreen:full});
-    if (Platform.OS==="ios") StatusBarIOS.setHidden(full);
-    else if(typeof StatusBarAndroid!=="undefind"){ //defined in index.android.ios
-      full?StatusBarAndroid.hideStatusBar():StatusBarAndroid.showStatusBar();
-    }
+  ,renderBody:function(){
+    return <SelectableText texts={sentences} onMode={this.setMode}/>
   }
-  ,tapcount:0
-  ,inTabBar:function(x,y) {
-    if (this.state.isLandscape) {
-      return x+49>Screen.height;
+  ,setMode:function(mode,obj){
+    LayoutAnimation.spring();
+    if (mode==="sentence") {
+       this.setState({menu:sentencemenu,mode,menuobj:obj});
     } else {
-      return y+49>Screen.height;
-    }
-  }
-  ,onTouchEnd:function(e){
-    if (this.inTabBar(e.nativeEvent.pageX,e.nativeEvent.pageY)) {
-      this.tapcount=0;
-      return;
-    }
-    clearTimeout(this.timer);
-    this.timer=setTimeout(function(){
-      this.tapcount=0;
-    }.bind(this),300);
-    this.tapcount++;
-    if(this.tapcount>1) {
-      this.toggleFullScreen();
-      this.tapcount=0;
+      this.setState({menu:mainmenu,mode:null,menuobj:null});
     }
   }
   ,render:function(){
-    var layout=this.state.isLandscape?Landscape:Portrait;
-    return React.createElement(View,{onLayout:this.onLayout,style:{flex:1},onTouchEnd:this.onTouchEnd},
-      React.createElement(layout,{fullscreen:this.state.fullscreen})
+    return (
+      <View style={{flex:1}}>
+        <Flippable body={this.renderBody()} menu={this.state.menu(this.state.menuobj)}/>
+      </View>
     );
   }
 })

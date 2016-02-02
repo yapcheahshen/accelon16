@@ -2,12 +2,12 @@ var React=require("react-native");
 var {
 	View,Text,Image,StyleSheet,
 	StatusBarIOS,Dimensions,
-	LayoutAnimation,PixelRatio,Platform
+	LayoutAnimation,PixelRatio,Platform,PropTypes
 } =React;
 
 
 var TabNav=require("./tabnav");
-var defaulttabs=require("./tabs");
+
 var Screen=require("./screen");
 
 var tabBarWidth=49;
@@ -18,7 +18,11 @@ if (Platform.OS==="ios") {
 }
 
 var Landscape=React.createClass({
-	getInitialState:function(){
+	propTypes:{
+		body:PropTypes.element.isRequired,
+		menu:PropTypes.array.isRequired
+	}
+	,getInitialState:function(){
 		return {tabBarWidth:tabBarWidth,panelFlex:0};
 	}
 	,updateTab:function(tab,fullscreen){
@@ -32,9 +36,12 @@ var Landscape=React.createClass({
 	,onTabSelected:function(tab){
 		this.updateTab(tab,this.props.fullscreen);
 	}
-	,componentWillReceiveProps:function(nextProps){
+	,componentWillReceiveProps:function(nextProps,nextState){
 		if (nextProps.fullscreen!==this.props.fullscreen){
 			this.updateTab(this.state.selectedTab,nextProps.fullscreen);
+		}
+		if (nextProps.menu!==this.props.menu) {
+			nextState.selectedTab=null;
 		}
 	}
 	,renderTab:function(){
@@ -43,17 +50,14 @@ var Landscape=React.createClass({
 				<View style={{flex:this.state.panelFlex}}><TabNav tabBarStyle={[styles.tabnav,
 					{width:this.state.tabbarWidth,height:Screen.width}]}
 				sceneStyle={styles.sceneStyle}
-				landscape={true} tabs={defaulttabs()} onTabSelected={this.onTabSelected}/></View>
+				landscape={true} tabs={this.props.menu} onTabSelected={this.onTabSelected}/></View>
 				);
 		}
 	}	
 	,render:function(){
 		return 	(
 			<View style={{flex:1, flexDirection: 'row'}} >
-			
-					<View style={styles.maintext}><Text>Vasfsas adfasfsdf
-					dfafda fsadfads fsadfsasf sfdasfas fasdfa sdfasdasdfs adfadsafd</Text></View>
-				
+			<View style={{flex:6}}>{this.props.body}</View>
 			{this.renderTab()}
 			</View>
 		)
@@ -61,8 +65,9 @@ var Landscape=React.createClass({
 });
 var styles=StyleSheet.create({
 	maintext:{backgroundColor:'blue',flex:6}
+	,sceneStyle:{backgroundColor:'gray',paddingBottom:0}
 	,tabnav:{top:0,left:undefined,bottom:0,flexDirection:'column',alignItems:'center'}
-})	,sceneStyle:{}
+})	
 
 module.exports=Landscape;
 

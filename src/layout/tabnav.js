@@ -35,11 +35,12 @@ var TabNav=React.createClass({
      source={item.selectedIcon||item.icon} />}
     badgeText={item.badgeText||""}
     onPress={()=>this.selectTab(item,idx)}>
-    <View>{React.createElement(item.component)}</View>
+    <View style={{flex:1}}>{item.component}</View>
     </TabNavigator.Item>
   }
   ,render:function(){
-    return <TabNavigator tabBarStyle={this.props.tabBarStyle} sceneStyle={this.props.sceneStyle}>{this.props.tabs.map(this.renderTab)}</TabNavigator>
+    return <TabNavigator tabBarStyle={this.props.tabBarStyle} 
+    sceneStyle={this.props.sceneStyle}>{this.props.tabs.map(this.renderTab)}</TabNavigator>
   }
 })
 module.exports=TabNav;
