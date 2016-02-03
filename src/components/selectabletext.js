@@ -66,7 +66,8 @@ var SelectableText=React.createClass({
 var styles=StyleSheet.create({
 	sentence:{fontSize:36},
 	selectedSentence:{backgroundColor:'lightyellow'},
-	selectedToken:{backgroundColor:'yellow'}
+	selectedToken:{textShadowColor:'yellow',
+		textShadowRadius:6,textShadowOffset:{width:1,height:1}}
 })
 
 module.exports=SelectableText;

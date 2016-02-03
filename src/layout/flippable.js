@@ -33,6 +33,9 @@ var flippable=React.createClass({
       return y+49>Screen.height;
     }
   }
+  ,componentWillReceiveProps:function(){
+    this.tapcount=0; //reset tap count if mode changed cause full refresh
+  }
   ,onTouchEnd:function(e){
     if (this.inTabBar(e.nativeEvent.pageX,e.nativeEvent.pageY)) {
       this.tapcount=0;
