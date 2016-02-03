@@ -10,7 +10,7 @@ var TabNav=require("./tabnav");
 
 var Screen=require("./screen");
 
-var tabBarWidth=49;
+var tabBarWidth=39;
 
 var tabBorderWidth=1;
 if (Platform.OS==="ios") {
@@ -44,11 +44,16 @@ var Landscape=React.createClass({
 			nextState.selectedTab=null;
 		}
 	}
+	,paddingBottom:function(){
+		 //because Tab.js use justifyContent: 'flex-end', adjust by using paddingBottom
+		return Screen.width / (this.props.menu.length*2 ) - (39/this.props.menu.length) ;
+	}
 	,renderTab:function(){
 		if (this.state.tabBarWidth) {
 			return (
-				<View style={{flex:this.state.panelFlex}}><TabNav tabBarStyle={[styles.tabnav,
-					{width:this.state.tabbarWidth,height:Screen.width}]}
+				<View style={{flex:this.state.panelFlex}}>
+				<TabNav tabBarStyle={[styles.tabnav,
+					{width:this.state.tabBarWidth,height:Screen.width,paddingBottom:this.paddingBottom()}]}
 				sceneStyle={styles.sceneStyle}
 				landscape={true} tabs={this.props.menu} onTabSelected={this.onTabSelected}/></View>
 				);
@@ -66,7 +71,8 @@ var Landscape=React.createClass({
 var styles=StyleSheet.create({
 	maintext:{backgroundColor:'blue',flex:6}
 	,sceneStyle:{backgroundColor:'gray',paddingBottom:0}
-	,tabnav:{top:0,left:undefined,bottom:0,flexDirection:'column',alignItems:'center'}
+	,tabnav:{top:0,left:null,flexDirection:'column',
+		alignItems:'center'}
 })	
 
 module.exports=Landscape;

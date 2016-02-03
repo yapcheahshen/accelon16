@@ -13,15 +13,13 @@ var HomeView=React.createClass({
   }
 })
 var searchicon=require("../../images/find.png");
-var bookmarkicon=require("../../images/bookmark.png");
 var linkicon=require("../../images/link.png");
-var dicticon=require("../../images/dictionary.png");
 var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	return [
-	{name:"Search",component:<HomeView/>,icon:searchicon,badgeText:'9',flex:6},
-	{name:"Link",component:<HomeView/>,icon:linkicon,badgeText:'5',flex:4},
-	{name:"Settings",component:<HomeView/>,icon:settingsicon,badgeText:'2',flex:2}
+	{name:"搜尋",component:<HomeView/>,icon:searchicon,badgeText:'9',flex:6},
+	{name:"連結",component:<HomeView/>,icon:linkicon,badgeText:'5',flex:4},
+	{name:"設定",component:<HomeView/>,icon:settingsicon,badgeText:'2',flex:2}
 	];
 };
 

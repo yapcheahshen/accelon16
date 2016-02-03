@@ -31,7 +31,7 @@ var TabNav=React.createClass({
     title={item.name} 
     key={idx}
     renderIcon={() => <Image style={{width:22,height:22}} source={item.icon} />}
-    renderSelectedIcon={() => <Image style={{width:22,height:22}}
+    renderSelectedIcon={() => <Image style={{width:28,height:28}}
      source={item.selectedIcon||item.icon} />}
     badgeText={item.badgeText||""}
     onPress={()=>this.selectTab(item,idx)}>
