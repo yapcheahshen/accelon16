@@ -1,7 +1,6 @@
 var React=require("react-native");
 var {
-  View,Text,Image,StyleSheet,
-  StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform
+  View,Text,Image,StyleSheet,StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform
 } =React;
 
 var mainmenu=require("./src/menu/mainmenu");
@@ -9,24 +8,23 @@ var sentencemenu=require("./src/menu/sentencemenu");
 var tokenmenu=require("./src/menu/tokenmenu");
 var SelectableText=require("./src/components/selectabletext");
 var Flippable=require("./src/layout/flippable");
-var sentences=[
-  "abc abc abc abc abc ",
-  "xyz xyz xyz"
-]
+var sampletext=require("./sampletext").slice(0,15);
+
 var main=React.createClass({
   getInitialState:function(){
     return {menu:mainmenu,mode:null,menuobj:null};
   }
   ,renderBody:function(){
-    return <SelectableText texts={sentences} onMode={this.setMode}/>
+    return <SelectableText texts={sampletext} onMode={this.setMode}/>
   }
   ,setMode:function(mode,obj){
-    LayoutAnimation.spring();
+  
     if (mode==="sentence") {
       this.setState({menu:sentencemenu,mode,menuobj:obj});
     } else if (mode==="token") {
       this.setState({menu:tokenmenu,mode,menuobj:obj});
     } else {
+       LayoutAnimation.spring();
       this.setState({menu:mainmenu,mode:null,menuobj:null});
     }
   }

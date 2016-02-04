@@ -1,18 +1,9 @@
 var React=require("react-native");
 var {
-  View,Text,Image,StyleSheet,
+  View,Text,Image,StyleSheet,ScrollView,
   StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform,PropTypes
 } =React;
-var tokenize=function(text){
-	var out=[],lastidx=0;
-	text.replace(/\w+/g,function(w,idx){
-		var s=text.substring(lastidx,idx);
-		if (s) out.push(s);
-		lastidx=idx;
-	});
-	out.push(text.substring(lastidx));
-	return out;
-}
+var Sentence=require("./sentence");
 var SelectableText=React.createClass({
 	propTypes:{
 		onMode:PropTypes.func.isRequired
@@ -38,36 +29,26 @@ var SelectableText=React.createClass({
 			this.props.onMode("token",{token:idx});			
 		}
 	}
-	,renderSelectable:function(text,idx) {
-		var tokens=tokenize(text);
-		var out=tokens.map(function(token,i){
-			return <Text style={i===this.state.token?styles.selectedToken:null}
-			 onPress={this.selectToken.bind(this,i)} key={i}>{token}</Text>
-			
-		}.bind(this));
-		return out;
-	}
 	,renderSentence:function(text,idx){
 		if(this.state.selected===idx) {
-			return <Text key={idx} style={styles.selectedSentence}>
-				{this.renderSelectable(text,idx)}</Text>
+			return <Sentence key={idx} text={text} token={this.state.token} selectToken={this.selectToken}/>
+				
 		} else {
-			return <Text key={idx} 
-			 onPress={this.selectSentence.bind(this,idx)}>{text}</Text>
+			return <View key={idx}><Text  style={styles.sentence}
+			 onPress={this.selectSentence.bind(this,idx)}>{text}</Text></View>
+		
 		}
 	}
 	,render:function(){
-		return <View style={{flex:1,top:22}}>
-      		<Text style={styles.sentence}>{this.props.texts.map(this.renderSentence)}</Text>
-    	</View>
+		return <ScrollView style={{flex:1,top:22}}>
+      		{this.props.texts.map(this.renderSentence)}
+    	</ScrollView>
 	}
 });
 
 var styles=StyleSheet.create({
-	sentence:{fontSize:36},
-	selectedSentence:{backgroundColor:'lightyellow'},
-	selectedToken:{textShadowColor:'yellow',
-		textShadowRadius:6,textShadowOffset:{width:1,height:1}}
+	sentence:{fontSize:24},
+	selectedSentence:{backgroundColor:'lightyellow'}
 })
 
 module.exports=SelectableText;
