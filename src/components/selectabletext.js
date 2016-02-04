@@ -9,33 +9,46 @@ var SelectableText=React.createClass({
 		onMode:PropTypes.func.isRequired
 	}
 	,getInitialState:function(){
-		return {selected:null,token:null};
+		return {senStart:0,senEnd:-1,token:null};
 	}
-	,selectSentence:function(idx){
-		if (this.state.selected!==idx && this.state.token===null) {
-			this.setState({selected:idx});
-			this.props.onMode("sentence",{text:this.props.texts[idx],sentence:idx});
+	,onTouchStart:function(n,evt) {
+		if (evt.nativeEvent.touches.length==1){
+			this.setState({senStart:n,senEnd:n});
 		} else {
-			this.setState({selected:null,token:null});
-			this.props.onMode();
+			this.setState({senEnd:n});
 		}
 	}
-	,selectToken:function(idx) {
-		if (this.state.token===idx) {
-			this.setState({token:null});
-			this.props.onMode("sentence",{text:this.props.texts[this.state.selected]});
+	,isSelected:function(n){
+		var start=this.state.senStart;
+		var end=this.state.senEnd;
+		if (end<start &&end>-1) {
+			var t=end;
+			end=start;
+			start=t;
+		}
+		return (n>=start)&&(n<=end);
+	}
+	,cancelSelection:function(){
+		this.setState({senStart:0,senEnd:-1});
+	}
+	,trimSelection:function(sen,start) {
+		if (start) {
+			this.setState({senStart:sen});
 		} else {
-			this.setState({token:idx});
-			this.props.onMode("token",{token:idx});			
+			this.setState({senEnd:sen});
 		}
 	}
 	,renderSentence:function(text,idx){
-		if(this.state.selected===idx) {
-			return <Sentence key={idx} text={text} token={this.state.token} selectToken={this.selectToken}/>
-				
+		if(this.isSelected(idx)) {
+			return <Sentence key={idx} sen={idx} text={text} token={this.state.token} 
+			selectToken={this.selectToken} 
+			senStart={this.state.senStart} 
+			senEnd={this.state.senEnd}
+			trimSelection={this.trimSelection}
+			cancelSelection={this.cancelSelection}/>
 		} else {
 			return <View key={idx}><Text  style={styles.sentence}
-			 onPress={this.selectSentence.bind(this,idx)}>{text}</Text></View>
+			 onTouchStart={this.onTouchStart.bind(this,idx)}>{text}</Text></View>
 		
 		}
 	}

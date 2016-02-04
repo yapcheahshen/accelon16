@@ -18,8 +18,15 @@ var tokenize=function(text){
 }
 
 var Sentence=React.createClass({
-	getInitialState:function() {
-		return {tokens:tokenize(this.props.text),selStart:0,selEnd:0};
+	propTypes:{
+		senStart:PropTypes.number.isRequired,//starting sentence id
+		senEnd:PropTypes.number.isRequired, //ending sentence id
+		sen:PropTypes.number.isRequired,  //sentence id
+		trimSelection:PropTypes.func.isRequired,
+		cancelSelection:PropTypes.func.isRequired
+	}
+	,getInitialState:function() {
+		return {tokens:tokenize(this.props.text),selStart:0,selEnd:-1};
 	}
 	,start:0
 	,onMoving:function(){
@@ -30,10 +37,16 @@ var Sentence=React.createClass({
 	}
 	,onTouchStart:function(n,evt){
 		if (evt.nativeEvent.touches.length==1){
-			this.selstart=n;
-			this.setState({selStart:n,selEnd:n+1});
+			if (n===this.state.selStart && n==this.state.selEnd) {
+				this.setState({selStart:0,selEnd:-1});
+				this.props.cancelSelection();
+				return;
+			}
+			this.setState({selStart:n,selEnd:n});
+			this.props.trimSelection(this.props.sen,true);
 		} else {
 			this.setState({selEnd:n});
+			this.props.trimSelection(this.props.sen);
 		}
 	//	console.log("touch start",arguments)
 	}
@@ -41,14 +54,25 @@ var Sentence=React.createClass({
 	//	console.log("touch end",e)
 	}
 	,isSelected:function(n){
+		var sen=this.props.sen;
+		if (sen>this.props.senStart && sen<this.props.senEnd)return true;
+		if (sen<this.props.senStart || sen>this.props.senEnd)return false;
 		var start=this.state.selStart;
 		var end=this.state.selEnd;
-		if (end<start) {
+		if (end<start && end>-1) {
 			var t=end;
 			end=start;
 			start=t;
 		}
-		return (n>=start)&&(n<end);
+
+		if (sen===this.props.senEnd && sen!==this.props.senStart) {
+			start=0;
+		}
+		if (sen===this.props.senStart && sen!==this.props.senEnd) {
+			end=this.state.tokens.length;
+		}
+
+		return (n>=start)&&(n<=end);
 	}
 	,renderToken:function(token,idx){
 		return <Text onTouchEnd={this.onTouchEnd} 
