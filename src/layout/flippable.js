@@ -25,7 +25,6 @@ var flippable=React.createClass({
       full?StatusBarAndroid.hideStatusBar():StatusBarAndroid.showStatusBar();
     }
   }
-  ,tapcount:0
   ,inTabBar:function(x,y) {
     if (this.state.isLandscape) {
       return x+49>Screen.height;
@@ -33,27 +32,15 @@ var flippable=React.createClass({
       return y+49>Screen.height;
     }
   }
-  ,componentWillReceiveProps:function(){
-    this.tapcount=0; //reset tap count if mode changed cause full refresh
-  }
-  ,onTouchEnd:function(e){
-    if (this.inTabBar(e.nativeEvent.pageX,e.nativeEvent.pageY)) {
-      this.tapcount=0;
-      return;
-    }
-    clearTimeout(this.timer);
-    this.timer=setTimeout(function(){
-      this.tapcount=0;
-    }.bind(this),300);
-    this.tapcount++;
-    if(this.tapcount>1) {
+  ,onTouchStart:function(e){
+    if(e.nativeEvent.touches.length===3) {
       this.toggleFullScreen();
-      this.tapcount=0;
     }
   }
   ,render:function(){
     var layout=this.state.isLandscape?Landscape:Portrait;
-    return React.createElement(View,{onLayout:this.onLayout,style:{flex:1},onTouchEnd:this.onTouchEnd},
+    return React.createElement(View,{onLayout:this.onLayout,style:{flex:1}, 
+      onTouchStart:this.onTouchStart},
       React.createElement(layout,{fullscreen:this.state.fullscreen, menu:this.props.menu,body:this.props.body})
     );
   }

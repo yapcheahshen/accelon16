@@ -36,8 +36,7 @@ var Sentence=React.createClass({
 	,selectToken:function(idx){
 		this.props.selectToken(idx);
 	}
-	,onTouchStart:function(n,evt){
-		this.touchToken=true;
+	,onTokenTouchStart:function(n,evt){
 		if (evt.nativeEvent.touches.length==1){
 			if (n===this.state.selStart && n==this.state.selEnd) {
 				this.setState({selStart:0,selEnd:-1});
@@ -73,15 +72,18 @@ var Sentence=React.createClass({
 
 		return (n>=start)&&(n<=end);
 	}
+	,onTokenTouchEnd:function(){
+		this.touchToken=true;
+	}
 	,onTouchEnd:function(evt){
-		console.log("touch end")
 		if (!this.touchToken) {
 			this.props.cancelSelection();
 		}
 		this.touchToken=false;
 	}
 	,renderToken:function(token,idx){
-		return <Text onTouchStart={this.onTouchStart.bind(this,idx)}
+		return <Text onTouchStart={this.onTokenTouchStart.bind(this,idx)}
+		onTouchEnd={this.onTokenTouchEnd}
 		style={this.isSelected(idx)?styles.selectedToken:null} 
 		ref={idx} key={idx}>{token}</Text>
 	}
