@@ -3,28 +3,28 @@ var {
   View,Text,Image,StyleSheet,ScrollView,
   StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform,PropTypes
 } =React;
-var Sentence=require("./sentence");
+var Paragraph=require("./paragraph");
 var SelectableText=React.createClass({
 	propTypes:{
 		onMode:PropTypes.func.isRequired
 	}
 	,getInitialState:function(){
-		return {senStart:0,senEnd:-1,token:null};
+		return {paraStart:0,paraEnd:-1,token:null};
 	}
 	,onTouchStart:function(n,evt) {
 		if (evt.nativeEvent.touches.length==1){
-			if (this.state.senStart===n && this.state.senEnd===n) {
+			if (this.state.paraStart===n && this.state.paraEnd===n) {
 				this.cancelSelection();
 			} else {
-				this.setState({senStart:n,senEnd:n});
+				this.setState({paraStart:n,paraEnd:n});
 			}
 		} else {
-			this.setState({senEnd:n});
+			this.setState({paraEnd:n});
 		}
 	}
 	,isSelected:function(n){
-		var start=this.state.senStart;
-		var end=this.state.senEnd;
+		var start=this.state.paraStart;
+		var end=this.state.paraEnd;
 		if (end<start &&end>-1) {
 			var t=end;
 			end=start;
@@ -33,25 +33,25 @@ var SelectableText=React.createClass({
 		return (n>=start)&&(n<=end);
 	}
 	,cancelSelection:function(){
-		this.setState({senStart:0,senEnd:-1});
+		this.setState({paraStart:0,paraEnd:-1});
 	}
-	,trimSelection:function(sen,start) {
+	,trimSelection:function(para,start) {
 		if (start) {
-			this.setState({senStart:sen});
+			this.setState({paraStart:para});
 		} else {
-			this.setState({senEnd:sen});
+			this.setState({paraEnd:para});
 		}
 	}
 	,renderSentence:function(text,idx){
 		if(this.isSelected(idx)) {
-			return <Sentence key={idx} sen={idx} text={text} token={this.state.token} 
+			return <Paragraph key={idx} para={idx} text={text} token={this.state.token} 
 			selectToken={this.selectToken} 
-			senStart={this.state.senStart} 
-			senEnd={this.state.senEnd}
+			paraStart={this.state.paraStart} 
+			paraEnd={this.state.paraEnd}
 			trimSelection={this.trimSelection}
 			cancelSelection={this.cancelSelection}/>
 		} else {
-			return <View key={idx}><Text  style={styles.sentence}
+			return <View key={idx}><Text  style={styles.paragraph}
 			 onTouchStart={this.onTouchStart.bind(this,idx)}>{text}</Text></View>
 		
 		}
@@ -64,8 +64,8 @@ var SelectableText=React.createClass({
 });
 
 var styles=StyleSheet.create({
-	sentence:{fontSize:24},
-	selectedSentence:{backgroundColor:'lightyellow'}
+	paragraph:{fontSize:24},
+	selectedParagraph:{backgroundColor:'lightyellow'}
 })
 
 module.exports=SelectableText;

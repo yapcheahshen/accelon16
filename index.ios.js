@@ -4,7 +4,7 @@ var {
 } =React;
 
 var mainmenu=require("./src/menu/mainmenu");
-var sentencemenu=require("./src/menu/sentencemenu");
+var paragraphmenu=require("./src/menu/paragraphmenu");
 var tokenmenu=require("./src/menu/tokenmenu");
 var SelectableText=require("./src/components/selectabletext");
 var Flippable=require("./src/layout/flippable");
@@ -19,8 +19,8 @@ var main=React.createClass({
   }
   ,setMode:function(mode,obj){
   
-    if (mode==="sentence") {
-      this.setState({menu:sentencemenu,mode,menuobj:obj});
+    if (mode==="paragraph") {
+      this.setState({menu:paragraphmenu,mode,menuobj:obj});
     } else if (mode==="token") {
       this.setState({menu:tokenmenu,mode,menuobj:obj});
     } else {

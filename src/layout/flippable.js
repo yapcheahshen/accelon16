@@ -25,13 +25,6 @@ var flippable=React.createClass({
       full?StatusBarAndroid.hideStatusBar():StatusBarAndroid.showStatusBar();
     }
   }
-  ,inTabBar:function(x,y) {
-    if (this.state.isLandscape) {
-      return x+49>Screen.height;
-    } else {
-      return y+49>Screen.height;
-    }
-  }
   ,onTouchStart:function(e){
     if(e.nativeEvent.touches.length===3) {
       this.toggleFullScreen();

@@ -17,11 +17,18 @@ var tokenize=function(text){
 	return out;
 }
 
-var Sentence=React.createClass({
+var normalToken=function(token) {
+	if (!token)return;
+	var t=token.trim();
+	var m=t.match(/[a-zA-Z\u3400-\u9fff\ud800-\udfff]*/);
+	return (m && m[0]===t);
+}
+
+var Paragraph=React.createClass({
 	propTypes:{
-		senStart:PropTypes.number.isRequired,//starting sentence id
-		senEnd:PropTypes.number.isRequired, //ending sentence id
-		sen:PropTypes.number.isRequired,  //sentence id
+		paraStart:PropTypes.number.isRequired,//starting paragraph id
+		paraEnd:PropTypes.number.isRequired, //ending paragraph id
+		para:PropTypes.number.isRequired,  //paragraph id
 		trimSelection:PropTypes.func.isRequired,
 		cancelSelection:PropTypes.func.isRequired
 	}
@@ -30,31 +37,41 @@ var Sentence=React.createClass({
 	}
 	,start:0
 	,touchToken:true //first touch
-	,onMoving:function(){
-		//console.log("pan moving");
-	}
 	,selectToken:function(idx){
 		this.props.selectToken(idx);
+	}
+	,selectSentence:function(n){
+		var start=n,end=n;
+		while (start>-2) {
+			if (normalToken(this.state.tokens[start-1])) start--;
+			else break;
+		}
+
+		while (end<this.state.tokens.length) {
+			if (normalToken(this.state.tokens[end+1])) end++;
+			else break;
+		}
+
+		this.setState({selStart:start,selEnd:end});
 	}
 	,onTokenTouchStart:function(n,evt){
 		if (evt.nativeEvent.touches.length==1){
 			if (n===this.state.selStart && n==this.state.selEnd) {
-				this.setState({selStart:0,selEnd:-1});
-				this.props.cancelSelection();
+				this.selectSentence(n);
 				return;
 			}
 			this.setState({selStart:n,selEnd:n});
-			this.props.trimSelection(this.props.sen,true);
+			this.props.trimSelection(this.props.para,true);
 		} else {
 			this.setState({selEnd:n});
-			this.props.trimSelection(this.props.sen);
+			this.props.trimSelection(this.props.para);
 		}
 		
 	}
 	,isSelected:function(n){
-		var sen=this.props.sen;
-		if (sen>this.props.senStart && sen<this.props.senEnd)return true;
-		if (sen<this.props.senStart || sen>this.props.senEnd)return false;
+		var para=this.props.para;
+		if (para>this.props.paraStart && para<this.props.paraEnd)return true;
+		if (para<this.props.paraStart || para>this.props.paraEnd)return false;
 		var start=this.state.selStart;
 		var end=this.state.selEnd;
 		if (end<start && end>-1) {
@@ -63,10 +80,10 @@ var Sentence=React.createClass({
 			start=t;
 		}
 
-		if (sen===this.props.senEnd && sen!==this.props.senStart) {
+		if (para===this.props.paraEnd && para!==this.props.paraStart) {
 			start=0;
 		}
-		if (sen===this.props.senStart && sen!==this.props.senEnd) {
+		if (para===this.props.paraStart && para!==this.props.paraEnd) {
 			end=this.state.tokens.length;
 		}
 
@@ -93,17 +110,17 @@ var Sentence=React.createClass({
 		
 //{...this._panResponder.panHandlers}
 		return <View style={{flex:1}} onTouchEnd={this.onTouchEnd}>
-		<Text style={styles.selectedSentence}>
+		<Text style={styles.selectedParagraph}>
 		{this.state.tokens.map(this.renderToken)}</Text></View>
 	}
 });
 var styles=StyleSheet.create({
-	selectedSentence:{fontSize:24,backgroundColor:'lightyellow'},
+	selectedParagraph:{fontSize:24,backgroundColor:'lightyellow'},
 	selectedToken:{backgroundColor:'yellow'}
 
 	//textShadowColor:'yellow',	textShadowRadius:6,textShadowOffset:{width:1,height:1}}
 })
-module.exports=Sentence;
+module.exports=Paragraph;
 /*
 componentWillMount:function(){
 	 var me = this;
