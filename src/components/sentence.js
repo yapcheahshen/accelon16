@@ -29,6 +29,7 @@ var Sentence=React.createClass({
 		return {tokens:tokenize(this.props.text),selStart:0,selEnd:-1};
 	}
 	,start:0
+	,touchToken:true //first touch
 	,onMoving:function(){
 		//console.log("pan moving");
 	}
@@ -36,6 +37,7 @@ var Sentence=React.createClass({
 		this.props.selectToken(idx);
 	}
 	,onTouchStart:function(n,evt){
+		this.touchToken=true;
 		if (evt.nativeEvent.touches.length==1){
 			if (n===this.state.selStart && n==this.state.selEnd) {
 				this.setState({selStart:0,selEnd:-1});
@@ -48,10 +50,7 @@ var Sentence=React.createClass({
 			this.setState({selEnd:n});
 			this.props.trimSelection(this.props.sen);
 		}
-	//	console.log("touch start",arguments)
-	}
-	,onTouchEnd:function(e,evt){
-	//	console.log("touch end",e)
+		
 	}
 	,isSelected:function(n){
 		var sen=this.props.sen;
@@ -74,9 +73,15 @@ var Sentence=React.createClass({
 
 		return (n>=start)&&(n<=end);
 	}
+	,onTouchEnd:function(evt){
+		console.log("touch end")
+		if (!this.touchToken) {
+			this.props.cancelSelection();
+		}
+		this.touchToken=false;
+	}
 	,renderToken:function(token,idx){
-		return <Text onTouchEnd={this.onTouchEnd} 
-		onTouchStart={this.onTouchStart.bind(this,idx)}
+		return <Text onTouchStart={this.onTouchStart.bind(this,idx)}
 		style={this.isSelected(idx)?styles.selectedToken:null} 
 		ref={idx} key={idx}>{token}</Text>
 	}
@@ -85,7 +90,7 @@ var Sentence=React.createClass({
 
 		
 //{...this._panResponder.panHandlers}
-		return <View style={{flex:1}} >
+		return <View style={{flex:1}} onTouchEnd={this.onTouchEnd}>
 		<Text style={styles.selectedSentence}>
 		{this.state.tokens.map(this.renderToken)}</Text></View>
 	}

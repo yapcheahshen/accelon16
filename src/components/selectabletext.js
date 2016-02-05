@@ -13,7 +13,11 @@ var SelectableText=React.createClass({
 	}
 	,onTouchStart:function(n,evt) {
 		if (evt.nativeEvent.touches.length==1){
-			this.setState({senStart:n,senEnd:n});
+			if (this.state.senStart===n && this.state.senEnd===n) {
+				this.cancelSelection();
+			} else {
+				this.setState({senStart:n,senEnd:n});
+			}
 		} else {
 			this.setState({senEnd:n});
 		}
