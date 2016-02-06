@@ -35,7 +35,10 @@ var main=React.createClass({
   ,render:function(){
     return (
       <View style={{flex:1,top:22}}>
-        <SelectableRichText rows={sampletext} textStyle={styles.textStyle}
+        <SelectableRichText rows={sampletext} 
+        textStyle={styles.textStyle} 
+        selectedStyle={styles.selectedStyle}
+        selectedTextStyle={styles.selectedTextStyle}
         markups={samplemarkup} onFetchText={this.onFetchText}/>
       </View>
     );
@@ -43,6 +46,8 @@ var main=React.createClass({
 });
 //<Flippable body={this.renderBody()} menu={this.state.menu(this.state.menuobj)}/>
 var styles=StyleSheet.create({
-  textStyle:{fontSize:24}
+  textStyle:{fontSize:24},
+  selectedStyle:{},
+  selectedTextStyle:{}
 })
 AppRegistry.registerComponent('accelon16', () => main);
