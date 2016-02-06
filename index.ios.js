@@ -9,7 +9,7 @@ var tokenmenu=require("./src/menu/tokenmenu");
 var SelectableText=require("./src/components/selectabletext");
 var Flippable=require("./src/layout/flippable");
 var sampletext=require("./sampletext").slice(0,15);
-
+var ListViewTest=require("./listviewtest");
 var main=React.createClass({
   getInitialState:function(){
     return {menu:mainmenu,mode:null,menuobj:null};
@@ -31,10 +31,11 @@ var main=React.createClass({
   ,render:function(){
     return (
       <View style={{flex:1}}>
-        <Flippable body={this.renderBody()} menu={this.state.menu(this.state.menuobj)}/>
+        <ListViewTest/>
       </View>
     );
   }
-})
+});
+//<Flippable body={this.renderBody()} menu={this.state.menu(this.state.menuobj)}/>
 
 AppRegistry.registerComponent('accelon16', () => main);

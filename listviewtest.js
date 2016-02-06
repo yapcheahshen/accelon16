@@ -35,24 +35,24 @@ var ListViewTest=React.createClass({
 	}
 	,randomText:function() {
 		var s="";
-		for (var i=0;i<200;i++) {
+		for (var i=0;i<80+Math.floor(Math.random()*200);i++) {
 			s+=String.fromCharCode(0x4e00+ Math.floor(Math.random()*20000)) ;
 		}
 		return s;
 	}
 	,onChangeVisibleRows:function(visibleRows){
-		var loading=false;
+		var loading=0;
 		for (row in visibleRows.s1) {
 			if (!rows[row].text) {
 				loaded[row]=row+":"+this.randomText();
-				loading=true;
+				loading++;
 			}
 		}
 
 		if (!loading) return;
 		var ds=this.state.dataSource.cloneWithRows(this.getRows(loaded));
+		loaded={};
 		this.setState({dataSource:ds},function(){
-			loaded={};
 			if (this.uti) {
 				setTimeout(function(){
 					this.refs.list.scrollTo( rowY[this.state.uti],0);

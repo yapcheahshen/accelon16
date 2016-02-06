@@ -9,7 +9,7 @@ var SelectableText=React.createClass({
 		onMode:PropTypes.func.isRequired
 	}
 	,getInitialState:function(){
-		return {paraStart:0,paraEnd:-1,token:null};
+		return {paraStart:-1,paraEnd:-1,token:null};
 	}
 	,onTouchStart:function(n,evt) {
 		if (evt.nativeEvent.touches.length==1){
@@ -33,7 +33,7 @@ var SelectableText=React.createClass({
 		return (n>=start)&&(n<=end);
 	}
 	,cancelSelection:function(){
-		this.setState({paraStart:0,paraEnd:-1});
+		this.setState({paraStart:-1,paraEnd:-1});
 	}
 	,trimSelection:function(para,start) {
 		if (start) {
@@ -57,7 +57,7 @@ var SelectableText=React.createClass({
 		}
 	}
 	,render:function(){
-		return <ScrollView style={{flex:1,top:22}}>
+		return <ScrollView  style={{flex:1,top:22}}>
       		{this.props.texts.map(this.renderSentence)}
     	</ScrollView>
 	}

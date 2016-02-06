@@ -33,7 +33,7 @@ var Paragraph=React.createClass({
 		cancelSelection:PropTypes.func.isRequired
 	}
 	,getInitialState:function() {
-		return {tokens:tokenize(this.props.text),selStart:0,selEnd:-1};
+		return {tokens:tokenize(this.props.text),selStart:-1,selEnd:-1};
 	}
 	,start:0
 	,touchToken:true //first touch
@@ -64,6 +64,7 @@ var Paragraph=React.createClass({
 			this.props.trimSelection(this.props.para,true);
 		} else {
 			this.setState({selEnd:n});
+			if (this.state.selStart===-1) this.setState({selStart:n});
 			this.props.trimSelection(this.props.para);
 		}
 		
