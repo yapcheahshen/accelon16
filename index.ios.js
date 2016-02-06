@@ -8,8 +8,9 @@ var paragraphmenu=require("./src/menu/paragraphmenu");
 var tokenmenu=require("./src/menu/tokenmenu");
 var SelectableText=require("./src/components/selectabletext");
 var Flippable=require("./src/layout/flippable");
-var sampletext=require("./sampletext").slice(0,15);
-var ListViewTest=require("./listviewtest");
+var sampletext=require("./sampledata/text").map(function(t){return {rawtext:t}});
+var samplemarkup=require("./sampledata/markups");
+var {SelectableRichText}=require("ksana-rn-selectable-richtext");
 var main=React.createClass({
   getInitialState:function(){
     return {menu:mainmenu,mode:null,menuobj:null};
@@ -28,14 +29,20 @@ var main=React.createClass({
       this.setState({menu:mainmenu,mode:null,menuobj:null});
     }
   }
+  ,onFetchText:function(row,cb) {
+    cb(0,sampletext[row].rawtext,row);
+  }  
   ,render:function(){
     return (
-      <View style={{flex:1}}>
-        <ListViewTest/>
+      <View style={{flex:1,top:22}}>
+        <SelectableRichText rows={sampletext} textStyle={styles.textStyle}
+        markups={samplemarkup} onFetchText={this.onFetchText}/>
       </View>
     );
   }
 });
 //<Flippable body={this.renderBody()} menu={this.state.menu(this.state.menuobj)}/>
-
+var styles=StyleSheet.create({
+  textStyle:{fontSize:24}
+})
 AppRegistry.registerComponent('accelon16', () => main);
