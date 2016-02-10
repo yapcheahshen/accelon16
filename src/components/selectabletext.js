@@ -3,6 +3,7 @@ var {
   View,Text,Image,StyleSheet,ScrollView,
   StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform,PropTypes
 } =React;
+var E=React.createElement;
 var Paragraph=require("./paragraph");
 var SelectableText=React.createClass({
 	propTypes:{
@@ -22,16 +23,6 @@ var SelectableText=React.createClass({
 			this.setState({paraEnd:n});
 		}
 	}
-	,isSelected:function(n){
-		var start=this.state.paraStart;
-		var end=this.state.paraEnd;
-		if (end<start &&end>-1) {
-			var t=end;
-			end=start;
-			start=t;
-		}
-		return (n>=start)&&(n<=end);
-	}
 	,cancelSelection:function(){
 		this.setState({paraStart:-1,paraEnd:-1});
 	}
@@ -42,24 +33,24 @@ var SelectableText=React.createClass({
 			this.setState({paraEnd:para});
 		}
 	}
+	,getSentenceMarkup:function(sid){
+		console.log(this.prpos.markups,sid)
+		return this.props.markups[sid];
+	}
 	,renderSentence:function(text,idx){
-		if(this.isSelected(idx)) {
-			return <Paragraph key={idx} para={idx} text={text} token={this.state.token} 
-			selectToken={this.selectToken} 
-			paraStart={this.state.paraStart} 
-			paraEnd={this.state.paraEnd}
-			trimSelection={this.trimSelection}
-			cancelSelection={this.cancelSelection}/>
-		} else {
-			return <View key={idx}><Text  style={styles.paragraph}
-			 onTouchStart={this.onTouchStart.bind(this,idx)}>{text}</Text></View>
-		
-		}
+			return E(Paragraph,{key:idx
+			,para:idx,text:text
+			,markups:this.getSentenceMarkup(idx)
+			,token:this.state.token
+			,selectToken:this.selectToken 
+			,paraStart:this.state.paraStart 
+			,paraEnd:this.state.paraEnd
+			,onTouchStart:this.onTouchStart.bind(this,idx)
+			,trimSelection:this.trimSelection
+			,cancelSelection:this.cancelSelection});
 	}
 	,render:function(){
-		return <ScrollView  style={{flex:1,top:22}}>
-      		{this.props.texts.map(this.renderSentence)}
-    	</ScrollView>
+		return E(ScrollView,null,this.props.texts.map(this.renderSentence));
 	}
 });
 

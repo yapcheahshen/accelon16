@@ -6,24 +6,21 @@ var {
 var mainmenu=require("./src/menu/mainmenu");
 var paragraphmenu=require("./src/menu/paragraphmenu");
 var tokenmenu=require("./src/menu/tokenmenu");
-var SelectableText=require("./src/components/selectabletext");
 var Flippable=require("./src/layout/flippable");
 var sampletext=require("./sampledata/text").map(function(t){return {rawtext:t}});
 var samplemarkup=require("./sampledata/markups");
+var sampletypedef=require("./sampledata/typedef");
 var {SelectableRichText}=require("ksana-rn-selectable-richtext");
 var main=React.createClass({
   getInitialState:function(){
     return {menu:mainmenu,mode:null,menuobj:null};
   }
-  ,renderBody:function(){
-    return <SelectableText texts={sampletext} onMode={this.setMode}/>
-  }
   ,setMode:function(mode,obj){
   
     if (mode==="paragraph") {
-      this.setState({menu:paragraphmenu,mode,menuobj:obj});
+      this.setState({menu:paragraphmenu,mode:mode,menuobj:obj});
     } else if (mode==="token") {
-      this.setState({menu:tokenmenu,mode,menuobj:obj});
+      this.setState({menu:tokenmenu,mode:mode,menuobj:obj});
     } else {
        LayoutAnimation.spring();
       this.setState({menu:mainmenu,mode:null,menuobj:null});
@@ -39,7 +36,7 @@ var main=React.createClass({
         textStyle={styles.textStyle} 
         selectedStyle={styles.selectedStyle}
         selectedTextStyle={styles.selectedTextStyle}
-        markups={samplemarkup} onFetchText={this.onFetchText}/>
+        markups={samplemarkup} typedef={sampletypedef} onFetchText={this.onFetchText}/>
       </View>
     );
   }
