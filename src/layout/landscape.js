@@ -48,28 +48,36 @@ var Landscape=React.createClass({
 		 //because Tab.js use justifyContent: 'flex-end', adjust by using paddingBottom
 		return Screen.width / (this.props.menu.length*2 ) - (39/this.props.menu.length) ;
 	}
+	,bodyPaddingRight:function(){
+		return this.state.tabBarWidth;
+	}
 	,renderTab:function(){
 		if (this.state.tabBarWidth) {
+			var unit=Screen.width/12;
 			return (
-				<View style={{flex:this.state.panelFlex}}>
+				<View style={[styles.panelStyle,{height:Screen.height,
+					width:this.state.panelFlex*unit+this.state.tabBarWidth}]}>
 				<TabNav tabBarStyle={[styles.tabnav,
-					{width:this.state.tabBarWidth,height:Screen.width,paddingBottom:this.paddingBottom()}]}
+					{width:this.state.tabBarWidth,height:Screen.width,
+						paddingBottom:this.paddingBottom()}]}
 				sceneStyle={styles.sceneStyle}
-				landscape={true} tabs={this.props.menu} onTabSelected={this.onTabSelected}/></View>
+				landscape={true} tabs={this.props.menu} onTabSelected={this.onTabSelected}/>
+				</View>
 				);
 		}
 	}	
 	,render:function(){
 		return 	(
 			<View style={{flex:1, flexDirection: 'row'}} >
-			<View style={{flex:6}}>{this.props.body}</View>
+			
+			<View style={{flex:6,paddingRight:this.bodyPaddingRight()}}>{this.props.body}</View>
 			{this.renderTab()}
 			</View>
 		)
 	}
 });
 var styles=StyleSheet.create({
-	maintext:{backgroundColor:'blue',flex:6}
+	panelStyle:{position:'absolute',right:0, opacity:0.9}
 	,sceneStyle:{backgroundColor:'gray',paddingBottom:0}
 	,tabnav:{top:0,left:null,flexDirection:'column',
 		alignItems:'center'}

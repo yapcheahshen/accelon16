@@ -44,7 +44,7 @@ var Portrait=React.createClass({
 	,renderTab:function(){
 		if (this.state.tabBarHeight) {
 			return (
-				<View  style={{flex:this.state.panelFlex}} >
+				<View style={[styles.panelStyle,{flex:this.state.panelFlex}]} >
 				<TabNav tabBarStyle={styles.tabBarStyle}
 				portrait={true} tabs={this.props.menu} onTabSelected={this.onTabSelected}/>
 				</View>
@@ -62,9 +62,9 @@ var Portrait=React.createClass({
 	
 });
 var styles=StyleSheet.create({
-	maintext:{backgroundColor:'silver',flex:6},
-	tabBarStyle:{},
-	sceneStyle:{backgroundColor:'gray'}
+	tabBarStyle:{}
+	,panelStyle:{opacity:0.8}
+	,sceneStyle:{backgroundColor:'gray'}
 })	
 
 
