@@ -49,5 +49,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>CFBundleDisplayName</key>
+	<string>Accelon16</string>
 </dict>
 </plist>
