@@ -3,20 +3,30 @@ var {
   View,Text,Image,StyleSheet,Dimensions,LayoutAnimation,PixelRatio,Platform
 } =React;
 var E=React.createElement;
-var sampletext=require("./sampledata/text").map(function(t){return {rawtext:t}});
-var samplemarkup=require("./sampledata/markups");
-var sampletypedef=require("./sampledata/typedef");
-var {SelectableRichText}=require("ksana-rn-selectable-richtext");
+var {SelectableRichText,Selections}=require("ksana-selectable-richtext");
+
+
+var sampletext=require("ksana-selectable-richtext/sampledata/text").map(function(t){return {rawtext:t}});
+var samplemarkup=require("ksana-selectable-richtext/sampledata/markups");
+var sampletypedef=require("ksana-selectable-richtext/sampledata/typedef");
+var sampleselection=require("ksana-selectable-richtext/sampledata/selections");
+
 var MarkupMenu=require("./src/menu/markupmenu");
 var selectable_richtext_test=React.createClass({
   getInitialState:function(){
-    return {};
+    return {sels:Selections({data:sampleselection})};
   }
   ,markLeft:function(){
     this.refs.srt.markLeft();
   }
   ,markRight:function(){
     this.refs.srt.markRight();
+  }
+  ,onSelection:function(rowid,sel){
+    if (sel.length===0) this.state.sels.clearEmpty();
+    if (this.state.sels.set(rowid,sel)){
+      this.forceUpdate();
+    }
   }
   ,onMarkup:function(type){
     var sel=this.refs.srt.getSelection();
@@ -40,6 +50,8 @@ var selectable_richtext_test=React.createClass({
               E(MarkupMenu,{onMarkup:this.onMarkup,typedef:sampletypedef
                 ,markLeft:this.markLeft,markRight:this.markRight}),
               E(SelectableRichText,{ref:"srt",rows:sampletext 
+              ,selections:this.state.sels.getAll()
+              ,onSelection:this.onSelection
               ,textStyle:styles.textStyle
               ,onHyperlink:this.onHyperlink
               ,selectedStyle:styles.selectedStyle
