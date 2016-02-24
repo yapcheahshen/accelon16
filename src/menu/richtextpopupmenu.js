@@ -7,16 +7,16 @@ var E=React.createElement;
 var Button=require("../components/button");
 var RichTextPopupMenu=React.createClass({
 	contextTypes:{
-		action:React.PropTypes.object
+		action:React.PropTypes.func
 	}
 	,selLengthPlusOne:function(){
-		this.context.action.selLengthPlusOne&&this.context.action.selLengthPlusOne();
+		this.context.action("selLengthPlusOne");
 	}
 	,selLengthPunc:function(){
-		this.context.action.selLengthPunc&&this.context.action.selLengthPunc();
+		this.context.action("selLengthPunc");
 	}
 	,saveSelection:function(){
-		this.context.action.saveSelection&&this.context.action.saveSelection();
+		this.context.action("saveSelection");
 	}
 	,render:function(){
 		return E(View,{style:styles.popup}

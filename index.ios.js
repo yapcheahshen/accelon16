@@ -10,15 +10,18 @@ var Flippable=require("./src/layout/flippable");
 var ksa=require("ksana-simple-api");
 var SRT=require("./selectable_richtext_test");
 var NAVT=require("./src/components/nav");
-var action=require("./src/action");
+var {store,action,getter,registerGetter}=require("./src/model");
 
 var main=React.createClass({
   childContextTypes: {
-    action: React.PropTypes.object
+    store: React.PropTypes.object
+    ,action:React.PropTypes.func
+    ,getter:React.PropTypes.func
+    ,registerGetter:React.PropTypes.func
   }
   ,
   getChildContext:function(){
-    return {action};
+    return {action,store,getter,registerGetter};
   }
   ,getInitialState:function(){
     return {menu:mainmenu,mode:null,menuobj:null,loading:true};
