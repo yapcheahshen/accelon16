@@ -3,7 +3,7 @@ var {
   View,Text,Image,StyleSheet,Dimensions,LayoutAnimation,PixelRatio,Platform
 } =React;
 var E=React.createElement;
-var {SelectableRichText,Selections}=require("ksana-selectable-richtext");
+var {SelectableRichText}=require("ksana-selectable-richtext");
 
 
 var sampletext=require("ksana-selectable-richtext/sampledata/text").map(function(t){return {rawtext:t}});
@@ -11,10 +11,12 @@ var samplemarkup=require("ksana-selectable-richtext/sampledata/markups");
 var sampletypedef=require("ksana-selectable-richtext/sampledata/typedef");
 var sampleselection=require("ksana-selectable-richtext/sampledata/selections");
 
+var RichTextPopupMenu=require("./src/menu/richtextpopupmenu");
+
 var MarkupMenu=require("./src/menu/markupmenu");
 var selectable_richtext_test=React.createClass({
   getInitialState:function(){
-    return {sels:Selections({data:sampleselection})};
+    return {selections:sampleselection};
   }
   ,markLeft:function(){
     this.refs.srt.markLeft();
@@ -22,22 +24,14 @@ var selectable_richtext_test=React.createClass({
   ,markRight:function(){
     this.refs.srt.markRight();
   }
-  ,onSelection:function(rowid,sel){
-    if (sel.length===0) this.state.sels.clearEmpty();
-    if (this.state.sels.set(rowid,sel)){
-      this.forceUpdate();
-    }
+  ,onSetTextRange:function(rowid,sel){
+    //if (sel && sel.length===0) this.state.sels.clearEmpty();
+    //if (this.state.sels.set(rowid,sel)){
+    //  this.forceUpdate();
+   // }
   }
   ,onMarkup:function(type){
-    var sel=this.refs.srt.getSelection();
-    if (sel.paraStart===-1||sel.paraEnd===-1) return; //no selected paragraph
-    if (sel.selStart===-1||sel.selEnd===-1)return;//no selection
-    if (sel.paraStart!==sel.paraEnd)return;//only single paragraph selection is supported
-    
-    if (!samplemarkup[sel.paraStart]) samplemarkup[sel.paraStart]={};
-    var mid='m'+Math.round(Math.random()*1000000);
-    samplemarkup[sel.paraStart][mid]={s:sel.selStart,l:sel.selEnd-sel.selStart+1,type:type}
-    this.refs.srt.cancelSelection();
+    console.log(type)
   }
   ,onFetchText:function(row,cb) {
     cb(0,sampletext[row].rawtext,row);
@@ -50,15 +44,16 @@ var selectable_richtext_test=React.createClass({
               E(MarkupMenu,{onMarkup:this.onMarkup,typedef:sampletypedef
                 ,markLeft:this.markLeft,markRight:this.markRight}),
               E(SelectableRichText,{ref:"srt",rows:sampletext 
-              ,selections:this.state.sels.getAll()
-              ,onSelection:this.onSelection
+              ,selections:this.state.selections
+              ,onSetTextRange:this.onSetTextRange
               ,textStyle:styles.textStyle
               ,onHyperlink:this.onHyperlink
               ,selectedStyle:styles.selectedStyle
               ,selectedTextStyle:styles.selectedTextStyle
               ,markups:samplemarkup
               ,typedef:sampletypedef
-              ,onFetchText:this.onFetchText})
+              ,onFetchText:this.onFetchText
+              ,popup:E(RichTextPopupMenu)})
     );
   }
 });

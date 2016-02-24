@@ -9,14 +9,23 @@ var tokenmenu=require("./src/menu/tokenmenu");
 var Flippable=require("./src/layout/flippable");
 var ksa=require("ksana-simple-api");
 var SRT=require("./selectable_richtext_test");
+var NAVT=require("./src/components/nav");
+var action=require("./src/action");
 
 var main=React.createClass({
-  getInitialState:function(){
+  childContextTypes: {
+    action: React.PropTypes.object
+  }
+  ,
+  getChildContext:function(){
+    return {action};
+  }
+  ,getInitialState:function(){
     return {menu:mainmenu,mode:null,menuobj:null,loading:true};
   }
   ,componentDidMount:function(){
      var t=new Date();    
-     ksa.open({db:"cbeta"},function(err,db){
+     ksa.open({db:"dsl_jwn"},function(err,db){
       console.log(db.get("meta"))
       console.log(new Date()-t);
       setTimeout(function(){
@@ -32,7 +41,6 @@ var main=React.createClass({
     return <SRT/>
   }
   ,render:function(){
-
     return  <Flippable body={this.renderBody()} menu={this.state.menu(this.state.menuobj)}/>
   }
 });
