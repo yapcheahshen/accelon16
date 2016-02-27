@@ -7,60 +7,64 @@ var {NavigationBar} = Navigator;
 var E=React.createElement;
 var PT=React.PropTypes;
 
-function newRandomRoute() {
-  return {
-    title: '#' + Math.ceil(Math.random() * 1000),
-  };
-}
-var Nav=React.createClass({
-   shouldComponentUpdate:function(nextProps){
-    return (nextProps.model!==this.props.model)
-   }
-   ,NavigationBarRouteMapper:{
-     LeftButton: function(route, navigator, index, navState) {
-        if (index === 0) return null;
-        var previousRoute = navState.routeStack[index - 1];
+var NavigationBarRouteMapper={
+      LeftButton: function(route, navigator, index, navState) {
+        var leftButtonOnPress=navigator.props.model.leftButtonOnPress;
+        
+        var leftButtonText=navigator.props.model.leftButtonText(route);
         return (
-          <TouchableOpacity onPress={() => navigator.pop()}
+          <TouchableOpacity onPress={()=>leftButtonOnPress(route,navigator)}
             style={styles.navBarLeftButton}>
             <Text style={[styles.navBarText, styles.navBarButtonText]}>
-              {previousRoute.title}
+              {leftButtonText}
             </Text>
           </TouchableOpacity>
         );
       },
 
       RightButton: function(route, navigator, index, navState) {
+        var rightButtonText=navigator.props.model.rightButtonText(route);
+        var rightButtonOnPress=navigator.props.model.rightButtonOnPress;
         return (
           <TouchableOpacity
-            onPress={() => navigator.push(newRandomRoute())}
+            onPress={()=>rightButtonOnPress(route,navigator)}
             style={styles.navBarRightButton}>
             <Text style={[styles.navBarText, styles.navBarButtonText]}>
-              Next2
+             {rightButtonText}
             </Text>
           </TouchableOpacity>
         );
-      }
-    ,Title:function(route,navigator,index,navstate) {
-      return (
-        E(Text,{style:[styles.navBarText, styles.navBarTitleText]},route.title+"="+index)
-        
-      );
     }
+    ,Title:function(route,navigator,index,navstate) {
+      var title=navigator.props.model.getTitle(route);
+      return E(Text,{style:styles.navBarTitleText},title);
+    }
+}
+var Nav=React.createClass({
+  propTypes:{
+    model:PT.object.isRequired
   }
-  ,componentWillMount:function(){
-    this.props.model.init();
+  ,getInitialState:function() {
+    return {ready:false};
+  }
+  ,shouldComponentUpdate:function(nextProps,nextState){
+    return (nextProps.model!==this.props.model || nextState.ready!==this.state.ready)
+  }
+  ,componentWillMount:function(){ 
+    this.props.model.init(function(){
+      this.setState({ready:true});
+    }.bind(this));
   }
   ,renderScene:function(route,navigator) {
-    console.log("render Scene")
-    return E(this.props.model.scene, {route:route,navigator:navigator});
+    return E(route.scene, {route:route,navigator:navigator});
   }
   ,propTypes:{
     model:PT.object.isRequired
   }
 	,render:function(){
-		return <Navigator 
-      navigationBar={E(NavigationBar,{style:styles.navBar,routeMapper:this.NavigationBarRouteMapper})}
+    if (!this.state.ready) return E(View);
+		return <Navigator model={this.props.model}
+      navigationBar={E(NavigationBar,{style:styles.navBar,routeMapper:NavigationBarRouteMapper})}
     	initialRoute={this.props.model.initialRoute}
  	    renderScene={this.renderScene} />
 	}
@@ -75,11 +79,11 @@ var styles = StyleSheet.create({
   navBarText: {
     fontSize: 16,
     color:'rgb(0,122,255)',
-    marginVertical: 0,
+    marginVertical: 3,
   },
   navBarTitleText: {
     fontWeight: '500',
-    marginVertical: 0,
+    marginVertical: 3,
   },
   navBarLeftButton: {
     paddingLeft: 10,

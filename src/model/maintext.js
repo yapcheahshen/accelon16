@@ -3,9 +3,12 @@
 var {store,action,getter,registerGetter}=require("../model");
 var ksa=require("ksana-simple-api");
 var textscene=require("../scenes/text");
-var textRoute={title: 'x', db:'ds',  uti:'1@0', index: 0};
+var textRoute={db:'ds', nfile:1, index: 0 , scene: textscene};
+var busy=false;//waiting for layout , prevent double click on next/prev button
+var timer1;
+
 var getSegments=function(opts,cb){
-	ksa.sibling({db:opts.db,uti:opts.uti},function(err,data){
+	ksa.sibling({db:opts.db,nfile:opts.nfile},function(err,data){
 		if(!err) {
 			cb(data.sibling.map((s)=>data.nfile+"@"+s));
 		}
@@ -14,18 +17,59 @@ var getSegments=function(opts,cb){
 }
 
 var getContent=function(opts,cb){
+	clearTimeout(timer1);
+	busy=true;
+	timer1=setTimeout(function(){
+		busy=false;
+	},300);
 	ksa.fetch({db:opts.db,uti:opts.uti},function(err,data){
 		if (!err) cb(data[0].text);
 		else console.error(err);
 	});
 }
 
+var getDBFilenames=function(route,cb){
+	ksa.open({db:route.db},function(err,db){
+		route.filenames=db.get("filenames");
+		cb();
+	});
+}
+
 var maintext={
-	init:function(){
+	init:function(cb){
 		registerGetter("content",getContent);
 		registerGetter("segments",getSegments);
+		getDBFilenames(textRoute,cb);
 	}
-	,scene:textscene
+	,leftButtonOnPress:function(route,navigator) {
+		if (busy) return ;
+		var nfile=route.nfile;
+		if (nfile===0) return;
+		var newroute=JSON.parse(JSON.stringify(route));
+		newroute.nfile=nfile-1;
+		newroute.scene=route.scene;
+		newroute.title=newroute.nfile;
+		navigator.replace(newroute);
+	}
+	,rightButtonOnPress:function(route,navigator) {
+		if (busy) return ;
+		var nfile=route.nfile;
+		if (nfile+1>=route.filenames.length) return ;
+		var newroute=JSON.parse(JSON.stringify(route));
+		newroute.nfile=nfile+1;
+		newroute.scene=route.scene;
+		newroute.title=newroute.nfile;
+		navigator.replace(newroute);
+	}
+	,leftButtonText:function(route){
+		return (route.nfile>0)?"Prev":"";
+	}
+	,rightButtonText:function(route){
+		return (route.nfile+1<route.filenames.length)?"Next":"";
+	}
+	,getTitle:function(route) {
+		return route.filenames[route.nfile];
+	}
 	,initialRoute:textRoute
 }
 

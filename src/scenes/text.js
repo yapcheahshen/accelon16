@@ -16,6 +16,10 @@ var TextScene=React.createClass({
     ,store: PT.object
     ,getter:PT.func
   }
+  ,propTypes:{
+    route:PT.object.isRequired
+    ,navigator:PT.object.isRequired
+  }
   ,getInitialState:function(){
   	return {markups:{},rows:[],selections:{},ready:false};
   }
@@ -28,14 +32,24 @@ var TextScene=React.createClass({
   ,onViewportChanged:function(start,end) {
 
   }
+  //,shouldComponentUpdate:function(nextProps,nextState){
+  //  return nextState.rows != this.state.rows ;
+  //}
+  ,componentWillReceiveProps:function(nextProps){
+    if (nextProps.route!==this.props.route) {
+      this.getRows(function(rows){
+        this.setState({rows});
+      }.bind(this));
+    }
+  }
   ,getRows:function(cb) {
-    this.context.getter("segments",{db:this.props.route.db,uti:this.props.route.uti},function(segments){
+    this.context.getter("segments",{db:this.props.route.db,nfile:this.props.route.nfile},function(segments){
       cb( segments.map((uti)=> {return {uti} } ));
     });
   }
   ,componentDidMount:function(){
     this.getRows(function(rows){
-      this.setState({rows:rows,ready:true});
+      this.setState({rows,ready:true});
     }.bind(this));
   }
   ,onFetchText:function(row,cb) {
@@ -47,7 +61,7 @@ var TextScene=React.createClass({
     if (!this.state.ready) {
       return E(View,{},E(Text,null,"Loading"));
     }
-    return E(View,{style:{flex:1,padding:5,paddingTop:48},name:this.props.route.name},
+    return E(View,{style:{flex:1,paddingTop:45},name:this.props.route.name},
  	          E(SelectableRichText,
  	          {ref:"srt",rows:this.state.rows 
               ,selections:this.state.selections
