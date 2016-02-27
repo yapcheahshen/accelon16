@@ -8,6 +8,11 @@ var orientationMixin=require("./orientation");
 var Landscape=require("./landscape");
 var Portrait=require("./portrait");
 var Screen=require("./screen");
+
+var windowH=screenH=Dimensions.get("window").height;
+var windowW=screenW=Dimensions.get("window").width;
+var isLandscape=false;
+if (windowW>windowH) isLandscape=true;
 var flippable=React.createClass({
   mixins:[orientationMixin]
   ,propTypes:{
@@ -15,7 +20,7 @@ var flippable=React.createClass({
     menu:PropTypes.array.isRequired
   }
   ,getInitialState:function(){
-    return {isLandscape:-1,fullscreen:false};
+    return {isLandscape:isLandscape,fullscreen:false};
   }
   ,toggleFullScreen:function(){
     var full=!this.state.fullscreen;
@@ -34,7 +39,10 @@ var flippable=React.createClass({
     var layout=this.state.isLandscape?Landscape:Portrait;
     return React.createElement(View,{onLayout:this.onLayout,style:{flex:1}, 
       onTouchStart:this.onTouchStart},
-      React.createElement(layout,{fullscreen:this.state.fullscreen, menu:this.props.menu,body:this.props.body})
+      React.createElement(layout,{
+        fullscreen:this.state.fullscreen, 
+        menu:this.props.menu,
+        body:this.props.body})
     );
   }
 });

@@ -5,105 +5,81 @@ var {
 } =React;
 var {NavigationBar} = Navigator;
 var E=React.createElement;
-
+var PT=React.PropTypes;
 
 function newRandomRoute() {
   return {
     title: '#' + Math.ceil(Math.random() * 1000),
   };
 }
+var Nav=React.createClass({
+   shouldComponentUpdate:function(nextProps){
+    return (nextProps.model!==this.props.model)
+   }
+   ,NavigationBarRouteMapper:{
+     LeftButton: function(route, navigator, index, navState) {
+        if (index === 0) return null;
+        var previousRoute = navState.routeStack[index - 1];
+        return (
+          <TouchableOpacity onPress={() => navigator.pop()}
+            style={styles.navBarLeftButton}>
+            <Text style={[styles.navBarText, styles.navBarButtonText]}>
+              {previousRoute.title}
+            </Text>
+          </TouchableOpacity>
+        );
+      },
 
-
-var NavigationBarRouteMapper ={
-	 LeftButton: function(route, navigator, index, navState) {
-	    if (index === 0) {
-	      return null;
-	    }
-
-	    var previousRoute = navState.routeStack[index - 1];
-	    return (
-	      <TouchableOpacity
-	        onPress={() => navigator.pop()}
-	        style={styles.navBarLeftButton}>
-	        <Text style={[styles.navBarText, styles.navBarButtonText]}>
-	          {previousRoute.title}
-	        </Text>
-	      </TouchableOpacity>
-	    );
-	  },
-
-	  RightButton: function(route, navigator, index, navState) {
-	    return (
-	      <TouchableOpacity
-	        onPress={() => navigator.push(newRandomRoute())}
-	        style={styles.navBarRightButton}>
-	        <Text style={[styles.navBarText, styles.navBarButtonText]}>
-	          Next
-	        </Text>
-	      </TouchableOpacity>
-	    );
-	  }
-	,Title:function(route,navigator,index,navstate) {
-    return (
-      E(Text,{style:[styles.navBarText, styles.navBarTitleText]},route.title+index)
-      
-    );
- 	}
-};
-
-var Scene=React.createClass({
-  contextTypes:{
-    action:React.PropTypes.object
+      RightButton: function(route, navigator, index, navState) {
+        return (
+          <TouchableOpacity
+            onPress={() => navigator.push(newRandomRoute())}
+            style={styles.navBarRightButton}>
+            <Text style={[styles.navBarText, styles.navBarButtonText]}>
+              Next2
+            </Text>
+          </TouchableOpacity>
+        );
+      }
+    ,Title:function(route,navigator,index,navstate) {
+      return (
+        E(Text,{style:[styles.navBarText, styles.navBarTitleText]},route.title+"="+index)
+        
+      );
+    }
   }
-  ,onpress:function(){
-    console.log("press00",this.context.action.hello());
+  ,componentWillMount:function(){
+    this.props.model.init();
   }
-  ,render : function(){
-    return <View style={{flex:1,paddingTop:50}}  name={this.props.route.name}>
-  <TouchableHighlight onPress={this.onpress}>
-  <Text style={{fontSize:36}}>{this.props.route.title}</Text></TouchableHighlight></View>
+  ,renderScene:function(route,navigator) {
+    console.log("render Scene")
+    return E(this.props.model.scene, {route:route,navigator:navigator});
   }
-})
-
-var renderScene=function(route,navigator){
-	return <Scene route={route} navigator={navigator}/>
-}
-
-var navigator_test=React.createClass({
-	render:function(){
-		return <Navigator navigationBar={<NavigationBar routeMapper={NavigationBarRouteMapper}/>}
-    	initialRoute={{title: 'My First Scene', index: 0}}
- 	   renderScene={renderScene} />
+  ,propTypes:{
+    model:PT.object.isRequired
+  }
+	,render:function(){
+		return <Navigator 
+      navigationBar={E(NavigationBar,{style:styles.navBar,routeMapper:this.NavigationBarRouteMapper})}
+    	initialRoute={this.props.model.initialRoute}
+ 	    renderScene={this.renderScene} />
 	}
 });
+
 var styles = StyleSheet.create({
-  messageText: {
-    fontSize: 17,
-    fontWeight: '500',
-    padding: 15,
-    marginTop: 50,
-    marginLeft: 15,
-  },
-  button: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#CDCDCD',
-  },
-  buttonText: {
-    fontSize: 17,
-    fontWeight: '500',
-  },
+
   navBar: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(212,212,212)',
+    height:45,
   },
   navBarText: {
     fontSize: 16,
-    marginVertical: 10,
+    color:'rgb(0,122,255)',
+    marginVertical: 0,
   },
   navBarTitleText: {
     fontWeight: '500',
-    marginVertical: 9,
+    marginVertical: 0,
   },
   navBarLeftButton: {
     paddingLeft: 10,
@@ -112,11 +88,6 @@ var styles = StyleSheet.create({
     paddingRight: 10,
   },
   navBarButtonText: {
-  },
-  scene: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#EAEAEA',
-  },
+  }
 });
-module.exports=navigator_test;
+module.exports=Nav;

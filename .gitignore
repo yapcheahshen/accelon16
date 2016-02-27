@@ -4,6 +4,13 @@
 *.kdb
 # Xcode
 #
+ksana-search
+ksana-simple-api
+ksana-selectable-richtext
+ksana-jsonrom
+ksana-analyzer
+ksana-indexer
+ksana-database
 build/
 *.pbxuser
 !default.pbxuser

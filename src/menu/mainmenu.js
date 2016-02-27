@@ -8,8 +8,8 @@ var {
 
 var HomeView=React.createClass({
   render:function(){
-    return React.createElement(View, {style:{flex:1,backgroundColor:'yellow'}},
-    	React.createElement(Text,{},"abc"));
+    return React.createElement(View, {style:{flex:1,backgroundColor:'yellow',height:50}},
+    	React.createElement(Text,{},"abc\nasdfasf\naasfsadfs"));
   }
 })
 var searchicon=require("../../images/find.png");

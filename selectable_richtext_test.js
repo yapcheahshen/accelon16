@@ -18,12 +18,6 @@ var selectable_richtext_test=React.createClass({
   getInitialState:function(){
     return {selections:sampleselection};
   }
-  ,markLeft:function(){
-    this.refs.srt.markLeft();
-  }
-  ,markRight:function(){
-    this.refs.srt.markRight();
-  }
   ,onSetTextRange:function(rowid,sel){
     //if (sel && sel.length===0) this.state.sels.clearEmpty();
     //if (this.state.sels.set(rowid,sel)){
@@ -41,8 +35,6 @@ var selectable_richtext_test=React.createClass({
   }
   ,render:function(){
     return  E(View,{style:{flex:1}},
-              E(MarkupMenu,{onMarkup:this.onMarkup,typedef:sampletypedef
-                ,markLeft:this.markLeft,markRight:this.markRight}),
               E(SelectableRichText,{ref:"srt",rows:sampletext 
               ,selections:this.state.selections
               ,onSetTextRange:this.onSetTextRange

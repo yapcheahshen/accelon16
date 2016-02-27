@@ -22,8 +22,7 @@ var orientationMixin = {
 	,onLayout:function(event){
 		var layout=event.nativeEvent.layout;
 		var isLandscape = layout.height <= windowW;
-		if (this.state.isLandscape==-1 //unknown yet
-			|| this.state.isLandscape!==isLandscape) {
+		if (this.state.isLandscape!==isLandscape) {
 			this.orientationChanged(isLandscape);
 			this.setState({isLandscape:isLandscape});
 		}

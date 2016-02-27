@@ -1,17 +1,23 @@
 /* action dispatcher */
-import EventEmitter from "react-native/Libraries/vendor/emitter/EventEmitter";
-var ee = new EventEmitter();
+var {queueTask}=require("./eventqueue");
+
 var listeners=[];
 var getters={};
-var action=function(evt,p1,p2,p3){
-	ee.emit(evt,p1,p2,p3);
+
+var action=function(evt,opts,cb){
+	for (var i=0;i<listeners.length;i+=1) {
+		var listener=listeners[i];
+		if (evt===listener[1]) {
+			queueTask( listener[2], opts,cb  );
+		}
+	}
 }
- 
-var getter=function(name,p1,p2,p3){ // immediate getter
+
+var getter=function(name,opts,cb){ // sync getter
 	if (getters[name]) {
-		return getters[name](p1,p2,p3);
+		return getters[name](opts,cb);
 	} else {
-		console.error("getter",name,"not found");
+		console.error("getter '"+name +"' not found");
 	}
 }
 
@@ -22,16 +28,11 @@ var registerGetter=function(name,cb){
 
 var store={
 	listen:function(event,cb,element){
-		ee.addListener(event,cb);
 		listeners.push([element,event,cb]);
 	}
 	,unlistenAll:function(element){
 		listeners=listeners.filter(function(listener){
-			if (listener[0]===element) {
-				ee.removeListener(listener[1],listener[2]);
-				return false;
-			}
-			return true;
+			return (listener[0]!==element) ;
 		});
 	}
 }

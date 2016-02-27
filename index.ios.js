@@ -4,14 +4,20 @@ var {
 } =React;
 var E=React.createElement;
 var mainmenu=require("./src/menu/mainmenu");
-var paragraphmenu=require("./src/menu/paragraphmenu");
-var tokenmenu=require("./src/menu/tokenmenu");
+//var paragraphmenu=require("./src/menu/paragraphmenu");
+//var tokenmenu=require("./src/menu/tokenmenu");
 var Flippable=require("./src/layout/flippable");
-var ksa=require("ksana-simple-api");
-var SRT=require("./selectable_richtext_test");
-var NAVT=require("./src/components/nav");
-var {store,action,getter,registerGetter}=require("./src/model");
 
+//var SRT=require("./selectable_richtext_test");
+var NAV=require("./src/components/nav");
+var {store,action,getter,registerGetter}=require("./src/model");
+var maintext=require("./src/model/maintext");
+var Test=React.createClass({
+  render:function(){
+    console.log("test")
+    return <View><Text>a</Text></View>
+  }
+})
 var main=React.createClass({
   childContextTypes: {
     store: React.PropTypes.object
@@ -24,24 +30,13 @@ var main=React.createClass({
     return {action,store,getter,registerGetter};
   }
   ,getInitialState:function(){
-    return {menu:mainmenu,mode:null,menuobj:null,loading:true};
-  }
-  ,componentDidMount:function(){
-     var t=new Date();    
-     ksa.open({db:"dsl_jwn"},function(err,db){
-      console.log(db.get("meta"))
-      console.log(new Date()-t);
-      setTimeout(function(){
-        this.setState({loading:false});
-      }.bind(this),500);
-    }.bind(this))
- 
+    return {menu:mainmenu,mode:null,menuobj:null,loading:false};
   }
   ,renderBody:function(){
     if (this.state.loading) {
       return <View style={{top:22}}><Text style={{fontSize:48}}>Loading</Text></View>
-    }
-    return <SRT/>
+    }//
+    return <View style={{flex:1}}><NAV model={maintext}/></View>
   }
   ,render:function(){
     return  <Flippable body={this.renderBody()} menu={this.state.menu(this.state.menuobj)}/>
