@@ -13,7 +13,7 @@ var RichTextPopupMenu=React.createClass({
 		this.context.action("selLengthPlusOne");
 	}
 	,selLengthPunc:function(){
-		this.context.action("selLengthPunc");
+		this.context.action("selLengthTillPunc");
 	}
 	,saveSelection:function(){
 		this.context.action("saveSelection");

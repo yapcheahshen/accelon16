@@ -43,8 +43,11 @@ var TextScene=React.createClass({
     }
   }
   ,getRows:function(cb) {
-    this.context.getter("segments",{db:this.props.route.db,nfile:this.props.route.nfile},function(segments){
-      cb( segments.map((uti)=> {return {uti} } ));
+    var getter=this.context.getter,db=this.props.route.db;
+    getter("segments",{db,nfile:this.props.route.nfile},function(segments){
+      getter("contents",{db, uti:segments},function(data){
+        cb(data.map(function(d){return {uti:d.uti,text:d.text}}));
+      });
     });
   }
   ,componentDidMount:function(){
@@ -53,9 +56,10 @@ var TextScene=React.createClass({
     }.bind(this));
   }
   ,onFetchText:function(row,cb) {
-  	this.context.getter("content",{db:this.props.route.db,uti:this.state.rows[row].uti},function(data){
-  		cb(0,data,row);
-  	});
+    //TODO fetch the markup
+
+    cb(0,this.state.rows[row].text,row);
+    return;
   }
   ,render : function(){
     if (!this.state.ready) {
