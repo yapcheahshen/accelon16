@@ -61,6 +61,15 @@ var TextScene=React.createClass({
     cb(0,this.state.rows[row].text,row);
     return;
   }
+  ,onSelection:function(row,selstart,sellen){
+    var selections=JSON.parse(JSON.stringify(this.state.selections));
+    if (selections[row]) {
+      selections[row].push([selstart,sellen]);
+    } else {  
+      selections[row]=[[selstart,sellen]];
+    }
+    this.setState({selections:selections});
+  }
   ,render : function(){
     if (!this.state.ready) {
       return E(View,{},E(Text,null,"Loading"));
@@ -73,6 +82,7 @@ var TextScene=React.createClass({
               ,textStyle:styles.textStyle
               ,onHyperlink:this.onHyperlink
               ,onViewportChanged:this.onViewportChanged
+              ,onSelection:this.onSelection
               ,selectedStyle:styles.selectedStyle
               ,selectedTextStyle:styles.selectedTextStyle
               ,markups:this.state.markups

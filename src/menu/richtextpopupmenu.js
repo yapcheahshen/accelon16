@@ -16,7 +16,7 @@ var RichTextPopupMenu=React.createClass({
 		this.context.action("selLengthTillPunc");
 	}
 	,saveSelection:function(){
-		this.context.action("saveSelection");
+		this.context.action("addSelection");
 	}
 	,render:function(){
 		return E(View,{style:styles.popup}
