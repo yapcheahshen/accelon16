@@ -88,6 +88,7 @@ var maintext={
 		store.unlistenAll(this);
 	}
 	,gotoTemp:function(opts){
+		//get file from uti, and scroll to it
 		var route={db:opts.db||textRoute.db, 
 			filenames:textRoute.filenames,
 			nfile:3, index: 1 , scene: textscene , temporary:true};
@@ -100,7 +101,6 @@ var maintext={
 	}
 	,leftButtonOnPress:function(route,navigator) {
 		if (busy) return ;
-
 		if (route.temporary) {
 			navigator.pop();
 		} else {
@@ -110,7 +110,11 @@ var maintext={
 	,rightButtonOnPress:function(route,navigator) {
 		if (busy) return ;
 		if (route.temporary) {
-			console.log("rebase");
+			var r=JSON.parse(JSON.stringify(route));
+			r.temporary=false;
+			r.scene=route.scene;
+			navigator.pop();
+			navigator.resetTo(r);
 		} else {
 			nextFile(route,navigator);
 		}
@@ -121,12 +125,11 @@ var maintext={
 		} else {
 			return (route.nfile>0)?"Prev":"";
 		}
-		
 	}
 	,rightButtonText:function(route){
 		if (route.temporary) {
 			return "Rebase";
-		} else {		
+		} else {
 			if (!route.filenames)return;
 			return (route.nfile+1<route.filenames.length)?"Next":"";
 		}
