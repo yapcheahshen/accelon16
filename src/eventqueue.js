@@ -9,21 +9,21 @@ var fireEvent=function(){
 	running=true;
 
 	var task=eventqueue.pop();
-	var func=task[0], opts=task[1], cb=task[2];
+	var func=task[0], opts=task[1], cb=task[2], context=task[3];
 
 	if (func.length>1){
-		func(opts,function(err,res,res2){
+		func.call(context,opts,function(err,res,res2){
 			cb&&cb(err,res,res2);
 			setTimeout(fireEvent,0);
 		});
 	} else { //sync func
-		func(opts);
+		func.call(context,opts);
 		setTimeout(fireEvent,0);
 	}
 }
 
-var queueTask=function(func,opts,cb) {
-	eventqueue.unshift([func,opts,cb]);
+var queueTask=function(func,opts,cb,context) {
+	eventqueue.unshift([func,opts,cb,context]);
 	if (!running) setTimeout(fireEvent,0);
 }
 module.exports={queueTask:queueTask};

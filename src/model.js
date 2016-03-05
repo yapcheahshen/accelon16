@@ -11,7 +11,7 @@ var action=function(evt,opts,cb){
 			if (listener[2]==undefined) {
 				console.error("action has no callback",evt,listener);
 			}
-			queueTask( listener[2], opts,cb  );
+			queueTask( listener[2], opts,cb  , listener[0]);
 		}
 	}
 }
@@ -24,10 +24,11 @@ var getter=function(name,opts,cb){ // sync getter
 	}
 }
 
-var registerGetter=function(name,cb){
+var registerGetter=function(name,cb,opts){
+	opts=opts||{};
 	if (!cb && name) delete getters[name];
 	else {
-		if (getters[name]) {
+		if (getters[name] && !opts.overwrite) {
 			console.error("getter name "+name+" overwrite.");
 		}
 		getters[name]=cb;
