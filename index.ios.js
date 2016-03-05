@@ -1,6 +1,6 @@
 var React=require("react-native");
 var {
-  View,Text,Image,StyleSheet,StatusBarIOS,AppRegistry,Dimensions,LayoutAnimation,PixelRatio,Platform
+  View,Text,Image,StyleSheet,AppRegistry,Dimensions,Platform
 } =React;
 var E=React.createElement;
 var mainmenu=require("./src/menu/mainmenu");
@@ -10,8 +10,9 @@ var Flippable=require("./src/layout/flippable");
 
 //var SRT=require("./selectable_richtext_test");
 var NAV=require("./src/components/nav");
-var {store,action,getter,registerGetter}=require("./src/model");
+var {store,action,getter,registerGetter,unregisterGetter}=require("./src/model");
 var maintext=require("./src/model/maintext");
+var PT=React.PropTypes;
 var Test=React.createClass({
   render:function(){
     console.log("test")
@@ -20,14 +21,15 @@ var Test=React.createClass({
 })
 var main=React.createClass({
   childContextTypes: {
-    store: React.PropTypes.object
-    ,action:React.PropTypes.func
-    ,getter:React.PropTypes.func
-    ,registerGetter:React.PropTypes.func
+    store: PT.object
+    ,action: PT.func
+    ,getter: PT.func
+    ,registerGetter:PT.func
+    ,unregisterGetter:PT.func
   }
   ,
   getChildContext:function(){
-    return {action,store,getter,registerGetter};
+    return {action,store,getter,registerGetter,unregisterGetter};
   }
   ,getInitialState:function(){
     return {menu:mainmenu,mode:null,menuobj:null,loading:false};

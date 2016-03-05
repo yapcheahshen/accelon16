@@ -1,6 +1,6 @@
 /* singleton of maintext */
 
-var {store,action,getter,registerGetter}=require("../model");
+var {store,action,getter,registerGetter,unregisterGetter}=require("../model");
 var ksa=require("ksana-simple-api");
 var textscene=require("../scenes/text");
 var textRoute={db:'dsl_jwn', nfile:1, index: 0 , scene: textscene};
@@ -58,6 +58,12 @@ var maintext={
 		registerGetter("segments",getSegments);
 		registerGetter("db",getDB);
 		getDBFilenames(textRoute.db,cb);
+	}
+	,finalize:function(){
+		unregisterGetter("content");
+		unregisterGetter("contents");
+		unregisterGetter("segments");
+		unregisterGetter("db");
 	}
 	,leftButtonOnPress:function(route,navigator) {
 		if (busy) return ;

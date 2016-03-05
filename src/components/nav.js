@@ -55,6 +55,9 @@ var Nav=React.createClass({
       this.setState({ready:true});
     }.bind(this));
   }
+  ,componentWillUnmount:function(){
+    this.props.model.finalize();
+  }
   ,renderScene:function(route,navigator) {
     return E(route.scene, {route:route,navigator:navigator,model:this.props.model});
   }
