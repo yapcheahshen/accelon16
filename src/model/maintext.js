@@ -22,7 +22,7 @@ var getContent=function(opts,cb){
 	timer1=setTimeout(function(){
 		busy=false;
 	},300);
-	ksa.fetch({db:opts.db,uti:opts.uti},function(err,data){
+	ksa.fetch({db:opts.db,uti:opts.uti,q:opts.q},function(err,data){
 		if (!err) cb(data[0].text);
 		else console.error(err);
 	});
@@ -47,11 +47,16 @@ var getDBFilenames=function(db,cb){
 	});
 }
 
+var getDB=function(){
+	return textRoute.db;
+}
+
 var maintext={
 	init:function(cb){
 		registerGetter("content",getContent);
 		registerGetter("contents",getContents);
 		registerGetter("segments",getSegments);
+		registerGetter("db",getDB);
 		getDBFilenames(textRoute.db,cb);
 	}
 	,leftButtonOnPress:function(route,navigator) {

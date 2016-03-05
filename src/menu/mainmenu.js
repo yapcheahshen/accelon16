@@ -5,6 +5,7 @@ var {
 	LayoutAnimation,PixelRatio,Platform
 } =React;
 
+var Search=require("../search/search");
 
 var HomeView=React.createClass({
   render:function(){
@@ -14,12 +15,16 @@ var HomeView=React.createClass({
 })
 var searchicon=require("../../images/find.png");
 var linkicon=require("../../images/link.png");
+var markupicon=require("../../images/marker.png");
+var bookmarkicon=require("../../images/bookmark.png");
 var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	return [
-	{name:"搜尋",component:<HomeView/>,icon:searchicon,badgeText:'9',flex:6},
-	{name:"連結",component:<HomeView/>,icon:linkicon,badgeText:'5',flex:4},
-	{name:"設定",component:<HomeView/>,icon:settingsicon,badgeText:'2',flex:2}
+	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,badgeText:'9',flex:6},
+	{id:"search",name:"搜尋",component:<Search/>,icon:searchicon,badgeText:'9',flex:6},
+	{id:"markup",name:"標記",component:<HomeView/>,icon:markupicon,badgeText:'5',flex:4},
+	{id:"bookmark",name:"書籤",component:<HomeView/>,icon:bookmarkicon,badgeText:'5',flex:4},
+	{id:"config",name:"設定",component:<HomeView/>,icon:settingsicon,badgeText:'2',flex:2}
 	];
 };
 

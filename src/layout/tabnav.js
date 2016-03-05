@@ -17,13 +17,18 @@ var TabNav=React.createClass({
   propTypes:{
     onTabSelected:PropTypes.func
   }
+  ,contextTypes:{
+    action:PropTypes.func
+  }
   ,getInitialState:function(){
-    return {selectedTab:""}
+    return {selectedTab:""};
   }
   ,selectTab:function(item,idx){
     var selected=(this.state.selectedTab==item.name)?"":item.name;
     this.setState({ selectedTab: selected  });
     this.props.onTabSelected&&this.props.onTabSelected(selected?item:'',selected?idx:-1);
+    this.context.action("selectTab."+item.id,item); //if only need to listen to a specific tab
+    this.context.action("selectTab",item); //list to all tab
   }
   ,renderTab:function(item,idx) {
     return  <TabNavigator.Item

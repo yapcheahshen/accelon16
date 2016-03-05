@@ -1,7 +1,7 @@
 /* text scene*/
 var React=require("react-native");
 var {
-  View,Text,Image,StyleSheet,LayoutAnimation,TouchableHighlight
+  View,Text,Image,StyleSheet,TouchableHighlight
 } =React;
 var E=React.createElement;
 var PT=React.PropTypes;
