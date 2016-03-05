@@ -7,7 +7,10 @@ var PT=React.PropTypes;
 var ksa=require("ksana-simple-api");
 
 var ResultListView=React.createClass({
-	getInitialState:function(){
+	contextTypes:{
+		action:PT.func
+	}
+	,getInitialState:function(){
 		this.items=this.props.items.slice();
 		var ds=new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2});
 		return {dataSource:ds.cloneWithRows(this.props.items)};
@@ -25,7 +28,7 @@ var ResultListView=React.createClass({
 	}
 	,goText:function(i){
 		var item=this.props.items[i];
-		console.log(item);
+		this.context.action("gotoTemp",{uti:item.uti,db:this.props.db});
 	}
 	,renderRow:function(rowdata,rid,idx) {
 		return E(TouchableOpacity ,{onPress:this.goText.bind(this,idx)},

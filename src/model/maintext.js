@@ -51,6 +51,26 @@ var getDB=function(){
 	return textRoute.db;
 }
 
+var prevFile=function(route,navigator){
+	var nfile=route.nfile;
+	if (nfile===0) return;		
+	var newroute=JSON.parse(JSON.stringify(route));
+	newroute.nfile=nfile-1;
+	newroute.scene=route.scene;
+	newroute.title=newroute.nfile;
+	navigator.replace(newroute);		
+}
+var nextFile=function(route,navigator){
+	var nfile=route.nfile;
+	if (nfile+1>=route.filenames.length) return ;
+
+	var newroute=JSON.parse(JSON.stringify(route));
+	newroute.nfile=nfile+1;
+	newroute.scene=route.scene;
+	newroute.title=newroute.nfile;
+	navigator.replace(newroute);
+}
+
 var maintext={
 	init:function(cb){
 		registerGetter("content",getContent);
@@ -58,47 +78,65 @@ var maintext={
 		registerGetter("segments",getSegments);
 		registerGetter("db",getDB);
 		getDBFilenames(textRoute.db,cb);
+		store.listen("gotoTemp",this.gotoTemp,this);
 	}
 	,finalize:function(){
 		unregisterGetter("content");
 		unregisterGetter("contents");
 		unregisterGetter("segments");
 		unregisterGetter("db");
+		store.unlistenAll(this);
+	}
+	,gotoTemp:function(opts){
+		var route={db:opts.db||textRoute.db, 
+			filenames:textRoute.filenames,
+			nfile:3, index: 1 , scene: textscene , temporary:true};
+		if (this.navigator.getCurrentRoutes().length===1) {
+			this.navigator.push(route);
+		} else {
+			route.nfile++;
+			this.navigator.replace(route);
+		}
 	}
 	,leftButtonOnPress:function(route,navigator) {
 		if (busy) return ;
-		var nfile=route.nfile;
-		if (nfile===0) return;
 
-		var newroute=JSON.parse(JSON.stringify(route));
-		newroute.nfile=nfile-1;
-		newroute.scene=route.scene;
-		newroute.title=newroute.nfile;
-		navigator.replace(newroute);
+		if (route.temporary) {
+			navigator.pop();
+		} else {
+			prevFile(route,navigator);
+		}
 	}
 	,rightButtonOnPress:function(route,navigator) {
 		if (busy) return ;
-		var nfile=route.nfile;
-		if (nfile+1>=route.filenames.length) return ;
-
-		var newroute=JSON.parse(JSON.stringify(route));
-		newroute.nfile=nfile+1;
-		newroute.scene=route.scene;
-		newroute.title=newroute.nfile;
-		navigator.replace(newroute);
+		if (route.temporary) {
+			console.log("rebase");
+		} else {
+			nextFile(route,navigator);
+		}
 	}
 	,leftButtonText:function(route){
-		return (route.nfile>0)?"Prev":"";
+		if (route.temporary) {
+			return "Back";
+		} else {
+			return (route.nfile>0)?"Prev":"";
+		}
+		
 	}
 	,rightButtonText:function(route){
-		if (!route.filenames)return;
-		return (route.nfile+1<route.filenames.length)?"Next":"";
+		if (route.temporary) {
+			return "Rebase";
+		} else {		
+			if (!route.filenames)return;
+			return (route.nfile+1<route.filenames.length)?"Next":"";
+		}
 	}
 	,getTitle:function(route) {
 		if (!route.filenames)return;
 		return route.filenames[route.nfile];
 	}
 	,initialRoute:textRoute
+	,initialRouteStack:[textRoute]
 }
 
 module.exports=maintext;

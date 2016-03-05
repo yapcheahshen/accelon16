@@ -51,8 +51,10 @@ var Nav=React.createClass({
     return (nextProps.model!==this.props.model || nextState.ready!==this.state.ready)
   }
   ,componentWillMount:function(){ 
+
     this.props.model.init(function(){
       this.setState({ready:true});
+      this.props.model.navigator=this.refs.nav;
     }.bind(this));
   }
   ,componentWillUnmount:function(){
@@ -66,7 +68,7 @@ var Nav=React.createClass({
   }
 	,render:function(){
     if (!this.state.ready) return E(View);
-		return <Navigator model={this.props.model}
+		return <Navigator ref="nav" model={this.props.model}
       navigationBar={E(NavigationBar,{style:styles.navBar,routeMapper:NavigationBarRouteMapper})}
     	initialRouteStack={this.props.model.initialRouteStack}
       initialRoute={this.props.model.initialRoute}

@@ -33,7 +33,7 @@ var SearchOutput=React.createClass({
 		if (this.state.searching) {
 			return E(Text,{},"Searching");
 		}
-		return E(ResultList,{fontSize:20,items:this.state.items});
+		return E(ResultList,{db:this.props.db,fontSize:20,items:this.state.items});
 	}
 });
 
