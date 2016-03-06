@@ -13,11 +13,13 @@ var Search=React.createClass({
 		,getter:PT.func
 	}
 	,getInitialState:function(){
-		return {q:"世間"};//
+		var q="世間";
+		this.context.action("setQ",{q});
+		return {q};//
 	}
 	,doSearch:function(q){
 		this.setState({q});
-		this.context.action("fulltextsearch",{q});
+		this.context.action("setQ",{q});
 	}
 	,componentDidMount:function(){
 		this.context.store.listen("selectTab.search",this.onSearchTab,this);

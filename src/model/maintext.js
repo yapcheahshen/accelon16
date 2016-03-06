@@ -34,7 +34,7 @@ var getContents=function(opts,cb){
 	timer1=setTimeout(function(){
 		busy=false;
 	},300);
-	ksa.fetch({db:opts.db,uti:opts.uti},function(err,data){
+	ksa.fetch({db:opts.db,uti:opts.uti,q:opts.q},function(err,data){
 		if (!err) cb(data)
 		else console.error(err);
 	});
@@ -79,6 +79,7 @@ var maintext={
 		registerGetter("db",getDB);
 		getDBFilenames(textRoute.db,cb);
 		store.listen("gotoTemp",this.gotoTemp,this);
+		store.listen("setQ",this.setQ,this);
 	}
 	,finalize:function(){
 		unregisterGetter("content");
@@ -86,6 +87,9 @@ var maintext={
 		unregisterGetter("segments");
 		unregisterGetter("db");
 		store.unlistenAll(this);
+	}
+	,setQ:function(opts){
+		this.q=opts.q;
 	}
 	,gotoTemp:function(opts){
 		//get file from uti, and scroll to it
@@ -95,7 +99,7 @@ var maintext={
 
 		var nfile=textRoute.filenames.indexOf(fn);
 
-		var route={db:opts.db||textRoute.db, 
+		var route={db:opts.db||textRoute.db, q: this.q,
 			filenames:textRoute.filenames,
 			scrollTo:nfile+"@"+sid,nfile:nfile, index: 1 , scene: textscene , temporary:true};
 		if (this.navigator.getCurrentRoutes().length===1) {

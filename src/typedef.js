@@ -1,1 +1,3 @@
-module.exports={};
+module.exports={
+	hl:{style:{color:"red"}}
+};

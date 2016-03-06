@@ -21,7 +21,7 @@ var TextScene=React.createClass({
     ,navigator:PT.object.isRequired
   }
   ,getInitialState:function(){
-  	return {markups:{},rows:[],selections:{},ready:false};
+  	return {markups:[],rows:[],selections:{},ready:false};
   }
   ,onMarkup:function(type){
     console.log(type)
@@ -35,24 +35,41 @@ var TextScene=React.createClass({
   //,shouldComponentUpdate:function(nextProps,nextState){
   //  return nextState.rows != this.state.rows ;
   //}
+  ,hits2markups:function(rows){
+    var markups=[],hits,nhit=0,i,j;
+    for (i=0;i<rows.length;i+=1) {
+      hits=rows[i].hits;
+      if (!hits || !hits.length) continue;
+      markups[i]={};
+      for (j=0;j<hits.length;j+=1) {
+        var hit=hits[j];
+        markups[i]["h"+nhit]={s:hit[0],l:hit[1],type:"hl"};
+        nhit+=1;
+      }
+    }
+    return markups;
+  }
   ,componentWillReceiveProps:function(nextProps){
     if (nextProps.route!==this.props.route) {
       this.getRows(function(rows){
-        this.setState({rows});
+        var markups=this.hits2markups(rows);
+        this.setState({rows,markups});
       }.bind(this));
     }
   }
   ,getRows:function(cb) {
-    var getter=this.context.getter,db=this.props.route.db;
-    getter("segments",{db,nfile:this.props.route.nfile},function(segments){
-      getter("contents",{db, uti:segments},function(data){
-        cb(data.map(function(d){return {uti:d.uti,text:d.text}}));
+    var getter=this.context.getter,
+      db=this.props.route.db,nfile=this.props.route.nfile,q=this.props.route.q;
+    getter("segments",{db,nfile},function(segments){
+      getter("contents",{db, uti:segments, q},function(data){
+        cb(data.map(function(d){return {uti:d.uti,text:d.text,hits:d.hits}}));
       });
     });
   }
   ,componentDidMount:function(){
     this.getRows(function(rows){
-      this.setState({rows,ready:true});
+      var markups=this.hits2markups(rows);
+      this.setState({rows,markups,ready:true});
     }.bind(this));
   }
   ,onFetchText:function(row,cb) {
