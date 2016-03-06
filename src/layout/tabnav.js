@@ -1,27 +1,38 @@
 
 var React = require('react-native');
-var {
-  PanResponder,
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  processColor,
-  ScrollView,
-  PropTypes
-} = React;
+var { StyleSheet, View, Text, Image } = React;
+var PT=React.PropTypes;
 var TabNavigator=require('react-native-tab-navigator').default;
 
 
 var TabNav=React.createClass({
   propTypes:{
-    onTabSelected:PropTypes.func
+    onTabSelected:PT.func
+    ,tabs:PT.array.isRequired
   }
   ,contextTypes:{
-    action:PropTypes.func
+    action:PT.func
+    ,store:PT.object
   }
   ,getInitialState:function(){
     return {selectedTab:""};
+  }
+  ,componentDidMount:function(){
+    this.context.store.listen("setBadge",this.onSetBadge,this);
+  }
+  ,componentWillUnmount:function(){
+    this.context.store.unlistenAll(this);
+  }
+  ,onSetBadge:function(opts){
+    var dirty=false;
+    for (var i=0;i<this.props.tabs.length;i+=1) {
+      var tab=this.props.tabs[i];
+      if (tab.id==opts.id) {
+        tab.badgeText=opts.text;
+        dirty=true;
+      }
+    }
+    if (dirty) this.forceUpdate();
   }
   ,selectTab:function(item,idx){
     var selected=(this.state.selectedTab==item.name)?"":item.name;

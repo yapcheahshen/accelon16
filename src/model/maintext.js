@@ -70,7 +70,13 @@ var nextFile=function(route,navigator){
 	newroute.title=newroute.nfile;
 	navigator.replace(newroute);
 }
-
+var rebase=function(route,navigator){ //set temporary text as base text
+	var r=JSON.parse(JSON.stringify(route));
+	delete r.q; 
+	r.scene=route.scene;
+	navigator.replacePrevious(r);
+	setTimeout(navigator.pop,0);		
+}
 var maintext={
 	init:function(cb){
 		registerGetter("content",getContent);
@@ -96,47 +102,32 @@ var maintext={
 		var p=opts.uti.lastIndexOf("@");
 		var fn=opts.uti.substr(0,p);
 		var sid=opts.uti.substr(p+1);
+		var navigator=this.navigator;
 
 		var nfile=textRoute.filenames.indexOf(fn);
 
+		var routes=navigator.getCurrentRoutes();
 		var route={db:opts.db||textRoute.db, q: this.q,
 			filenames:textRoute.filenames,
-			scrollTo:nfile+"@"+sid,nfile:nfile, index: 1 , scene: textscene , temporary:true};
-		if (this.navigator.getCurrentRoutes().length===1) {
-			this.navigator.push(route);
-		} else {
-			this.navigator.replace(route);
-		}
+			scrollTo:nfile+"@"+sid,nfile:nfile, index:routes.length  , scene: textscene};
+
+		(routes.length===1)?navigator.push(route):navigator.replace(route);
+
 	}
 	,leftButtonOnPress:function(route,navigator) {
 		if (busy) return ;
-		if (route.temporary) {
-			navigator.pop();
-		} else {
-			prevFile(route,navigator);
-		}
+		(route.index>0)?navigator.pop():prevFile(route,navigator);
 	}
 	,rightButtonOnPress:function(route,navigator) {
 		if (busy) return ;
-		if (route.temporary) {
-			var r=JSON.parse(JSON.stringify(route));
-			delete r.temporary;
-			r.scene=route.scene;
-			navigator.replacePrevious(r);
-			setTimeout(navigator.pop,0);
-		} else {
-			nextFile(route,navigator);
-		}
+		(route.index>0)?rebase(route,navigator):nextFile(route,navigator);
 	}
 	,leftButtonText:function(route){
-		if (route.temporary) {
-			return "Back";
-		} else {
-			return (route.nfile>0)?"Prev":"";
-		}
+		return (route.index>0)?"Back": ((route.nfile>0)?"Prev":"") ;
+
 	}
 	,rightButtonText:function(route){
-		if (route.temporary) {
+		if (route.index>0) {
 			return "Rebase";
 		} else {
 			if (!route.filenames)return;

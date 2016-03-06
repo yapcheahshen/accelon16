@@ -21,7 +21,7 @@ var ResultListView=React.createClass({
 	,renderKWIC:function(rowdata){
 		return ksa.renderHits(rowdata.text,rowdata.hits,function(opts,t){
 						if (t.length>10) {
-							t=opts.key===0?"":t.substr(0,5)+"..."+t.substr(t.length-5);
+							t=opts.key===0?t.substr(t.length-5):t.substr(0,5)+"..."+t.substr(t.length-5);
 						}
 						return E(Text,{key:opts.key,style:styles[opts.className]},t.trim());
 					})

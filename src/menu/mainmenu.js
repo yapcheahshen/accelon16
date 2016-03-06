@@ -20,11 +20,11 @@ var bookmarkicon=require("../../images/bookmark.png");
 var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	return [
-	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,badgeText:'9',flex:6},
-	{id:"search",name:"搜尋",component:<Search/>,icon:searchicon,badgeText:'9',flex:6},
-	{id:"markup",name:"標記",component:<HomeView/>,icon:markupicon,badgeText:'5',flex:4},
-	{id:"bookmark",name:"書籤",component:<HomeView/>,icon:bookmarkicon,badgeText:'5',flex:4},
-	{id:"config",name:"設定",component:<HomeView/>,icon:settingsicon,badgeText:'2',flex:2}
+	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,badgeText:'',flex:6},
+	{id:"search",name:"搜尋",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
+	{id:"markup",name:"標記",component:<HomeView/>,icon:markupicon,badgeText:'',flex:4},
+	{id:"bookmark",name:"書籤",component:<HomeView/>,icon:bookmarkicon,badgeText:'',flex:4},
+	{id:"config",name:"設定",component:<HomeView/>,icon:settingsicon,badgeText:'',flex:2}
 	];
 };
 
