@@ -3,7 +3,9 @@
 var {store,action,getter,registerGetter,unregisterGetter}=require("../model");
 var ksa=require("ksana-simple-api");
 var textscene=require("../scenes/text");
-var textRoute={db:'dsl_jwn', nfile:1, index: 0 , scene: textscene};
+var markups=require("./samplemarkups");
+
+var textRoute={db:'dsl_jwn', nfile:1, index: 0 , scene: textscene ,markups:markups[1]};
 var busy=false;//waiting for layout , prevent double click on next/prev button
 var timer1;
 
@@ -58,6 +60,7 @@ var prevFile=function(route,navigator){
 	newroute.nfile=nfile-1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
+	newroute.markups=markups[newroute.nfile];
 	navigator.replace(newroute);		
 }
 var nextFile=function(route,navigator){
@@ -68,6 +71,7 @@ var nextFile=function(route,navigator){
 	newroute.nfile=nfile+1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
+	newroute.markups=markups[newroute.nfile];
 	navigator.replace(newroute);
 }
 var rebase=function(route,navigator){ //set temporary text as base text

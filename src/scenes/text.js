@@ -35,12 +35,12 @@ var TextScene=React.createClass({
   //,shouldComponentUpdate:function(nextProps,nextState){
   //  return nextState.rows != this.state.rows ;
   //}
-  ,hits2markups:function(rows){
-    var markups=[],hits,nhit=0,i,j;
+  ,hits2markups:function(markups,rows){
+    var hits,nhit=0,i,j;
     for (i=0;i<rows.length;i+=1) {
       hits=rows[i].hits;
       if (!hits || !hits.length) continue;
-      markups[i]={};
+      if (!markups[i]) markups[i]={};
       for (j=0;j<hits.length;j+=1) {
         var hit=hits[j];
         markups[i]["h"+nhit]={s:hit[0],l:hit[1],type:"hl"};
@@ -49,10 +49,24 @@ var TextScene=React.createClass({
     }
     return markups;
   }
+  ,buildMarkups:function(rawmarkups,rows){
+    var markups=[];
+    var segments=rows.map(function(r){return r.uti});
+    for (var m in rawmarkups) {
+      var i=segments.indexOf(m);
+      if (i>-1) {
+        markups[i]=rawmarkups[m];
+      } else {
+        console.warn("segment id "+m+" not found");
+      }
+    }
+
+    return this.hits2markups(markups,rows);
+  }
   ,componentWillReceiveProps:function(nextProps){
     if (nextProps.route!==this.props.route) {
       this.getRows(function(rows){
-        var markups=this.hits2markups(rows);
+        var markups=this.buildMarkups(nextProps.route.markups||{},rows);
         this.setState({rows,markups});
       }.bind(this));
     }
@@ -68,7 +82,7 @@ var TextScene=React.createClass({
   }
   ,componentDidMount:function(){
     this.getRows(function(rows){
-      var markups=this.hits2markups(rows);
+      var markups=this.buildMarkups(this.props.route.markups||{},rows);
       this.setState({rows,markups,ready:true});
     }.bind(this));
   }
