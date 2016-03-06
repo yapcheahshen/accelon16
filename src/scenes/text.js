@@ -87,6 +87,7 @@ var TextScene=React.createClass({
               ,selectedTextStyle:styles.selectedTextStyle
               ,markups:this.state.markups
               ,typedef:typedef
+              ,scrollTo:this.props.route.scrollTo
               ,onFetchText:this.onFetchText
               ,popup:E(RichTextPopupMenu)})
  	      );

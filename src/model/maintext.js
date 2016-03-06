@@ -89,13 +89,18 @@ var maintext={
 	}
 	,gotoTemp:function(opts){
 		//get file from uti, and scroll to it
+		var p=opts.uti.lastIndexOf("@");
+		var fn=opts.uti.substr(0,p);
+		var sid=opts.uti.substr(p+1);
+
+		var nfile=textRoute.filenames.indexOf(fn);
+
 		var route={db:opts.db||textRoute.db, 
 			filenames:textRoute.filenames,
-			nfile:3, index: 1 , scene: textscene , temporary:true};
+			scrollTo:nfile+"@"+sid,nfile:nfile, index: 1 , scene: textscene , temporary:true};
 		if (this.navigator.getCurrentRoutes().length===1) {
 			this.navigator.push(route);
 		} else {
-			route.nfile++;
 			this.navigator.replace(route);
 		}
 	}
@@ -111,10 +116,10 @@ var maintext={
 		if (busy) return ;
 		if (route.temporary) {
 			var r=JSON.parse(JSON.stringify(route));
-			r.temporary=false;
+			delete r.temporary;
 			r.scene=route.scene;
-			navigator.pop();
-			navigator.resetTo(r);
+			navigator.replacePrevious(r);
+			setTimeout(navigator.pop,0);
 		} else {
 			nextFile(route,navigator);
 		}
