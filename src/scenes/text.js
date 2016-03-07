@@ -35,7 +35,7 @@ var TextScene=React.createClass({
   ,onSetTextRange:function(rowid,sel){
 
   }
-  ,onViewportChanged:function(start,end) {
+  ,onViewport:function(start,end) {
 
   }
   //,shouldComponentUpdate:function(nextProps,nextState){
@@ -118,7 +118,7 @@ var TextScene=React.createClass({
               ,onSetTextRange:this.onSetTextRange
               ,textStyle:styles.textStyle
               ,onHyperlink:this.onHyperlink
-              ,onViewportChanged:this.onViewportChanged
+              ,onViewport:this.onViewport
               ,onSelection:this.onSelection
               ,selectedStyle:styles.selectedStyle
               ,selectedTextStyle:styles.selectedTextStyle
