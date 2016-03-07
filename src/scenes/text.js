@@ -26,6 +26,12 @@ var TextScene=React.createClass({
   ,onMarkup:function(type){
     console.log(type)
   }
+  ,onHyperlink:function(markups,para){
+    var M=this.state.markups[para];
+    //TODO , handle multiple markup on same position
+    var target=M[markups[0]].target, db=target.db||this.props.route.db ;
+    this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l });
+  }
   ,onSetTextRange:function(rowid,sel){
 
   }

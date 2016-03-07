@@ -28,7 +28,7 @@ var ResultListView=React.createClass({
 	}
 	,goText:function(i){
 		var item=this.props.items[i];
-		this.context.action("gotoTemp",{uti:item.uti,db:this.props.db});
+		this.context.action("pushText",{uti:item.uti,db:this.props.db,replace:true});
 	}
 	,renderRow:function(rowdata,rid,idx) {
 		return E(TouchableOpacity ,{onPress:this.goText.bind(this,idx)},

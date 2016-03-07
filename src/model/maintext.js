@@ -3,9 +3,9 @@
 var {store,action,getter,registerGetter,unregisterGetter}=require("../model");
 var ksa=require("ksana-simple-api");
 var textscene=require("../scenes/text");
-var markups=require("./samplemarkups");
+var Markups=require("./samplemarkups");
 
-var textRoute={db:'dsl_jwn', nfile:1, index: 0 , scene: textscene ,markups:markups[1]};
+var textRoute={db:'dsl_jwn', nfile:1, index: 0 , scene: textscene ,markups:Markups[1]};
 var busy=false;//waiting for layout , prevent double click on next/prev button
 var timer1;
 
@@ -44,8 +44,7 @@ var getContents=function(opts,cb){
 
 var getDBFilenames=function(db,cb){
 	ksa.open({db:db},function(err,db){
-		textRoute.filenames=db.get("filenames");
-		cb();
+		cb(db.get("filenames"));
 	});
 }
 
@@ -60,7 +59,7 @@ var prevFile=function(route,navigator){
 	newroute.nfile=nfile-1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
-	newroute.markups=markups[newroute.nfile];
+	newroute.markups=Markups[newroute.nfile];
 	navigator.replace(newroute);		
 }
 var nextFile=function(route,navigator){
@@ -71,7 +70,7 @@ var nextFile=function(route,navigator){
 	newroute.nfile=nfile+1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
-	newroute.markups=markups[newroute.nfile];
+	newroute.markups=Markups[newroute.nfile];
 	navigator.replace(newroute);
 }
 var rebase=function(route,navigator){ //set temporary text as base text
@@ -87,8 +86,11 @@ var maintext={
 		registerGetter("contents",getContents);
 		registerGetter("segments",getSegments);
 		registerGetter("db",getDB);
-		getDBFilenames(textRoute.db,cb);
-		store.listen("gotoTemp",this.gotoTemp,this);
+		getDBFilenames(textRoute.db,function(filenames){
+			textRoute.filenames=filenames;
+			cb();
+		});
+		store.listen("pushText",this.pushText,this);
 		store.listen("setQ",this.setQ,this);
 	}
 	,finalize:function(){
@@ -101,22 +103,48 @@ var maintext={
 	,setQ:function(opts){
 		this.q=opts.q;
 	}
-	,gotoTemp:function(opts){
-		//get file from uti, and scroll to it
-		var p=opts.uti.lastIndexOf("@");
-		var fn=opts.uti.substr(0,p);
-		var sid=opts.uti.substr(p+1);
+	,pushText:function(opts){
+		//TODO fetch filenames
 		var navigator=this.navigator;
-
-		var nfile=textRoute.filenames.indexOf(fn);
-
 		var routes=navigator.getCurrentRoutes();
-		var route={db:opts.db||textRoute.db, q: this.q,
-			filenames:textRoute.filenames,
-			scrollTo:nfile+"@"+sid,nfile:nfile, index:routes.length  , scene: textscene};
+		var q=this.q;
 
-		(routes.length===1)?navigator.push(route):navigator.replace(route);
+		getDBFilenames(opts.db,function(filenames){
+		//get file from uti, and scroll to it
+			var p=opts.uti.lastIndexOf("@");
+			var fn=opts.uti.substr(0,p);
+			var nfile=parseInt(fn);
+			var sid=opts.uti.substr(p+1);
+			if (isNaN(parseInt(fn))){
+				nfile=filenames.indexOf(fn);
+			}
+			
+			if (isNaN(nfile)||nfile===-1) {
+				console.warn("invalid uti"+opts.uti);
+				return;
+			}
+			var targetuti=nfile+"@"+sid;
 
+			var markups=Markups[nfile]||{};
+
+			if (opts.s>-1 && opts.l>0) {
+				markups=JSON.parse(JSON.stringify(markups));
+				if (!markups[targetuti]) {
+					markups[targetuti]={};
+				}
+				markups[targetuti]["__flashhint__"]={s:opts.s,l:opts.l,type:"flashhint",ttl:3000};
+			}
+
+			var route={q, db:opts.db, s: opts.s , l:opts.l,
+			filenames:textRoute.filenames,markups,
+			scrollTo:targetuti,nfile:nfile, index:routes.length, scene: textscene};
+
+			if (opts.replace) {
+				(routes.length===1)?navigator.push(route):navigator.replace(route);
+			} else {
+				navigator.push(route);
+			}
+		});
 	}
 	,leftButtonOnPress:function(route,navigator) {
 		if (busy) return ;

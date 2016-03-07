@@ -6,4 +6,5 @@ module.exports={
 	textDecorationColor:"brown",textDecorationStyle:"solid"}}	
 		,synonym2:{style:{textDecorationLine:"underline",
 	textDecorationColor:"brown",textDecorationStyle:"dotted"}}	
+	,flashhint:{style:{backgroundColor:"red"}}
 };
