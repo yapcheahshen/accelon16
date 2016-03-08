@@ -11,8 +11,8 @@ var Button = React.createClass({
   },
   render: function() {
     return E(TouchableHighlight,{underlayColor:"rgba(0,0,0,0.3)",onPress:this._handlePress},
-        E(View,{style:(this.props.styles||styles).button},
-          E(Text,{style:(this.props.styles||styles).buttonText},this.props.text))
+        E(View,{style:[styles.button,this.props.style]},
+          E(Text,{style:[styles.buttonText,this.props.buttonStyle]},this.props.text))
     );
   }
 });

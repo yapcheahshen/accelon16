@@ -36,7 +36,7 @@ var getContents=function(opts,cb){
 	timer1=setTimeout(function(){
 		busy=false;
 	},300);
-	ksa.fetch({db:opts.db,uti:opts.uti,q:opts.q},function(err,data){
+	ksa.fetch({db:opts.db,uti:opts.uti,q:opts.q,fields:"head",asMarkup:true},function(err,data){
 		if (!err) cb(data)
 		else console.error(err);
 	});
@@ -44,7 +44,12 @@ var getContents=function(opts,cb){
 
 var getDBFilenames=function(db,cb){
 	ksa.open({db:db},function(err,db){
-		cb(db.get("filenames"));
+		if (err) {
+			console.error(err);
+		} else{
+
+			cb(db.get("filenames"));
+		}
 	});
 }
 
@@ -83,7 +88,6 @@ var camp=function(route,navigator){ //set temporary text as base text
 }
 
 var parseUti=function(uti,filenames){
-	var p=uti.lastIndexOf("@");
 	var fn=uti.substr(0,p);
 	var nfile=parseInt(fn);
 	var sid=uti.substr(p+1);
@@ -98,12 +102,23 @@ var scrollToUti=function(uti,route) {
 	action("scrollToUti",{uti,route});
 }
 
+var getTOC=function(opts,cb) {
+	ksa.toc({db:opts.db,vpos:opts.vpos,tocname:opts.tocname},function(err,toc){
+		if (err) {
+			console.error(err);
+		} else {
+			cb(toc);
+		}
+	});
+}
+
 var maintext={
 	init:function(cb){
 		registerGetter("content",getContent);
 		registerGetter("contents",getContents);
 		registerGetter("segments",getSegments);
 		registerGetter("db",getDB);
+		registerGetter("toc",getTOC);
 		getDBFilenames(textRoute.db,function(filenames){
 			textRoute.filenames=filenames;
 			cb();
@@ -116,6 +131,7 @@ var maintext={
 		unregisterGetter("contents");
 		unregisterGetter("segments");
 		unregisterGetter("db");
+		unregisterGetter("toc");
 		store.unlistenAll(this);
 	}
 	,setQ:function(opts){
@@ -141,8 +157,12 @@ var maintext={
 			var targetuti=nfile+"@"+sid;
 
 			if (routes.length>1 && r.db===opts.db && r.scene===textscene && r.nfile===nfile) {
-				scrollToUti(targetuti, r);
-				return;
+				if (opts.replaceCamp && routes.length>1) {
+					//let navigator resetTo 
+				} else {
+					scrollToUti(targetuti, r);
+					return;					
+				}
 			}			
 
 			var markups=Markups[nfile]||{};
@@ -161,6 +181,8 @@ var maintext={
 
 			if (opts.replace) {
 				(routes.length===1)?navigator.push(route):navigator.replace(route);
+			} else if (opts.replaceCamp) {
+				navigator.resetTo(route);
 			} else {
 				navigator.push(route);
 			}

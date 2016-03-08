@@ -8,6 +8,7 @@ var PT=React.PropTypes;
 
 var {SelectableRichText}=require("ksana-selectable-richtext");
 var RichTextPopupMenu=require("../menu/richtextpopupmenu");
+var HeadPopupMenu=require("../menu/headpopupmenu");
 var typedef=require("../typedef");
 
 var TextScene=React.createClass({
@@ -28,8 +29,14 @@ var TextScene=React.createClass({
   }
   ,onHyperlink:function(markups,para){
     var M=this.state.markups[para];
+    var first=M[markups[0]];
+
     //TODO , handle multiple markup on same position
-    var target=M[markups[0]].target, db=target.db||this.props.route.db ;
+    var target=first.target;
+    if (!target && first.type==="head") {
+      return E(HeadPopupMenu,{type:"head",vpos:first.vpos,db:this.props.route.db});
+    }
+    var db=target.db||this.props.route.db ;
     this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l });
   }
   ,onSetTextRange:function(rowid,sel){
@@ -55,6 +62,39 @@ var TextScene=React.createClass({
     }
     return markups;
   }
+  ,tag2markups:function(rows){ //convert kdb internal tag format to markup format
+    var markups=[],ntag=0;
+    for (var i=0;i<rows.length;i+=1) {
+      var tags=rows[i].tags;
+      for (var tag in tags) {
+        var T=tags[tag];
+        if (!T.texts.length) break;
+
+        for (var j=0;j<T.texts.length;j+=1) {
+          if (!markups[i]) markups[i]={};
+          var p=T.realpos[j];
+          var vpos=T.vpos[j][0]+T.vpos[j][1]; //end of tag
+          markups[i][ tag+ntag ] = {s:p[0], l :p[1], type:tag ,vpos};
+          ntag++;
+        }
+      }
+    }
+    return markups;
+  }
+  ,combineMarkups:function(M1,M2) {
+    if (!M1.length) return M2;
+    if (!M2.length) return M1;
+    var o=[];
+    for (var i=0;i<M1.length;i+=1) {
+      if (M1[i]) o[i]=M1[i];
+    }
+    for (var j=0;j<M2.length;j+=1) {
+      if (!M2[i]) continue;
+      if (!o[i]) o[i]=M2[i];
+      else o[i] = Object.assign(o[i],M2[i]);
+    }
+    return o;
+  }
   ,buildMarkups:function(rawmarkups,rows){
     var markups=[];
     var segments=rows.map(function(r){return r.uti});
@@ -67,7 +107,10 @@ var TextScene=React.createClass({
       }
     }
 
-    return this.hits2markups(markups,rows);
+    var externals=this.hits2markups(markups,rows);
+    var internals=this.tag2markups(rows);
+
+    return this.combineMarkups(internals,externals);
   }
   ,componentWillReceiveProps:function(nextProps){
     if (nextProps.route!==this.props.route) {
@@ -82,7 +125,7 @@ var TextScene=React.createClass({
       db=this.props.route.db,nfile=this.props.route.nfile,q=this.props.route.q;
     getter("segments",{db,nfile},function(segments){
       getter("contents",{db, uti:segments, q},function(data){
-        cb(data.map(function(d){return {uti:d.uti,text:d.text,hits:d.hits}}));
+        cb(data.map(function(d){return {uti:d.uti,text:d.text,hits:d.hits,tags:d.markups}}));
       });
     });
   }

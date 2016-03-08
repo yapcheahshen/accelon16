@@ -1,7 +1,7 @@
 module.exports={
 	"1":{
 		"1@義因文顯":{
-			'm1':{s:7,l:4,type:'link',target:{ uti:'2@即白佛言',s:0,l:5 } }
+			'm1':{s:9,l:4,type:'link',target:{ uti:'2@即白佛言',s:0,l:5 } }
 		}
 		,"1@證信序":{
 			'm2':{s:1,l:3,type:'synonym'}

@@ -1,3 +1,4 @@
+
 module.exports={
 	hl:{style:{color:"red"}}
 	,link:{style:{textDecorationLine:"underline",
@@ -7,4 +8,5 @@ module.exports={
 		,synonym2:{style:{textDecorationLine:"underline",
 	textDecorationColor:"brown",textDecorationStyle:"dotted"}}	
 	,flashhint:{style:{backgroundColor:"red"}}
+	,"head":{style:{fontFamily:"DFKai-SB"}}
 };
