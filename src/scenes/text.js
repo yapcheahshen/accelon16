@@ -91,6 +91,15 @@ var TextScene=React.createClass({
       var markups=this.buildMarkups(this.props.route.markups||{},rows);
       this.setState({rows,markups,ready:true});
     }.bind(this));
+
+    this.context.store.listen("scrollToUti",this.scrollToUti,this);
+  }
+  ,componentWillUnmount:function(){
+    this.context.store.unlistenAll(this);
+  }
+  ,scrollToUti:function(opts){
+    if (opts.route!==this.props.route) return;
+    this.refs.srt.scrollToUti(opts.uti);
   }
   ,onFetchText:function(row,cb) {
     //TODO fetch the markup

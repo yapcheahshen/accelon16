@@ -5,7 +5,7 @@ var ksa=require("ksana-simple-api");
 var textscene=require("../scenes/text");
 var Markups=require("./samplemarkups");
 
-var textRoute={db:'dsl_jwn', nfile:1, index: 0 , scene: textscene ,markups:Markups[1]};
+var textRoute={id:'root', db:'dsl_jwn', nfile:1, index: 0 , scene: textscene ,markups:Markups[1]};
 var busy=false;//waiting for layout , prevent double click on next/prev button
 var timer1;
 
@@ -73,13 +73,31 @@ var nextFile=function(route,navigator){
 	newroute.markups=Markups[newroute.nfile];
 	navigator.replace(newroute);
 }
-var rebase=function(route,navigator){ //set temporary text as base text
+var camp=function(route,navigator){ //set temporary text as base text
 	var r=JSON.parse(JSON.stringify(route));
 	delete r.q; 
 	r.scene=route.scene;
+	textRoute=r;
 	navigator.replacePrevious(r);
 	setTimeout(navigator.pop,0);		
 }
+
+var parseUti=function(uti,filenames){
+	var p=uti.lastIndexOf("@");
+	var fn=uti.substr(0,p);
+	var nfile=parseInt(fn);
+	var sid=uti.substr(p+1);
+	if (isNaN(parseInt(fn))){
+		nfile=filenames.indexOf(fn);
+	}
+			
+	return {nfile,sid};	
+}
+
+var scrollToUti=function(uti,route) {
+	action("scrollToUti",{uti,route});
+}
+
 var maintext={
 	init:function(cb){
 		registerGetter("content",getContent);
@@ -103,27 +121,29 @@ var maintext={
 	,setQ:function(opts){
 		this.q=opts.q;
 	}
+
 	,pushText:function(opts){
 		//TODO fetch filenames
 		var navigator=this.navigator;
 		var routes=navigator.getCurrentRoutes();
 		var q=this.q;
+		var scrollToText=this.sc
 
 		getDBFilenames(opts.db,function(filenames){
-		//get file from uti, and scroll to it
-			var p=opts.uti.lastIndexOf("@");
-			var fn=opts.uti.substr(0,p);
-			var nfile=parseInt(fn);
-			var sid=opts.uti.substr(p+1);
-			if (isNaN(parseInt(fn))){
-				nfile=filenames.indexOf(fn);
-			}
-			
+		//parse UTI , should move into ksana-simple-api
+			var {sid,nfile}=parseUti(opts.uti,filenames);
+			var r=routes[routes.length-1];
+
 			if (isNaN(nfile)||nfile===-1) {
 				console.warn("invalid uti"+opts.uti);
 				return;
 			}
 			var targetuti=nfile+"@"+sid;
+
+			if (routes.length>1 && r.db===opts.db && r.scene===textscene && r.nfile===nfile) {
+				scrollToUti(targetuti, r);
+				return;
+			}			
 
 			var markups=Markups[nfile]||{};
 
@@ -136,7 +156,7 @@ var maintext={
 			}
 
 			var route={q, db:opts.db, s: opts.s , l:opts.l,
-			filenames:textRoute.filenames,markups,
+			filenames:filenames,markups,
 			scrollTo:targetuti,nfile:nfile, index:routes.length, scene: textscene};
 
 			if (opts.replace) {
@@ -152,7 +172,7 @@ var maintext={
 	}
 	,rightButtonOnPress:function(route,navigator) {
 		if (busy) return ;
-		(route.index>0)?rebase(route,navigator):nextFile(route,navigator);
+		(route.index>0)?camp(route,navigator):nextFile(route,navigator);
 	}
 	,leftButtonText:function(route){
 		return (route.index>0)?"Back": ((route.nfile>0)?"Prev":"") ;
@@ -160,7 +180,7 @@ var maintext={
 	}
 	,rightButtonText:function(route){
 		if (route.index>0) {
-			return "Rebase";
+			return "Camp";
 		} else {
 			if (!route.filenames)return;
 			return (route.nfile+1<route.filenames.length)?"Next":"";
