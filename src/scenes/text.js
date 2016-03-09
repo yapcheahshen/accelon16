@@ -34,7 +34,7 @@ var TextScene=React.createClass({
     //TODO , handle multiple markup on same position
     var target=first.target;
     if (!target && first.type==="head") {
-      return E(HeadPopupMenu,{type:"head",vpos:first.vpos,db:this.props.route.db});
+      return E(HeadPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.route.db});
     }
     var db=target.db||this.props.route.db ;
     this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l });
