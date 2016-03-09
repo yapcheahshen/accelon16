@@ -8,7 +8,7 @@ var PT=React.PropTypes;
 
 var {SelectableRichText}=require("ksana-selectable-richtext");
 var RichTextPopupMenu=require("../menu/richtextpopupmenu");
-var HeadPopupMenu=require("../menu/headpopupmenu");
+var TOCPopupMenu=require("../menu/tocpopupmenu");
 var typedef=require("../typedef");
 
 var TextScene=React.createClass({
@@ -34,7 +34,7 @@ var TextScene=React.createClass({
     //TODO , handle multiple markup on same position
     var target=first.target;
     if (!target && first.type==="head") {
-      return E(HeadPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.route.db});
+      return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.route.db});
     }
     var db=target.db||this.props.route.db ;
     this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l });
@@ -88,10 +88,12 @@ var TextScene=React.createClass({
     for (var i=0;i<M1.length;i+=1) {
       if (M1[i]) o[i]=M1[i];
     }
-    for (var j=0;j<M2.length;j+=1) {
+    for (var i=0;i<M2.length;i+=1) {
       if (!M2[i]) continue;
       if (!o[i]) o[i]=M2[i];
-      else o[i] = Object.assign(o[i],M2[i]);
+      else {
+        for (var j in M2[i]) o[i][j] = M2[i][j];
+      }
     }
     return o;
   }

@@ -88,6 +88,7 @@ var camp=function(route,navigator){ //set temporary text as base text
 }
 
 var parseUti=function(uti,filenames){
+	var p=uti.lastIndexOf("@");
 	var fn=uti.substr(0,p);
 	var nfile=parseInt(fn);
 	var sid=uti.substr(p+1);
