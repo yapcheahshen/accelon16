@@ -36,8 +36,11 @@ var TextScene=React.createClass({
     if (!target && first.type==="head") {
       return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.route.db});
     }
-    var db=target.db||this.props.route.db ;
-    this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l });
+    if (target) {
+      var db=target.db||this.props.route.db ;
+      this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l }); 
+    }
+
   }
   ,onSetTextRange:function(rowid,sel){
 
@@ -105,7 +108,7 @@ var TextScene=React.createClass({
       if (i>-1) {
         markups[i]=rawmarkups[m];
       } else {
-        console.warn("segment id "+m+" not found");
+        //console.warn("segment id "+m+" not found");
       }
     }
 

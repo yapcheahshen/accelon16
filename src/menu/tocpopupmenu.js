@@ -41,13 +41,13 @@ var HeadPopupMenu=React.createClass({
 		var child=parent+1;
 		if (child && toc[child].d==toc[parent].d+1) {
 			while (child && toc[child]) {
-				var item={text:toc[child].t,n:child};
+				var item={text:toc[child].t,idx:child};
 				//if (child===now) item.selected=true;
 				
-				if (toc[child+1].d===toc[child].d+1) item.hasChild=true;
+				if (toc[child+1] && toc[child+1].d===toc[child].d+1) item.hasChild=true;
 				o.push(item);
 
-				if (toc[child+1].d===toc[child].d) {
+				if (toc[child+1] && toc[child+1].d===toc[child].d) {
 					child++;
 				} else {
 					child=toc[child].n;
@@ -80,14 +80,20 @@ var HeadPopupMenu=React.createClass({
 		}.bind(this));
 	}
 	,onSelectChild:function(row){
-		var n=this.state.rows[row].n;
-		this.getToc(this.state.toc[n+1].vpos+1);
+		var idx=this.state.rows[row].idx;
+		this.getToc(this.state.toc[idx+1].vpos+1);
 	}
 	,onSelectAncestor:function(ancestor) {
 		this.getToc(this.state.toc[ancestor+1].vpos+1);	
 	}
-	,jump:function(){
-		//this.context.action("pushText",{db:this.props.db,replaceCamp:true});
+	,jump:function(row){
+		var idx=this.state.rows[row].idx;
+		var vpos=this.state.toc[idx].vpos;
+		var text=this.state.toc[idx].t;
+		//assume toc node at beginning of paragraph , need to get real position for scrollTo s,l
+		this.context.getter("vpos2pos",{db:this.props.db,vpos},function(res){
+			this.context.action("pushText",{db:this.props.db,replaceCamp:true,uti:res.uti});
+		}.bind(this));
 	}
 	,renderAncestor:function(ancestor,idx){
 		var A=this.state.toc[ancestor];
@@ -108,7 +114,8 @@ var HeadPopupMenu=React.createClass({
 				E(Text,{onPress:rowData.hasChild?this.onSelectChild.bind(this,idx):null ,
 					style:[styles.item,rowData.hasChild?styles.selectableItem:null] },
 					rowData.text)
-				,rowData.selected?null:E(Text,{onPress:this.jump},"     ",E(Image,{source:jumpIcon,height:18,width:24}),"     \n")	
+				,rowData.selected?null:E(Text,{onPress:this.jump.bind(this,idx)}
+					,"     ",E(Image,{source:jumpIcon,height:18,width:24}),"     \n")	
 			);
 	}
 	,render:function(){

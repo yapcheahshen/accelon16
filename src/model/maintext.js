@@ -113,6 +113,11 @@ var getTOC=function(opts,cb) {
 	});
 }
 
+var vpos2pos=function(opts,cb) {
+	ksa.vpos2uti(opts,function(err,res){
+		cb({uti:res[0],pos:0});
+	});
+}
 var maintext={
 	init:function(cb){
 		registerGetter("content",getContent);
@@ -120,6 +125,7 @@ var maintext={
 		registerGetter("segments",getSegments);
 		registerGetter("db",getDB);
 		registerGetter("toc",getTOC);
+		registerGetter("vpos2pos",vpos2pos);
 		getDBFilenames(textRoute.db,function(filenames){
 			textRoute.filenames=filenames;
 			cb();
@@ -133,6 +139,7 @@ var maintext={
 		unregisterGetter("segments");
 		unregisterGetter("db");
 		unregisterGetter("toc");
+		unregisterGetter("vpos2pos");
 		store.unlistenAll(this);
 	}
 	,setQ:function(opts){
@@ -183,6 +190,7 @@ var maintext={
 			if (opts.replace) {
 				(routes.length===1)?navigator.push(route):navigator.replace(route);
 			} else if (opts.replaceCamp) {
+				route.index=0;
 				navigator.resetTo(route);
 			} else {
 				navigator.push(route);
