@@ -4,7 +4,7 @@ var {
 } =React;
 var E=React.createElement;
 var mainmenu=require("./src/menu/mainmenu");
-//var paragraphmenu=require("./src/menu/paragraphmenu");
+var paragraphmenu=require("./src/menu/paragraphmenu");
 //var tokenmenu=require("./src/menu/tokenmenu");
 var Flippable=require("./src/layout/flippable");
 
@@ -27,8 +27,16 @@ var main=React.createClass({
     ,registerGetter:PT.func
     ,unregisterGetter:PT.func
   }
-  ,
-  getChildContext:function(){
+  ,componentDidMount:function(){
+    store.listen("selectingParagraph",this.selectingParagraph,this);
+  }
+  ,componentWillUnmount:function(){
+    store.unlistenAll(this);
+  }
+  ,selectingParagraph:function(n){
+    this.setState({menu:n===-1?mainmenu:paragraphmenu});
+  }
+  ,getChildContext:function(){
     return {action,store,getter,registerGetter,unregisterGetter};
   }
   ,getInitialState:function(){

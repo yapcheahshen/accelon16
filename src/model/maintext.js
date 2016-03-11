@@ -145,7 +145,6 @@ var maintext={
 	,setQ:function(opts){
 		this.q=opts.q;
 	}
-
 	,pushText:function(opts){
 		//TODO fetch filenames
 		var navigator=this.navigator;

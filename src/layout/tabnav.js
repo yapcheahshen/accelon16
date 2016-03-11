@@ -42,6 +42,8 @@ var TabNav=React.createClass({
     this.context.action("selectTab",item); //list to all tab
   }
   ,renderTab:function(item,idx) {
+    var onPress= item.onPress ||  this.selectTab.bind(this,item,idx) ;
+
     return  <TabNavigator.Item
     selected={this.state.selectedTab ===item.name}
     title={item.name} 
@@ -50,7 +52,7 @@ var TabNav=React.createClass({
     renderSelectedIcon={() => <Image style={{width:28,height:28}}
      source={item.selectedIcon||item.icon} />}
     badgeText={item.badgeText||""}
-    onPress={()=>this.selectTab(item,idx)}>
+    onPress={onPress} >
     <View style={{flex:1}}>{item.component}</View>
     </TabNavigator.Item>
   }

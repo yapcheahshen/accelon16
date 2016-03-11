@@ -11,7 +11,7 @@ var H=Dimensions.get("window").height;
 
 var Button=require("../components/button");
 var jumpIcon=require("../../images/next.png");
-var homeIcon=require("../../images/home.png");
+var homeIcon=require("../../images/kewen.png");
 var HeadPopupMenu=React.createClass({
 	getInitialState: function() {
 	  var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -19,6 +19,7 @@ var HeadPopupMenu=React.createClass({
 	  return {
 	  	ancestors:[],
 	  	rows:rows,
+	  	shownow:true,
 	    dataSource: ds.cloneWithRows(rows),
 	  };
 	}
@@ -42,7 +43,7 @@ var HeadPopupMenu=React.createClass({
 		if (child && toc[child].d==toc[parent].d+1) {
 			while (child && toc[child]) {
 				var item={text:toc[child].t,idx:child};
-				//if (child===now) item.selected=true;
+				if (child===now && this.state.shownow) item.now=true;
 				
 				if (toc[child+1] && toc[child+1].d===toc[child].d+1) item.hasChild=true;
 				o.push(item);
@@ -76,7 +77,7 @@ var HeadPopupMenu=React.createClass({
 			var ancestors=toc.nodeseq.slice(0,toc.nodeseq.length-1);
 			var dataSource=this.state.dataSource.cloneWithRows( rows );
 			if (vpos) LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-			this.setState({dataSource,rows,ancestors,toc:toc.toc});
+			this.setState({dataSource,rows,ancestors,toc:toc.toc,shownow:false});
 		}.bind(this));
 	}
 	,onSelectChild:function(row){
@@ -112,9 +113,9 @@ var HeadPopupMenu=React.createClass({
 	,renderRow:function(rowData,col,idx){
 		return E(View,{style:styles.child},
 				E(Text,{onPress:rowData.hasChild?this.onSelectChild.bind(this,idx):null ,
-					style:[styles.item,rowData.hasChild?styles.selectableItem:null] },
+					style:[styles.item,rowData.hasChild?styles.selectableItem:null,rowData.now?styles.now:null] },
 					rowData.text)
-				,rowData.selected?null:E(Text,{onPress:this.jump.bind(this,idx)}
+				,E(Text,{onPress:this.jump.bind(this,idx)}
 					,"     ",E(Image,{source:jumpIcon,height:18,width:24}),"     \n")	
 			);
 	}
@@ -129,6 +130,7 @@ var HeadPopupMenu=React.createClass({
 var styles=StyleSheet.create({
 	popup:{width:W-40,overflow:'hidden'} //deduct size of landscape tabbar at the right
 	,children:{margin:5,flexDirection:'column'}
+	,now:{backgroundColor:'rgb(192,192,192)',borderRadius:10}
 	,ancestors:{backgroundColor:'rgb(200,200,200)'}
 	,ancestor:{fontFamily:"DFKai-SB",fontSize:22,lineHeight:28}
 	,item:{fontFamily:"DFKai-SB",fontSize:24}

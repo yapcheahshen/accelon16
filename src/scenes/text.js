@@ -130,7 +130,7 @@ var TextScene=React.createClass({
       db=this.props.route.db,nfile=this.props.route.nfile,q=this.props.route.q;
     getter("segments",{db,nfile},function(segments){
       getter("contents",{db, uti:segments, q},function(data){
-        cb(data.map(function(d){return {uti:d.uti,text:d.text,hits:d.hits,tags:d.markups}}));
+        cb(data.map(function(d){return {uti:d.uti,text:d.text,hits:d.hits,tags:d.markups,vpos:d.vpos}}));
       });
     });
   }
@@ -141,9 +141,21 @@ var TextScene=React.createClass({
     }.bind(this));
 
     this.context.store.listen("scrollToUti",this.scrollToUti,this);
+    this.context.store.listen("showToc",this.showToc,this);
   }
   ,componentWillUnmount:function(){
     this.context.store.unlistenAll(this);
+  }
+  ,showToc:function(opts){
+    if (this.props.route.index!==this.props.navigator.getCurrentRoutes().length-1) return ; //foreground only
+    if (!opts || !opts.popup)return;
+    var selecting=this.context.getter("selectingParagraph");
+    if (!this.state.rows[selecting])return;
+    if (selecting<this.state.rows.length-1) selecting+=1; //vpos of next selecting paragraph
+    var vpos=this.state.rows[selecting].vpos; 
+    
+    var popup= E(opts.popup,{popupX:3,type:"head",vpos , db:this.props.route.db});
+    this.context.action("showTocPopup",{popup});
   }
   ,scrollToUti:function(opts){
     if (opts.route!==this.props.route) return;
