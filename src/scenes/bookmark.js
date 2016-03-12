@@ -55,12 +55,7 @@ var Bookmark=React.createClass({
 		this.onChanged();
 	}
 	,rows:[]
-	,swipeoutBtns:function(id){return [
-		{
-			text:E(Image,{height:20,width:20,source:deleteButton}),
-			onPress:this.deleteBookmark.bind(this,id)
-		}	
-	]}
+
 	,getBookmarks:function(){
 		model.getBookmarks(function(rows){
 			this.rows=rows;
@@ -85,8 +80,14 @@ var Bookmark=React.createClass({
 		var row=this.rows[rowID];
 		this.context.action("pushText",{db:row.db,uti:row.uti,replace:true});
 	}
+	,getButtons:function(rowData,sectionId,rowId){
+		return [{text:E(Image,{height:20,width:20,source:deleteButton}),
+				 onPress:this.deleteBookmark.bind(this,rowId)
+				}];	
+	}
 	,renderRow:function(rowData,sectionID,rowID) {
-		return 	E(Text,{style:styles.item,onPress:this.goBookmark.bind(this,rowID)},rowData.text||rowData.uti);
+		return 	E(Text,{onPress:this.goBookmark.bind(this,rowID)
+				 ,style:styles.item},rowData.text||rowData.uti);
 	}
 	,onChanged:function(){
 		LayoutAnimation.spring();
@@ -97,7 +98,8 @@ var Bookmark=React.createClass({
 		var separator=E(View,{style:styles.sep});
 		return E(View,{style:styles.container,flex:1,onLayout:this.onLayout},
 				E(Controls,{...this.state,onChanged:this.onChanged,landscape,width:this.width}),
-				E(SwipableListView,{rows:this.rows,	renderRow:this.renderRow , separator, getButtons:this.swipeoutBtns})
+				E(SwipableListView,{rows:this.rows,	renderRow:this.renderRow 
+								, separator, getButtons:this.getButtons})
 			);
 	}
 });

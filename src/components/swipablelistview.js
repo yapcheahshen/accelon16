@@ -9,7 +9,8 @@ var SwipeOut=require("react-native-swipeout");
 var SwipableListView=React.createClass({
 	propTypes:{
 		renderRow:PT.func.isRequired,
-		rows:PT.array.isRequired
+		rows:PT.array.isRequired,
+		getButtons:PT.func.isRequired
 	}
 	,componentDidMount:function(){
 		this.rows=this.props.rows;
@@ -47,7 +48,7 @@ var SwipableListView=React.createClass({
 	}
 	,renderRow:function(rowData,sectionID,rowID) {
 		return E(View,{},
-				E(SwipeOut,{left:this.props.getButtons(rowID),sectionID,rowID,close:!rowData.active,
+				E(SwipeOut,{left:this.props.getButtons(rowData,sectionID,rowID),sectionID,rowID,close:!rowData.active,
 					onOpen:(sectionID, rowID) => this._handleSwipeout(sectionID, rowID),
 					scroll: event => this._allowScroll(event)}
 				 ,this.props.renderRow(rowData,sectionID,rowID)
