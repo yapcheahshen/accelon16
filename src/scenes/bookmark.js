@@ -1,12 +1,12 @@
 
 var React=require("react-native");
 var {
-  View,Text,TextInput,Image,StyleSheet,TouchableOpacity,ListView,PixelRatio,LayoutAnimation
+  View,Text,TextInput,Image,StyleSheet,TouchableOpacity,PixelRatio,LayoutAnimation
 } =React;
 var E=React.createElement;
 var PT=React.PropTypes;
 var model=require("../model/bookmark");
-var SwipeOut=require("react-native-swipeout");
+var SwipableListView=require("../components/swipablelistview");
 
 var Controls=React.createClass({
 	contextTypes:{
@@ -46,25 +46,25 @@ var Bookmark=React.createClass({
     	,store: PT.object
     	,getter:PT.func
 	}
+	,getInitialState:function(){
+		return this.context.getter("viewport");
+	}	
 	,width:300
 	,deleteBookmark:function(n){
 		model.deleteBookmark(n);
 		this.onChanged();
 	}
-	,row:[]
+	,rows:[]
 	,swipeoutBtns:function(id){return [
 		{
 			text:E(Image,{height:20,width:20,source:deleteButton}),
 			onPress:this.deleteBookmark.bind(this,id)
 		}	
 	]}
-	,getInitialState:function(){
-		return this.context.getter("viewport");
-	}
 	,getBookmarks:function(){
 		model.getBookmarks(function(rows){
 			this.rows=rows;
-			this._updateDataSource(rows);
+			this.forceUpdate();
 		}.bind(this));
 	}
 	,onLayout:function(event){
@@ -81,44 +81,12 @@ var Bookmark=React.createClass({
 	,viewport:function(opts){
 		if (opts) this.setState(opts);
 	}
-	,getInitialState:function(){
-		var ds=new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2});	
-		return {dataSource:ds.cloneWithRows([])};
-	}	
 	,goBookmark:function(rowID){
 		var row=this.rows[rowID];
 		this.context.action("pushText",{db:row.db,uti:row.uti,replace:true});
 	}
-	//  set active swipeout item
-	, _handleSwipeout: function(sectionID, rowID) {
-		var rows=this.rows.slice();
-		for (var i = 0; i < rows.length; i++) {
-			var active=rows[i].active;
-			if (i != rowID && rows[i].active) rows[i].active = false ;
-			else if (!rows[i].active) rows[i].active = true ;
-			if (rows[i].active!==active) {
-				rows[i]=JSON.parse(JSON.stringify(rows[i]));
-			}
-		}
-		this.rows=rows;
-		this._updateDataSource(rows);
-	}
-	, _updateDataSource: function(data) {
-		this.setState({
-		  dataSource: this.state.dataSource.cloneWithRows(data)
-		})
-	}	
-	, _allowScroll: function(scrollEnabled) {
-	    this.setState({ scrollEnabled: scrollEnabled })
-	}
 	,renderRow:function(rowData,sectionID,rowID) {
-		return E(View,{key:rowData.uti},
-				E(SwipeOut,{left:this.swipeoutBtns(rowID),sectionID,rowID,close:!rowData.active,
-					onOpen:(sectionID, rowID) => this._handleSwipeout(sectionID, rowID),
-					scroll: event => this._allowScroll(event)},
-				 E(Text,{style:styles.item,onPress:this.goBookmark.bind(this,rowID)},rowData.text||rowData.uti))
-				,E(View,{style:styles.sep})
-				);
+		return 	E(Text,{style:styles.item,onPress:this.goBookmark.bind(this,rowID)},rowData.text||rowData.uti);
 	}
 	,onChanged:function(){
 		LayoutAnimation.spring();
@@ -126,11 +94,10 @@ var Bookmark=React.createClass({
 	}
 	,render:function(){
 		var landscape=this.context.getter("dimension").landscape;
+		var separator=E(View,{style:styles.sep});
 		return E(View,{style:styles.container,flex:1,onLayout:this.onLayout},
 				E(Controls,{...this.state,onChanged:this.onChanged,landscape,width:this.width}),
-				E(ListView,{dataSource:this.state.dataSource,
-					scrollEnabled:this.state.scrollEnabled,
-					renderRow:this.renderRow})
+				E(SwipableListView,{rows:this.rows,	renderRow:this.renderRow , separator, getButtons:this.swipeoutBtns})
 			);
 	}
 });
