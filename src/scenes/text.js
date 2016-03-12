@@ -16,6 +16,8 @@ var TextScene=React.createClass({
     action:PT.func
     ,store: PT.object
     ,getter:PT.func
+    ,registerGetter:PT.func
+    ,unregisterGetter:PT.func
   }
   ,propTypes:{
     route:PT.object.isRequired
@@ -45,8 +47,19 @@ var TextScene=React.createClass({
   ,onSetTextRange:function(rowid,sel){
 
   }
+  ,viewportStart:0
+  ,viewportEnd:0
   ,onViewport:function(start,end) {
-
+    if (this.viewportStart!==start||this.viewportEnd!==end) {
+      this.viewportStart=start;
+      this.viewportEnd=end;
+      this.context.action("viewport",this.getViewPort());      
+    }
+  }
+  ,getViewPort:function(){
+    if (this.props.route.index!==this.props.navigator.getCurrentRoutes().length-1) return ; //foreground only
+    return {db:this.props.route.db,uti:this.state.rows[this.viewportStart].uti
+    ,start:this.viewportStart,end:this.viewportEnd};
   }
   //,shouldComponentUpdate:function(nextProps,nextState){
   //  return nextState.rows != this.state.rows ;
@@ -142,8 +155,13 @@ var TextScene=React.createClass({
 
     this.context.store.listen("scrollToUti",this.scrollToUti,this);
     this.context.store.listen("showToc",this.showToc,this);
+    this.context.registerGetter("viewport",this.getViewPort,{overwrite:true});
+  }
+  ,componentDidUpdate:function(){
+    this.context.registerGetter("viewport",this.getViewPort,{overwrite:true});
   }
   ,componentWillUnmount:function(){
+    this.context.unregisterGetter("viewport");
     this.context.store.unlistenAll(this);
   }
   ,showToc:function(opts){

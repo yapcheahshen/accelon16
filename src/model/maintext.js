@@ -82,6 +82,7 @@ var camp=function(route,navigator){ //set temporary text as base text
 	var r=JSON.parse(JSON.stringify(route));
 	delete r.q; 
 	r.scene=route.scene;
+	r.index=0;
 	textRoute=r;
 	navigator.replacePrevious(r);
 	setTimeout(navigator.pop,0);		
@@ -150,7 +151,6 @@ var maintext={
 		var navigator=this.navigator;
 		var routes=navigator.getCurrentRoutes();
 		var q=this.q;
-		var scrollToText=this.sc
 
 		getDBFilenames(opts.db,function(filenames){
 		//parse UTI , should move into ksana-simple-api

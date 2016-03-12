@@ -7,7 +7,6 @@ var {
 
 var Search=require("../search/search");
 var Bookmark=require("../scenes/bookmark");
-
 var HomeView=React.createClass({
   render:function(){
     return React.createElement(View, {style:{flex:1,backgroundColor:'yellow',height:50}},
@@ -24,7 +23,7 @@ var getMenu=function(obj){
 	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,badgeText:'',flex:6},
 	{id:"search",name:"搜尋",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
 	{id:"markup",name:"標記",component:<HomeView/>,icon:markupicon,badgeText:'',flex:4},
-	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,badgeText:'',flex:4},
+	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,badgeText:'',flex:6},
 	{id:"config",name:"設定",component:<HomeView/>,icon:settingsicon,badgeText:'',flex:2}
 	];
 };
