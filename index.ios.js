@@ -27,13 +27,27 @@ var main=React.createClass({
     ,registerGetter:PT.func
     ,unregisterGetter:PT.func
   }
+  ,selectingTab:false
+  ,selectingParagraph:-1
   ,componentDidMount:function(){
     store.listen("selectingParagraph",this.selectingParagraph,this);
+    store.listen("selectTab",this.selectTab,this);
+    store.listen("unselectTab",this.unselectTab,this);
+  }
+  ,selectTab:function(){
+    this.selectingTab=true;
+  }
+  ,unselectTab:function(){
+    this.selectingTab=false;
+    var menu=this.selectingParagraph===-1?mainmenu:paragraphmenu;
+    if (menu!==this.state.menu) this.setState({menu}); //update menu
   }
   ,componentWillUnmount:function(){
     store.unlistenAll(this);
   }
   ,selectingParagraph:function(n){
+    this.selectingParagraph=n;
+    if (this.selectingTab) return; //do not change menu when tabnav is activated
     this.setState({menu:n===-1?mainmenu:paragraphmenu});
   }
   ,getChildContext:function(){

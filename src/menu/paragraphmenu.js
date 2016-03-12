@@ -29,7 +29,7 @@ var getMenu=function(obj){
 	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,badgeText:'',flex:6},
 	{id:"search",name:"搜尋",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
 	{id:"markup",name:"標記",component:<HomeView/>,icon:markupicon,badgeText:'',flex:4},
-	{id:"tree",name:"樹",component:<Bookmark/>,icon:treeicon,badgeText:'',flex:4},
+	{id:"tree",name:"樹",component:<HomeView/>,icon:treeicon,badgeText:'',flex:4},
 	{id:"kewen",name:"科判",onPress:showToc,icon:kewenicon,badgeText:'',flex:4}
 
 	];

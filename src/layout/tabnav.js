@@ -38,8 +38,14 @@ var TabNav=React.createClass({
     var selected=(this.state.selectedTab==item.name)?"":item.name;
     this.setState({ selectedTab: selected  });
     this.props.onTabSelected&&this.props.onTabSelected(selected?item:'',selected?idx:-1);
-    this.context.action("selectTab."+item.id,item); //if only need to listen to a specific tab
-    this.context.action("selectTab",item); //list to all tab
+    if (selected) {
+      this.context.action("selectTab."+item.id,item); //if only need to listen to a specific tab
+      this.context.action("selectTab",item); //list to all tab      
+    } else {
+      this.context.action("unselectTab."+item.idx,item);
+      this.context.action("unselectTab",item);
+    }
+
   }
   ,renderTab:function(item,idx) {
     var onPress= item.onPress ||  this.selectTab.bind(this,item,idx) ;
