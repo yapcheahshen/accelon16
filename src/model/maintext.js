@@ -113,7 +113,10 @@ var getTOC=function(opts,cb) {
 		}
 	});
 }
-
+var resetMenu=function() {
+	var selectedTab=getter("selectedTab");
+	if (!selectedTab) action("selectingParagraph",-1);
+}
 var vpos2pos=function(opts,cb) {
 	ksa.vpos2uti(opts,function(err,res){
 		cb({uti:res[0],pos:0});
@@ -196,13 +199,16 @@ var maintext={
 			}
 		});
 	}
+
 	,leftButtonOnPress:function(route,navigator) {
 		if (busy) return ;
 		(route.index>0)?navigator.pop():prevFile(route,navigator);
+		resetMenu();
 	}
 	,rightButtonOnPress:function(route,navigator) {
 		if (busy) return ;
 		(route.index>0)?camp(route,navigator):nextFile(route,navigator);
+		resetMenu();
 	}
 	,leftButtonText:function(route){
 		return (route.index>0)?"Back": ((route.nfile>0)?"Prev":"") ;

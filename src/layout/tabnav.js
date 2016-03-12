@@ -13,15 +13,23 @@ var TabNav=React.createClass({
   ,contextTypes:{
     action:PT.func
     ,store:PT.object
+    ,registerGetter:PT.func
+    ,unregisterGetter:PT.func
   }
   ,getInitialState:function(){
     return {selectedTab:""};
   }
   ,componentDidMount:function(){
+    this.context.registerGetter("selectedTab",this.getSelectedTab,{overwrite:true});
     this.context.store.listen("setBadge",this.onSetBadge,this);
   }
   ,componentWillUnmount:function(){
+    this.context.unregisterGetter("selectedTab");
     this.context.store.unlistenAll(this);
+  }
+  ,selectedTab:null
+  ,getSelectedTab:function(){
+    return this.selectedTab;
   }
   ,onSetBadge:function(opts){
     var dirty=false;
@@ -40,12 +48,13 @@ var TabNav=React.createClass({
     this.props.onTabSelected&&this.props.onTabSelected(selected?item:'',selected?idx:-1);
     if (selected) {
       this.context.action("selectTab."+item.id,item); //if only need to listen to a specific tab
-      this.context.action("selectTab",item); //list to all tab      
+      this.context.action("selectTab",item); //list to all tab     
+      this.selectedTab=item; 
     } else {
       this.context.action("unselectTab."+item.idx,item);
       this.context.action("unselectTab",item);
+      this.selectedTab=null;
     }
-
   }
   ,renderTab:function(item,idx) {
     var onPress= item.onPress ||  this.selectTab.bind(this,item,idx) ;

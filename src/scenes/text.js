@@ -57,7 +57,7 @@ var TextScene=React.createClass({
     }
   }
   ,getViewPort:function(){
-    if (this.props.route.index!==this.props.navigator.getCurrentRoutes().length-1) return ; //foreground only
+    if (this.props.route.index!==this.props.navigator.getCurrentRoutes().length-1) return null ; //foreground only
     return {db:this.props.route.db,uti:this.state.rows[this.viewportStart].uti
     ,start:this.viewportStart,end:this.viewportEnd};
   }

@@ -79,7 +79,7 @@ var Bookmark=React.createClass({
 		this.context.store.unlistenAll(this);
 	}
 	,viewport:function(opts){
-		this.setState(opts);
+		if (opts) this.setState(opts);
 	}
 	,getInitialState:function(){
 		var ds=new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2});	
@@ -87,7 +87,7 @@ var Bookmark=React.createClass({
 	}	
 	,goBookmark:function(rowID){
 		var row=this.rows[rowID];
-		this.context.action("pushText",row);
+		this.context.action("pushText",{db:row.db,uti:row.uti,replace:true});
 	}
 	//  set active swipeout item
 	, _handleSwipeout: function(sectionID, rowID) {
