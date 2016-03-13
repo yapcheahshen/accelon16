@@ -18,17 +18,6 @@ var getSegments=function(opts,cb){
 	});
 }
 
-var getContent=function(opts,cb){
-	clearTimeout(timer1);
-	busy=true;
-	timer1=setTimeout(function(){
-		busy=false;
-	},300);
-	ksa.fetch({db:opts.db,uti:opts.uti,q:opts.q},function(err,data){
-		if (!err) cb(data[0].text);
-		else console.error(err);
-	});
-}
 
 var getContents=function(opts,cb){
 	clearTimeout(timer1);
@@ -36,6 +25,7 @@ var getContents=function(opts,cb){
 	timer1=setTimeout(function(){
 		busy=false;
 	},300);
+
 	ksa.fetch({db:opts.db,uti:opts.uti,q:opts.q,fields:"head",asMarkup:true},function(err,data){
 		if (!err) cb(data)
 		else console.error(err);
@@ -47,7 +37,6 @@ var getDBFilenames=function(db,cb){
 		if (err) {
 			console.error(err);
 		} else{
-
 			cb(db.get("filenames"));
 		}
 	});
@@ -115,6 +104,7 @@ var getTOC=function(opts,cb) {
 }
 var resetMenu=function() {
 	var selectedTab=getter("selectedTab");
+	 //force unselect paragraph, not a good way
 	if (!selectedTab) action("selectingParagraph",-1);
 }
 var vpos2pos=function(opts,cb) {
@@ -124,7 +114,6 @@ var vpos2pos=function(opts,cb) {
 }
 var maintext={
 	init:function(cb){
-		registerGetter("content",getContent);
 		registerGetter("contents",getContents);
 		registerGetter("segments",getSegments);
 		registerGetter("db",getDB);
@@ -138,7 +127,6 @@ var maintext={
 		store.listen("setQ",this.setQ,this);
 	}
 	,finalize:function(){
-		unregisterGetter("content");
 		unregisterGetter("contents");
 		unregisterGetter("segments");
 		unregisterGetter("db");
@@ -173,7 +161,7 @@ var maintext={
 					scrollToUti(targetuti, r);
 					return;					
 				}
-			}			
+			}
 
 			var markups=Markups[nfile]||{};
 

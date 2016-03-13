@@ -5,7 +5,7 @@ var {
 var E=React.createElement;
 var mainmenu=require("./src/menu/mainmenu");
 var paragraphmenu=require("./src/menu/paragraphmenu");
-//var tokenmenu=require("./src/menu/tokenmenu");
+var tokenmenu=require("./src/menu/tokenmenu");
 var Flippable=require("./src/layout/flippable");
 
 //var SRT=require("./selectable_richtext_test");
@@ -31,6 +31,7 @@ var main=React.createClass({
   ,selectingParagraph:-1
   ,componentDidMount:function(){
     store.listen("selectingParagraph",this.selectingParagraph,this);
+    store.listen("selectingToken",this.selectingToken,this);
     store.listen("selectTab",this.selectTab,this);
     store.listen("unselectTab",this.unselectTab,this);
   }
@@ -45,9 +46,16 @@ var main=React.createClass({
   ,componentWillUnmount:function(){
     store.unlistenAll(this);
   }
+  ,selectingToken:function(opts) {
+    console.log(opts);
+  }
+  ,selectingToken:function(opts) {
+    this.setState({menu:opts.selStart>-1?tokenmenu:paragraphmenu});
+  }
   ,selectingParagraph:function(n){
     this.selectingParagraph=n;
     if (this.selectingTab) return; //do not change menu when tabnav is activated
+
     this.setState({menu:n===-1?mainmenu:paragraphmenu});
   }
   ,getChildContext:function(){

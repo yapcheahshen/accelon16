@@ -85,8 +85,8 @@ var Bookmark=React.createClass({
 				 onPress:this.deleteBookmark.bind(this,rowId)
 				}];	
 	}
-	,renderRow:function(rowData,sectionID,rowID) {
-		return 	E(Text,{onPress:this.goBookmark.bind(this,rowID)
+	,renderRow:function(rowData,sectionId,rowId) {
+		return 	E(Text,{onPress:this.goBookmark.bind(this,rowId)
 				 ,style:styles.item},rowData.text||rowData.uti);
 	}
 	,onChanged:function(){

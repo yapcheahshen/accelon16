@@ -1,4 +1,3 @@
-/* text scene*/
 var React=require("react-native");
 var {
   View,Text,Image,StyleSheet,TouchableHighlight
@@ -130,17 +129,31 @@ var TextScene=React.createClass({
 
     return this.combineMarkups(internals,externals);
   }
-  ,componentWillReceiveProps:function(nextProps){
+  ,member2selections:function(utis,member){
+    member=member||this.state.member;
+    var selections={};
+    for (var i=0;i<member.length;i+=1) {
+      var m=member[i];
+      var paragraph=utis.indexOf(m.uti);
+      if (paragraph===-1) {
+        console.error("markup uti is invalid",m);
+      }
+      if (!selections[paragraph]) selections[paragraph]=[];
+      selections[paragraph].push([m.s,m.l,m.text]);
+    }
+    return selections;
+  }
+  ,componentWillReceiveProps:function(nextProps,nextState){
     if (nextProps.route!==this.props.route) {
       this.getRows(function(rows){
         var markups=this.buildMarkups(nextProps.route.markups||{},rows);
+        var utis=rows.map(function(r){return r.uti});
         this.setState({rows,markups});
       }.bind(this));
     }
   }
   ,getRows:function(cb) {
-    var getter=this.context.getter,
-      db=this.props.route.db,nfile=this.props.route.nfile,q=this.props.route.q;
+    var getter=this.context.getter,db=this.props.route.db,nfile=this.props.route.nfile,q=this.props.route.q;
     getter("segments",{db,nfile},function(segments){
       getter("contents",{db, uti:segments, q},function(data){
         cb(data.map(function(d){return {uti:d.uti,text:d.text,hits:d.hits,tags:d.markups,vpos:d.vpos}}));
@@ -150,11 +163,16 @@ var TextScene=React.createClass({
   ,componentDidMount:function(){
     this.getRows(function(rows){
       var markups=this.buildMarkups(this.props.route.markups||{},rows);
-      this.setState({rows,markups,ready:true});
+      var utis=rows.map(function(r){return r.uti});
+      var member=this.context.getter("getMember",{db:this.props.route.db,nfile:this.props.route.nfile});
+      var selections=this.member2selections(utis,member);
+      this.setState({rows,markups,selections,member,ready:true});
     }.bind(this));
 
     this.context.store.listen("scrollToUti",this.scrollToUti,this);
     this.context.store.listen("showToc",this.showToc,this);
+    this.context.store.listen("markupMember",this.markupMember,this);
+
     this.context.registerGetter("viewport",this.getViewPort,{overwrite:true});
   }
   ,componentDidUpdate:function(){
@@ -164,10 +182,32 @@ var TextScene=React.createClass({
     this.context.unregisterGetter("viewport");
     this.context.store.unlistenAll(this);
   }
+  ,dirtyRowBySelection:function(newsel,oldsel) {
+    var rows=this.state.rows.slice(),i;
+ 
+    var dirty={};
+    //stupid check
+    for (i in newsel) if (JSON.stringify(newsel[i])!==JSON.stringify(oldsel[i])) dirty[i]=true;
+    for (i in oldsel) if (JSON.stringify(newsel[i])!==JSON.stringify(oldsel[i])) dirty[i]=true;
+
+    for (i in dirty) {
+      rows[i]=JSON.parse(JSON.stringify(rows[i]));
+    }
+
+    return rows;
+  }
+  ,markupMember:function(member) {
+    var member=this.context.getter("getMember",{db:this.props.route.db,nfile:this.props.route.nfile});
+    var utis=this.state.rows.map(function(r){return r.uti});
+    var selections=this.member2selections(utis,member);
+
+    var rows=this.dirtyRowBySelection(selections,this.state.selections);
+    this.setState({rows,member,selections});
+  }
   ,showToc:function(opts){
     if (this.props.route.index!==this.props.navigator.getCurrentRoutes().length-1) return ; //foreground only
     if (!opts || !opts.popup)return;
-    var selecting=this.context.getter("selectingParagraph");
+    var selecting=this.context.getter("selectedParagraph");
     if (!this.state.rows[selecting])return;
     if (selecting<this.state.rows.length-1) selecting+=1; //vpos of next selecting paragraph
     var vpos=this.state.rows[selecting].vpos; 
@@ -185,14 +225,35 @@ var TextScene=React.createClass({
     cb(0,this.state.rows[row].text,row);
     return;
   }
-  ,onSelection:function(row,selstart,sellen){
+  ,buildSelections:function(selections){
+    var out=[],db=this.props.route.db;
+    for (var row in selections) {
+      var uti=this.state.rows[row].uti;
+      for (var i=0;i<selections[row].length;i+=1){
+        var s=selections[row][i][0];
+        var l=selections[row][i][1];
+        var text=selections[row][i][2];
+        out.push({db,uti:uti, s,l,text});
+      }
+    }
+    return out;
+  }
+  ,onSelection:function(opts){
     var selections=JSON.parse(JSON.stringify(this.state.selections));
-    if (selections[row]) {
-      selections[row].push([selstart,sellen]);
+    if (selections[opts.paragraph]) {
+      selections[opts.paragraph].push([opts.selStart,opts.selLength,opts.text]);
     } else {  
-      selections[row]=[[selstart,sellen]];
+      selections[opts.paragraph]=[[opts.selStart,opts.selLength,opts.text]];
     }
     this.setState({selections:selections});
+    this.context.action("addSelections",
+      {db:this.props.route.db,selections:this.buildSelections(selections)});
+  }
+  ,onSelectToken:function(opts){
+    this.context.action("selectingToken",opts);
+  }
+  ,onSelectParagraph:function(n) {
+    this.context.action("selectingParagraph",n);
   }
   ,render : function(){
     if (!this.state.ready) {
@@ -213,7 +274,9 @@ var TextScene=React.createClass({
               ,typedef:typedef
               ,scrollTo:this.props.route.scrollTo
               ,onFetchText:this.onFetchText
-              ,popup:E(RichTextPopupMenu)})
+              ,popup:E(RichTextPopupMenu)
+              ,onSelectToken:this.onSelectToken
+              ,onSelectParagraph:this.onSelectParagraph})
  	      );
   }
 

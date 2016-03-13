@@ -29,8 +29,8 @@ var SwipableListView=React.createClass({
 		var rows=this.rows.slice();
 		for (var i = 0; i < rows.length; i++) {
 			var active=rows[i].active;
-			if (i != rowID && rows[i].active) rows[i].active = false ;
-			else if (!rows[i].active) rows[i].active = true ;
+			if (i != rowID) rows[i].active = false ;
+			else rows[i].active = true ;
 			if (rows[i].active!==active) {
 				rows[i]=JSON.parse(JSON.stringify(rows[i]));
 			}

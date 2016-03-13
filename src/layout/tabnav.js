@@ -3,7 +3,8 @@ var React = require('react-native');
 var { StyleSheet, View, Text, Image } = React;
 var PT=React.PropTypes;
 var TabNavigator=require('react-native-tab-navigator').default;
-
+var BadgeText=require("../model/badgetext");
+var markupMember=require("../model/member"); //need to load first
 
 var TabNav=React.createClass({
   propTypes:{
