@@ -135,11 +135,10 @@ var TextScene=React.createClass({
     for (var i=0;i<member.length;i+=1) {
       var m=member[i];
       var paragraph=utis.indexOf(m.uti);
-      if (paragraph===-1) {
-        console.error("markup uti is invalid",m);
+      if (paragraph>-1) {
+        if (!selections[paragraph]) selections[paragraph]=[];
+        selections[paragraph].push([m.s,m.l,m.text]);
       }
-      if (!selections[paragraph]) selections[paragraph]=[];
-      selections[paragraph].push([m.s,m.l,m.text]);
     }
     return selections;
   }
@@ -247,7 +246,7 @@ var TextScene=React.createClass({
     }
     this.setState({selections:selections});
     this.context.action("addSelections",
-      {db:this.props.route.db,selections:this.buildSelections(selections)});
+      {db:this.props.route.db,nfile:this.props.route.nfile,selections:this.buildSelections(selections)});
   }
   ,onSelectToken:function(opts){
     this.context.action("selectingToken",opts);

@@ -47,6 +47,6 @@ var MarkupMember=React.createClass({
 	}
 });
 var styles={
-	item:{fontSize:20,margin:5,color:'rgb(0,122,255)'}
+	item:{fontSize:32,margin:5,color:'rgb(0,122,255)'}
 }
 module.exports=MarkupMember;

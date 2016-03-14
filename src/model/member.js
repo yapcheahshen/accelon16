@@ -17,9 +17,12 @@ var Member={
 		unregisterGetter("getMember");
 		store.unlistenAll(this);
 	}
-	,addSelections:function({db,selections}){
+	,addSelections:function({db,nfile,selections}){
 		//TODO , remove duplicate selection
-		members=members.filter(function(m){return m.db!==db});
+		members=members.filter(function(m){
+			var mnfile=parseInt(m.uti.substr(m.uti.indexOf("@")));
+			return !(m.db===db && m.nfile===nfile);
+		});
 		members=members.concat(selections);
 		action("setBadge",{id:"markup",text:members.length});
 		action("markupMember",this.getMember());
