@@ -18,15 +18,15 @@ var HomeView=React.createClass({
     	React.createElement(Text,{},"abc\nasdfasf\naasfsadfs"));
   }
 })
-var searchicon=require("../../images/find.png");
+var helpicon=require("../../images/help.png");
 var linkicon=require("../../images/link.png");
-var markupicon=require("../../images/marker.png");
+var markupicon=require("../../images/dhammagear.png");
 var bookmarkicon=require("../../images/bookmark.png");
 var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	var menu=[
+	{id:"help",name:"說明",component:<HomeView/>,icon:helpicon,badgeText:'',flex:6},
 	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,flex:6},
-	{id:"search",name:"記錄",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,flex:6},
 	{id:"config",name:"設定",component:<HomeView/>,icon:settingsicon,flex:2}
