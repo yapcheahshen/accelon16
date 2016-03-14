@@ -16,15 +16,24 @@ var HomeView=React.createClass({
 		React.createElement(Text,{},"selected "+this.props.obj.idx));
 	}
 });
-
+var copytext=function(){
+	console.log("copy text");
+}
+var google=function(){
+	console.log("google");
+}
 var searchicon=require("../../images/find.png");
 var markupicon=require("../../images/marker.png");
 var dicticon=require("../../images/dictionary.png");
+var copytexticon=require("../../images/copytext.png");
+var googleicon=require("../../images/google.png");
 var getMenu=function(obj){
 	var menu=[
 	{id:"dictionary",name:"字典",component:<HomeView/>,icon:dicticon,flex:3},
 	{id:"search",name:"選取",component:<Search/>,icon:searchicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
+	{id:"copy",name:"複製",onPress:copytext,icon:copytexticon,flex:4},
+	{id:"google",name:"Google",onPress:google,icon:googleicon,flex:4},
 	];
 	menu.forEach(function(m){m.badgeText=getter("getBadge",m.id)||""});
 	return menu;	
