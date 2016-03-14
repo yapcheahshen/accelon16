@@ -12,8 +12,7 @@ var Controls=React.createClass({
     	getter:PT.func
 	}	
 	,onPress:function(){
-		model.addBookmark({db:this.props.db,uti:this.props.uti,text:this.state.label});
-		this.props.onChanged();
+		this.props.onChanged&&this.props.onChanged();
 	}
 	,getInitialState:function(){
 		return {label:this.props.label};
@@ -22,18 +21,19 @@ var Controls=React.createClass({
 		this.setState({label});
 	}
 	,componentWillReceiveProps:function(nextProps){
-		this.setState({label:nextProps.uti});
+		this.setState({label:nextProps.label});
 	}
 	,render:function(){
 		var landscape=this.context.getter("dimension").landscape;		
 		var marginTop=landscape?15:0;
 		var marginRight=landscape?50:5;
 		var width=this.props.width-styles.labelInput.fontSize-marginRight-10;
+		var addable=this.props.canAdd&&this.state.label.length;
 
-		var canAdd=this.props.canAdd?styles.addable:null;
+		var addablestyle=addable?styles.addable:null;
 
-		var addbuttontext=E(Text,{style:[styles.addbutton,canAdd]},"+");
-		var addbutton=this.props.canAdd?E(TouchableOpacity,{onPress:this.onPress},addbuttontext):addbuttontext;
+		var addbuttontext=E(Text,{style:[styles.addbutton,addablestyle]},"+");
+		var addbutton=addable?E(TouchableOpacity,{onPress:this.onPress},addbuttontext):addbuttontext;
 	
 
 		return E(View,{style:[styles.controls,{marginTop}]}

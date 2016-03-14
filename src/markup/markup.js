@@ -8,10 +8,11 @@ var Member=require("./member");
 var model=require("../model/member");
 
 var Controls=require("./controls");
+var Help=require("./help");
+
 var MarkupEditor=React.createClass({
 	contextTypes:{
-		action:PT.func
-		,store: PT.object
+		store: PT.object
 	}	
 	,componentDidMount:function(){
 		this.context.store.listen("markupMember",this.markupMember,this);
@@ -28,10 +29,11 @@ var MarkupEditor=React.createClass({
 		return {label:firstMember,member};
 	}
 	,render:function(){
+		var M=this.state.member;
 
 		return E(View,{style:styles.container},
-			E(Controls,{label:this.state.label,canAdd:this.state.member.length})
-			,E(Member,{member:this.state.member})
+			E(Controls,{label:this.state.label,canAdd:M.length})
+			,E( M.length?Member:Help,{member:M})
 			);
 	}
 });

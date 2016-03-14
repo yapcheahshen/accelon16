@@ -8,7 +8,10 @@ var SwipableListView=require("../components/swipablelistview");
 var model=require("../model/member");
 var deleteButton=require("../../images/delete.png");
 var MarkupMember=React.createClass({
-	deleteMember:function(rowId){
+	contextTypes:{
+		action:PT.func
+	}	
+	,deleteMember:function(rowId){
 		model.remove(rowId);
 	}
 	,goMember:function(rowId){
