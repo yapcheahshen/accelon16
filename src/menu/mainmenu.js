@@ -10,7 +10,7 @@ var {getter}=require("../model");
 
 var Search=require("../search/search");
 var Bookmark=require("../scenes/bookmark");
-var MarkupEditor=require("../scenes/markupeditor");
+var Markup=require("../markup/markup");
 
 var HomeView=React.createClass({
   render:function(){
@@ -27,7 +27,7 @@ var getMenu=function(obj){
 	var menu=[
 	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,flex:6},
 	{id:"search",name:"記錄",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
-	{id:"markup",name:"標記",component:<MarkupEditor/>,icon:markupicon,flex:4},
+	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,flex:6},
 	{id:"config",name:"設定",component:<HomeView/>,icon:settingsicon,flex:2}
 	];

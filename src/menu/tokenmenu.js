@@ -9,7 +9,7 @@ var {
 var {getter}=require("../model");
 
 var Search=require("../search/search");
-var MarkupEditor=require("../scenes/markupeditor");
+var Markup=require("../markup/markup");
 var HomeView=React.createClass({
 	render:function(){
 	return React.createElement(View, {style:{flex:1,backgroundColor:'orange'}},
@@ -24,7 +24,7 @@ var getMenu=function(obj){
 	var menu=[
 	{id:"dictionary",name:"字典",component:<HomeView/>,icon:dicticon,flex:3},
 	{id:"search",name:"選取",component:<Search/>,icon:searchicon,flex:6},
-	{id:"markup",name:"標記",component:<MarkupEditor/>,icon:markupicon,flex:4},
+	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	];
 	menu.forEach(function(m){m.badgeText=getter("getBadge",m.id)||""});
 	return menu;	

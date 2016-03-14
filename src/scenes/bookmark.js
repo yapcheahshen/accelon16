@@ -26,14 +26,15 @@ var Controls=React.createClass({
 		this.setState({label:nextProps.uti});
 	}
 	,render:function(){
-		var marginTop=this.props.landscape?15:0;
-		var marginRight=this.props.landscape?50:5;
-		var width=this.props.width-styles.labelInput.fontSize-marginRight-10;
-
+		var landscape=this.context.getter("dimension").landscape;		
+		var marginTop=landscape?15:0;
+		var marginRight=landscape?50:5;
 		return E(View,{style:[styles.controls,{marginTop}]},
-				E(TextInput,{style:[styles.labelInput,{width}],value:this.state.label,autoCorrect:false,
+				E(TouchableOpacity,{onPress:this.onPress},E(Text,{style:styles.addbutton},"+"))
+				,E(TextInput,{clearButtonMode:'while-editing',
+					style:[styles.labelInput,{marginRight}],value:this.state.label,autoCorrect:false,
 					onChangeText:this.onChangeText})
-				,E(TouchableOpacity,{onPress:this.onPress},E(Text,{style:[styles.addbutton,{marginRight}]},"+"))
+				
 				
 			);
 	}
@@ -94,10 +95,10 @@ var Bookmark=React.createClass({
 		this.getBookmarks();
 	}
 	,render:function(){
-		var landscape=this.context.getter("dimension").landscape;
+
 		var separator=E(View,{style:styles.sep});
 		return E(View,{style:styles.container,flex:1,onLayout:this.onLayout},
-				E(Controls,{...this.state,onChanged:this.onChanged,landscape,width:this.width}),
+				E(Controls,{...this.state,onChanged:this.onChanged,width:this.width}),
 				E(SwipableListView,{rows:this.rows,	renderRow:this.renderRow 
 								, separator, getButtons:this.getButtons})
 			);
@@ -105,8 +106,8 @@ var Bookmark=React.createClass({
 });
 var styles={
 	controls:{alignItems:'flex-end',flexDirection:'row',justifyContent:'flex-end'},
-	addbutton:{fontSize:38,color:'rgb(0,122,255)'},
-	labelInput:{marginTop:12,marginRight:5,fontSize:24,borderRadius:5,
+	addbutton:{marginLeft:5,fontSize:38,color:'rgb(0,122,255)'},
+	labelInput:{flex:1,marginLeft:5,marginTop:12,marginRight:5,fontSize:24,borderRadius:5,
 		borderColor:'rgb(128,128,128)',height:30,borderWidth:1/PixelRatio.get()},
 	container:{backgroundColor:'rgb(240,240,240)'},
 	item:{fontSize:20,margin:5,color:'rgb(0,122,255)'},

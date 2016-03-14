@@ -9,7 +9,7 @@ var {getter}=require("../model");
 
 var Search=require("../search/search");
 var Bookmark=require("../scenes/bookmark");
-var MarkupEditor=require("../scenes/markupeditor");
+var Markup=require("../markup/markup");
 var action=require("../model").action;
 var TOCPopupMenu=require("./tocpopupmenu");
 
@@ -33,7 +33,7 @@ var getMenu=function(obj){
 	var menu=[
 	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,flex:6},
 	{id:"search",name:"歷史",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
-	{id:"markup",name:"標記",component:<MarkupEditor/>,icon:markupicon,flex:4},
+	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"tree",name:"自訂樹",component:<HomeView/>,icon:treeicon,flex:4},
 	{id:"kewen",name:"科判",onPress:showToc,icon:kewenicon,flex:4}
 
