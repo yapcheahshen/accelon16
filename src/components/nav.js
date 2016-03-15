@@ -79,7 +79,7 @@ var Nav=React.createClass({
 var styles = StyleSheet.create({
 
   navBar: {
-    backgroundColor: 'rgb(212,212,212)',
+    backgroundColor: '#f8f8f8', //default value of react-native-tab-navigator
     height:45,
   },
   navBarText: {

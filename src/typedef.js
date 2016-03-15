@@ -2,7 +2,10 @@
 module.exports={
 	hl:{style:{color:"red"}}
 	,link:{style:{textDecorationLine:"underline",
-	textDecorationColor:"blue",textDecorationStyle:"double"}}
+	textDecorationColor:"blue"}}
+	,linktarget:{style:{textDecorationLine:"underline",
+	textDecorationColor:"blue",textDecorationStyle:"dotted"}}
+
 	,synonym:{style:{textDecorationLine:"underline",
 	textDecorationColor:"brown",textDecorationStyle:"solid"}}	
 		,synonym2:{style:{textDecorationLine:"underline",

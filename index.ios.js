@@ -1,6 +1,6 @@
 var React=require("react-native");
 var {
-  View,Text,Image,StyleSheet,AppRegistry,Dimensions,Platform
+  View,Text,Image,StyleSheet,AppRegistry,Dimensions,Platform,PixelRatio
 } =React;
 var E=React.createElement;
 var mainmenu=require("./src/menu/mainmenu");
@@ -66,8 +66,16 @@ var main=React.createClass({
   }
   ,renderBody:function(){
     if (this.state.loading) {
-      return <View style={{top:22}}><Text style={{fontSize:48}}>Loading</Text></View>
-    }//
+      return <View style={{top:22,flexDirection:'row'}}>
+
+      <Text style={{fontSize:48}}>Loading</Text>
+        <Text style={{color:"#a0a0a0",fontSize:24,marginLeft:-24,marginTop:-10,
+        backgroundColor:'rgba(0,0,0,0)',borderRadius:12,width:24,height:24,justifyContent:'space-around',
+        borderWidth:1/PixelRatio.get(),borderColor:'red',borderStyle:'solid'}}>中
+      </Text>
+      <Text style={{fontSize:48}}>QQQ </Text>
+     </View>
+    }
     return <View style={{flex:1}}><NAV model={maintext}/></View>
   }
   ,render:function(){

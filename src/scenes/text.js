@@ -33,7 +33,7 @@ var TextScene=React.createClass({
     var first=M[markups[0]];
 
     //TODO , handle multiple markup on same position
-    var target=first.target;
+    var target=this.context.getter("getMarkup",{id:first.target});
     if (!target && first.type==="head") {
       return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.route.db});
     }
@@ -68,7 +68,7 @@ var TextScene=React.createClass({
     for (i=0;i<rows.length;i+=1) {
       hits=rows[i].hits;
       if (!hits || !hits.length) continue;
-      if (!markups[i]) markups[i]={};
+      if (!markups[i]) markups[i]=[];
       for (j=0;j<hits.length;j+=1) {
         var hit=hits[j];
         markups[i]["h"+nhit]={s:hit[0],l:hit[1],type:"hl"};
@@ -86,7 +86,7 @@ var TextScene=React.createClass({
         if (!T.texts.length) break;
 
         for (var j=0;j<T.texts.length;j+=1) {
-          if (!markups[i]) markups[i]={};
+          if (!markups[i]) markups[i]=[];
           var p=T.realpos[j];
           var vpos=T.vpos[j][0]+T.vpos[j][1]; //end of tag
           markups[i][ tag+ntag ] = {s:p[0], l :p[1], type:tag ,vpos};
@@ -115,10 +115,11 @@ var TextScene=React.createClass({
   ,buildMarkups:function(rawmarkups,rows){
     var markups=[];
     var segments=rows.map(function(r){return r.uti});
-    for (var m in rawmarkups) {
-      var i=segments.indexOf(m);
-      if (i>-1) {
-        markups[i]=rawmarkups[m];
+    for (var i=0;i<rawmarkups.length;i+=1) {
+      var j=segments.indexOf( rawmarkups[i].uti );
+      if (j>-1) {
+        if (!markups[j]) markups[j]=[];
+        markups[j].push(rawmarkups[i]);
       } else {
         //console.warn("segment id "+m+" not found");
       }
@@ -161,7 +162,7 @@ var TextScene=React.createClass({
   }
   ,componentDidMount:function(){
     this.getRows(function(rows){
-      var markups=this.buildMarkups(this.props.route.markups||{},rows);
+      var markups=this.buildMarkups(this.props.route.markups||[],rows);
       var utis=rows.map(function(r){return r.uti});
       var member=this.context.getter("getMember",{db:this.props.route.db,nfile:this.props.route.nfile});
       var selections=this.member2selections(utis,member);

@@ -3,9 +3,7 @@
 var {store,action,getter,registerGetter,unregisterGetter}=require("../model");
 var ksa=require("ksana-simple-api");
 var textscene=require("../scenes/text");
-var Markups=require("./samplemarkups");
-
-var textRoute={id:'root', db:'dsl_jwn', nfile:1, index: 0 , scene: textscene ,markups:Markups[1]};
+var textRoute={id:'root', db:'dsl_jwn', nfile:1, index: 0 , scene: textscene };
 var busy=false;//waiting for layout , prevent double click on next/prev button
 var timer1;
 
@@ -53,7 +51,7 @@ var prevFile=function(route,navigator){
 	newroute.nfile=nfile-1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
-	newroute.markups=Markups[newroute.nfile];
+	newroute.markups=getter("getMarkupByFile",{db:newroute.db,nfile:newroute.nfile});
 	navigator.replace(newroute);		
 }
 var nextFile=function(route,navigator){
@@ -64,7 +62,7 @@ var nextFile=function(route,navigator){
 	newroute.nfile=nfile+1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
-	newroute.markups=Markups[newroute.nfile];
+	newroute.markups=getter("getMarkupByFile",{db:newroute.db,nfile:newroute.nfile});
 	navigator.replace(newroute);
 }
 var camp=function(route,navigator){ //set temporary text as base text
@@ -121,6 +119,7 @@ var maintext={
 		registerGetter("vpos2pos",vpos2pos);
 		getDBFilenames(textRoute.db,function(filenames){
 			textRoute.filenames=filenames;
+			textRoute.markups=getter("getMarkupByFile",{db:textRoute.db,nfile:textRoute.nfile});
 			cb();
 		});
 		store.listen("pushText",this.pushText,this);
@@ -163,7 +162,7 @@ var maintext={
 				}
 			}
 
-			var markups=Markups[nfile]||{};
+			var markups=getter("getMarkupByFile",{db:opts.db,nfile})||[];
 
 			if (opts.s>-1 && opts.l>0) {
 				markups=JSON.parse(JSON.stringify(markups));
