@@ -51,7 +51,7 @@ var prevFile=function(route,navigator){
 	newroute.nfile=nfile-1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
-	newroute.markups=getter("getMarkupByFile",{db:newroute.db,nfile:newroute.nfile});
+	//newroute.markups=getter("getMarkupByFile",{db:newroute.db,nfile:newroute.nfile});
 	navigator.replace(newroute);		
 }
 var nextFile=function(route,navigator){
@@ -62,7 +62,7 @@ var nextFile=function(route,navigator){
 	newroute.nfile=nfile+1;
 	newroute.scene=route.scene;
 	newroute.title=newroute.nfile;
-	newroute.markups=getter("getMarkupByFile",{db:newroute.db,nfile:newroute.nfile});
+	//newroute.markups=getter("getMarkupByFile",{db:newroute.db,nfile:newroute.nfile});
 	navigator.replace(newroute);
 }
 var camp=function(route,navigator){ //set temporary text as base text
@@ -119,7 +119,7 @@ var maintext={
 		registerGetter("vpos2pos",vpos2pos);
 		getDBFilenames(textRoute.db,function(filenames){
 			textRoute.filenames=filenames;
-			textRoute.markups=getter("getMarkupByFile",{db:textRoute.db,nfile:textRoute.nfile});
+			//textRoute.markups=getter("getMarkupByFile",{db:textRoute.db,nfile:textRoute.nfile});
 			cb();
 		});
 		store.listen("pushText",this.pushText,this);
@@ -162,19 +162,11 @@ var maintext={
 				}
 			}
 
-			var markups=getter("getMarkupByFile",{db:opts.db,nfile})||[];
+			//var markups=getter("getMarkupByFile",{db:opts.db,nfile})||[];
 
-			if (opts.s>-1 && opts.l>0) {
-				markups=JSON.parse(JSON.stringify(markups));
-				if (!markups[targetuti]) {
-					markups[targetuti]={};
-				}
-				markups[targetuti]["__flashhint__"]={s:opts.s,l:opts.l,type:"flashhint",ttl:3000};
-			}
-
-			var route={q, db:opts.db, s: opts.s , l:opts.l,
-			filenames:filenames,markups,
-			scrollTo:targetuti,nfile:nfile, index:routes.length, scene: textscene};
+			var route={q, db:opts.db,nfile:nfile,filenames:filenames
+			, scrollTo:targetuti,s: opts.s , l:opts.l
+			, index:routes.length, scene: textscene};
 
 			if (opts.replace) {
 				(routes.length===1)?navigator.push(route):navigator.replace(route);

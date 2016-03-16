@@ -39,7 +39,31 @@ var get=function(opts){
 	if (i>-1) return markups[i];
 }
 
+var uniqueid=function(){
+	return 'm'+(Math.random()*10000000).toFixed();
+}
+var add=function(opts) {
+	var member=opts.member;
+	var affectedDB={};
+	var M=member.map(function(m){
+		affectedDB[m.db]=true;
+		return {id:uniqueid(), db:m.db,uti:m.uti,
+		type:"link",label:opts.label, s:m.s, l:m.l
+	}});
+	
+	if (M.length>2) M[0].target= M.map(function(m){return m.id}).unshift();
+	else M[0].target=M[1].id;
+
+	for (var i=1;i<M.length;i+=1) {
+		M[i].type="linktarget";
+		M[i].source=M[0].id;
+	}
+	markups=markups.concat(M);
+	buildIndex();
+	action("markupChanged",affectedDB);
+}
+
 
 registerGetter("getMarkup",get);
 registerGetter("getMarkupByFile",getByFile);
-module.exports={getByFile,get};
+module.exports={getByFile,get,add};

@@ -11,24 +11,22 @@ var Controls=React.createClass({
 	contextTypes:{
     	getter:PT.func
 	}	
-	,onPress:function(){
-		this.props.onChanged&&this.props.onChanged();
+	,propTypes:{
+		setLabel:PT.func.isRequired,
+		createMarkup:PT.func.isRequired
 	}
-	,getInitialState:function(){
-		return {label:this.props.label};
+	,onPress:function(){
+		this.props.createMarkup();
 	}
 	,onChangeText:function(label){
-		this.setState({label});
-	}
-	,componentWillReceiveProps:function(nextProps){
-		this.setState({label:nextProps.label});
+		this.props.setLabel(label);
 	}
 	,render:function(){
 		var landscape=this.context.getter("dimension").landscape;		
 		var marginTop=landscape?15:0;
 		var marginRight=landscape?50:5;
 		var width=this.props.width-styles.labelInput.fontSize-marginRight-10;
-		var addable=this.props.canAdd&&this.state.label.length;
+		var addable=this.props.canAdd&&this.props.label.length;
 
 		var addablestyle=addable?styles.addable:null;
 
@@ -39,7 +37,7 @@ var Controls=React.createClass({
 		return E(View,{style:[styles.controls,{marginTop}]}
 				,addbutton	
 				,E(TextInput,{clearButtonMode:'while-editing',
-					style:[styles.labelInput,{marginRight}],value:this.state.label,autoCorrect:false,
+					style:[styles.labelInput,{marginRight}],value:this.props.label,autoCorrect:false,
 					onChangeText:this.onChangeText})
 				
 				

@@ -143,10 +143,19 @@ var TextScene=React.createClass({
     }
     return selections;
   }
+  ,onExternalMarkupChanged:function(affectedDB){
+    var {db,nfile}=this.props.route;
+    if (!affectedDB[db]) return;//not my business
+    var externalMarkups=this.context.getter("getMarkupByFile",{db,nfile});
+    var markups=this.buildMarkups(externalMarkups,this.state.rows);
+    this.setState({markups});
+  }
   ,componentWillReceiveProps:function(nextProps,nextState){
     if (nextProps.route!==this.props.route) {
       this.getRows(function(rows){
-        var markups=this.buildMarkups(nextProps.route.markups||{},rows);
+        var r=nextProps.route;
+        var externalMarkups=this.context.getter("getMarkupByFile",{db:r.db,nfile:r.nfile});
+        var markups=this.buildMarkups(externalMarkups,rows);
         var utis=rows.map(function(r){return r.uti});
         this.setState({rows,markups});
       }.bind(this));
@@ -162,7 +171,12 @@ var TextScene=React.createClass({
   }
   ,componentDidMount:function(){
     this.getRows(function(rows){
-      var markups=this.buildMarkups(this.props.route.markups||[],rows);
+      var r=this.props.route;
+      var externalMarkups=this.context.getter("getMarkupByFile",{db:r.db,nfile:r.nfile});
+      if (r.scrollTo) {
+        externalMarkups.push({uti:r.scrollTo,s:r.s,l:r.l,type:"flashhint",ttl:3000});
+      }
+      var markups=this.buildMarkups(externalMarkups,rows);
       var utis=rows.map(function(r){return r.uti});
       var member=this.context.getter("getMember",{db:this.props.route.db,nfile:this.props.route.nfile});
       var selections=this.member2selections(utis,member);
@@ -172,8 +186,9 @@ var TextScene=React.createClass({
     this.context.store.listen("scrollToUti",this.scrollToUti,this);
     this.context.store.listen("showToc",this.showToc,this);
     this.context.store.listen("markupMember",this.markupMember,this);
-
+    this.context.store.listen("markupChanged",this.onExternalMarkupChanged,this);
     this.context.registerGetter("viewport",this.getViewPort,{overwrite:true});
+
   }
   ,componentDidUpdate:function(){
     this.context.registerGetter("viewport",this.getViewPort,{overwrite:true});
