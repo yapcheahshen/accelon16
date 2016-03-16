@@ -56,7 +56,7 @@ var add=function(opts) {
 
 	for (var i=1;i<M.length;i+=1) {
 		M[i].type="linktarget";
-		M[i].source=M[0].id;
+		M[i].target=M[0].id;
 	}
 	markups=markups.concat(M);
 	buildIndex();

@@ -1,7 +1,7 @@
 /* member of current editing/creating markups */
 var sample=[
-			{db:"dsl_jwn",uti:"1@義因文顯",s:17,l:2,text:"般若"}
-			,{db:"dsl_jwn",uti:"2@時須菩提",s:34,l:2,text:"世尊"}
+		//	{db:"dsl_jwn",uti:"1@義因文顯",s:17,l:2,text:"般若"}
+		//	,{db:"dsl_jwn",uti:"2@時須菩提",s:34,l:2,text:"世尊"}
 			//,{db:"dsl_jwn",uti:"3@佛告菩薩",s:44,l:2,text:"離相"}
 		//	,{db:"dsl_jwn",uti:"4@次第-6",s:0,l:2,text:"學者"}
 		]
@@ -34,6 +34,7 @@ var Member={
 	}
 	,clear:function(){
 		members=[];
+		action("setBadge",{id:"markup",text:""});
 		action("markupMember",members);
 	}
 	,remove:function(i){

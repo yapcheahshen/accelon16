@@ -36,7 +36,7 @@ var Controls=React.createClass({
 
 		return E(View,{style:[styles.controls,{marginTop}]}
 				,addbutton	
-				,E(TextInput,{clearButtonMode:'while-editing',
+				,E(TextInput,{clearButtonMode:'while-editing',autoCapitalize :"none",
 					style:[styles.labelInput,{marginRight}],value:this.props.label,autoCorrect:false,
 					onChangeText:this.onChangeText})
 				
