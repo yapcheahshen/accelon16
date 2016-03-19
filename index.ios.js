@@ -12,6 +12,7 @@ var Flippable=require("./src/layout/flippable");
 var NAV=require("./src/components/nav");
 var {store,action,getter,registerGetter,unregisterGetter}=require("./src/model");
 var maintext=require("./src/model/maintext");
+var downloadfile=require("./downloadfile");
 var PT=React.PropTypes;
 var Test=React.createClass({
   render:function(){
@@ -34,6 +35,11 @@ var main=React.createClass({
     store.listen("selectingToken",this.selectingToken,this);
     store.listen("selectTab",this.selectTab,this);
     store.listen("unselectTab",this.unselectTab,this);
+
+    downloadfile(function(){
+      this.setState({loading:false});
+    }.bind(this));
+
   }
   ,selectTab:function(){
     this.selectingTab=true;
@@ -62,7 +68,7 @@ var main=React.createClass({
     return {action,store,getter,registerGetter,unregisterGetter};
   }
   ,getInitialState:function(){
-    return {menu:mainmenu,mode:null,menuobj:null,loading:false};
+    return {menu:mainmenu,mode:null,menuobj:null,loading:true};
   }
   ,renderBody:function(){
     if (this.state.loading) {
