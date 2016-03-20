@@ -297,7 +297,7 @@ var TextScene=React.createClass({
 
 });
 var styles=StyleSheet.create({
-  textStyle:{fontSize:28},
+  textStyle:{fontSize:28,fontWeight:'200',lineHeight:36},
   selectedStyle:{},
   selectedTextStyle:{}
 })
