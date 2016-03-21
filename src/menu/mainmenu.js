@@ -6,7 +6,7 @@ var {
 } =React;
 
 
-var {getter}=require("../model");
+var {getter,action}=require("../model");
 
 var Search=require("../search/search");
 var Bookmark=require("../scenes/bookmark");
@@ -18,6 +18,11 @@ var HomeView=React.createClass({
     	React.createElement(Text,{},"abc\nasdfasf\naasfsadfs"));
   }
 })
+var setFont=function(){
+	var zs=getter("zoomScale");
+	console.log(zs);
+	action("setFont",-zs);
+}
 var helpicon=require("../../images/help.png");
 var linkicon=require("../../images/link.png");
 var markupicon=require("../../images/dhammagear.png");
@@ -29,7 +34,7 @@ var getMenu=function(obj){
 	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,flex:6},
-	{id:"config",name:"設定",component:<HomeView/>,icon:settingsicon,flex:2}
+	{id:"config",name:"設定",onPress:setFont,icon:settingsicon,flex:2}
 	];
 	menu.forEach(function(m){m.badgeText=getter("getBadge",m.id)||""});
 	return menu;	
