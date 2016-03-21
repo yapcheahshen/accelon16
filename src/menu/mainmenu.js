@@ -20,8 +20,7 @@ var HomeView=React.createClass({
 })
 var setFont=function(){
 	var zs=getter("zoomScale");
-	console.log(zs);
-	action("setFont",-zs);
+	action("setFontSize",-zs);
 }
 var helpicon=require("../../images/help.png");
 var linkicon=require("../../images/link.png");

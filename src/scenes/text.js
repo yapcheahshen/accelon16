@@ -1,6 +1,6 @@
 var React=require("react-native");
 var {
-  View,Text,Image,StyleSheet,TouchableHighlight
+  View,Text,Image,StyleSheet,TouchableHighlight,AsyncStorage
 } =React;
 var E=React.createElement;
 var PT=React.PropTypes;
@@ -9,6 +9,8 @@ var {SelectableRichText}=require("ksana-selectable-richtext");
 var RichTextPopupMenu=require("../menu/richtextpopupmenu");
 var TOCPopupMenu=require("../menu/tocpopupmenu");
 var typedef=require("../typedef");
+
+var fontSize=28;
 
 var TextScene=React.createClass({
   contextTypes:{
@@ -150,15 +152,14 @@ var TextScene=React.createClass({
     var markups=this.buildMarkups(externalMarkups,this.state.rows);
     this.setState({markups});
   }
+  ,componentWillMount:function(){
+    AsyncStorage.getItem("FONTSIZE",function(err,r){
+      fontSize=parseFloat(r)||fontSize;
+    });
+  }
   ,componentWillReceiveProps:function(nextProps,nextState){
     if (nextProps.route!==this.props.route) {
-      this.getRows(function(rows){
-        var r=nextProps.route;
-        var externalMarkups=this.context.getter("getMarkupByFile",{db:r.db,nfile:r.nfile});
-        var markups=this.buildMarkups(externalMarkups,rows);
-        var utis=rows.map(function(r){return r.uti});
-        this.setState({rows,markups});
-      }.bind(this));
+      this.reload(nextProps.route);
     }
   }
   ,getRows:function(cb) {
@@ -169,7 +170,17 @@ var TextScene=React.createClass({
       });
     });
   }
-  ,componentDidMount:function(){
+  ,reload:function(route){
+    route=route||this.props.route;
+    this.getRows(function(rows){
+      var r=route;
+      var externalMarkups=this.context.getter("getMarkupByFile",{db:r.db,nfile:r.nfile});
+      var markups=this.buildMarkups(externalMarkups,rows);
+      var utis=rows.map(function(r){return r.uti});
+      this.setState({rows,markups,ready:true});
+    }.bind(this));
+  }
+  ,load:function(){
     this.getRows(function(rows){
       var r=this.props.route;
       var externalMarkups=this.context.getter("getMarkupByFile",{db:r.db,nfile:r.nfile});
@@ -181,13 +192,17 @@ var TextScene=React.createClass({
       var member=this.context.getter("getMember",{db:this.props.route.db,nfile:this.props.route.nfile});
       var selections=this.member2selections(utis,member);
       this.setState({rows,markups,selections,member,ready:true});
-    }.bind(this));
+    }.bind(this));    
+  }
+  ,componentDidMount:function(){
+    this.load();
 
     this.context.store.listen("scrollToUti",this.scrollToUti,this);
     this.context.store.listen("showToc",this.showToc,this);
     this.context.store.listen("markupMember",this.markupMember,this);
     this.context.store.listen("markupChanged",this.onExternalMarkupChanged,this);
     this.context.registerGetter("viewport",this.getViewPort,{overwrite:true});
+    this.context.store.listen("setFontSize",this.setFontSize,this);
 
   }
   ,componentDidUpdate:function(){
@@ -196,6 +211,17 @@ var TextScene=React.createClass({
   ,componentWillUnmount:function(){
     this.context.unregisterGetter("viewport");
     this.context.store.unlistenAll(this);
+  }
+  ,setFontSize:function(size) {
+    if (size<0) {
+      fontSize=fontSize*Math.abs(size);
+    } else {
+      if (size<10) size=10; else if (size>48) size=48;
+      fontSize=size;
+    }
+    AsyncStorage.setItem("FONTSIZE",fontSize.toString());
+    this.setState({ready:false});
+    this.reload();
   }
   ,dirtyRowBySelection:function(newsel,oldsel) {
     var rows=this.state.rows.slice(),i;
@@ -279,7 +305,7 @@ var TextScene=React.createClass({
  	          {ref:"srt",rows:this.state.rows 
               ,selections:this.state.selections
               ,onSetTextRange:this.onSetTextRange
-              ,textStyle:styles.textStyle
+              ,textStyle:{fontWeight:'200',fontSize,lineHeight:fontSize*1.5}
               ,onHyperlink:this.onHyperlink
               ,onViewport:this.onViewport
               ,onSelection:this.onSelection
@@ -297,7 +323,6 @@ var TextScene=React.createClass({
 
 });
 var styles=StyleSheet.create({
-  textStyle:{fontSize:28,fontWeight:'200',lineHeight:36},
   selectedStyle:{},
   selectedTextStyle:{}
 })
