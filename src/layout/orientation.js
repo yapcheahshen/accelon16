@@ -2,6 +2,7 @@ var {
 	Dimensions
 } = require("react-native");
 var {registerGetter}=require("../model");
+var screenH,screenW;
 var windowH=screenH=Dimensions.get("window").height;
 var windowW=screenW=Dimensions.get("window").width;
 var isLandscape=false;

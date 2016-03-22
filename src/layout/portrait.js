@@ -38,7 +38,7 @@ var Portrait=React.createClass({
 			this.updateTab(this.state.selectedTab,nextProps.fullscreen);
 		}
 		if (nextProps.menu!==this.props.menu) {
-			nextState.selectedTab=null;
+			this.setState({selectedTab:null});
 		}		
 	}
 	,renderTab:function(){

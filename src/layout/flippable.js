@@ -8,7 +8,7 @@ var orientationMixin=require("./orientation");
 var Landscape=require("./landscape");
 var Portrait=require("./portrait");
 var Screen=require("./screen");
-
+var screenH,screenW;
 var windowH=screenH=Dimensions.get("window").height;
 var windowW=screenW=Dimensions.get("window").width;
 var isLandscape=false;
