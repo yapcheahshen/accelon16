@@ -12,6 +12,7 @@ var Search=require("../search/search");
 var Bookmark=require("../scenes/bookmark");
 var Markup=require("../markup/markup");
 
+var Translation=require("../scenes/translation");
 var HomeView=React.createClass({
   render:function(){
     return React.createElement(View, {style:{flex:1,backgroundColor:'yellow',height:50}},
@@ -30,7 +31,7 @@ var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	var menu=[
 	{id:"help",name:"說明",component:<HomeView/>,icon:helpicon,badgeText:'',flex:6},
-	{id:"intertext",name:"互文",component:<HomeView/>,icon:linkicon,flex:6},
+	{id:"translation",name:"互文",component:<Translation/>,icon:linkicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,flex:6},
 	{id:"config",name:"設定",onPress:setFont,icon:settingsicon,flex:2}

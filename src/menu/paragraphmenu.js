@@ -21,6 +21,8 @@ var HomeView=React.createClass({
   }
 })
 
+var Translation=require("../scenes/translation");
+
 var showToc=function(){
 	action("showToc",{popup:TOCPopupMenu}); //listen by maintext
 }
@@ -32,7 +34,7 @@ var kewenicon=require("../../images/kewen.png");
 var getMenu=function(obj){
 	var menu=[
 	{id:"search",name:"歷史",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
-	{id:"translation",name:"譯文",component:<HomeView/>,icon:translationicon,flex:6},
+	{id:"translation",name:"譯文",component:<Translation/>,icon:translationicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"tree",name:"自訂樹",component:<HomeView/>,icon:treeicon,flex:4},
 	{id:"kewen",name:"科判",onPress:showToc,icon:kewenicon,flex:4}

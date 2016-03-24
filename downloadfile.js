@@ -15,5 +15,20 @@ module.exports=function(cb){
 		} else {
 			cb();
 		}
-	}) 	
+	});
+	kfs.kdbExists("ds",function(exists){
+		if (!exists) {
+			console.log("download ds");
+
+			kfs.download("http://ya.ksana.tw/accelon2016/ds.kdb","",function(err,data){
+				if (!err) {
+					cb();
+				} else {
+					throw "cannot download ds";
+				}
+			});
+		} else {
+			cb();
+		}
+	});
 }

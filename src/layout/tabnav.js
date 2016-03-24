@@ -51,17 +51,22 @@ var TabNav=React.createClass({
   }
   ,selectTab:function(item){
     var selected=(this.state.selectedTab==item.name)?"":item.name;
-    this.setState({ selectedTab: selected  });
+
     this.props.onTabSelected&&this.props.onTabSelected(selected?item:'',selected?item.idx:-1);
     if (selected) {
       this.context.action("selectTab."+item.id,item); //if only need to listen to a specific tab
       this.context.action("selectTab",item); //list to all tab     
-      this.selectedTab=item; 
+      this.selectedTab=item;
+      
     } else {
-      this.context.action("unselectTab."+item.idx,item);
+      this.context.action("unselectTab."+item.id,item);
       this.context.action("unselectTab",item);
       this.selectedTab=null;
     }
+    this.setState({ selectedTab: selected },function(){
+        //HOW TO NOTIFY TAB ??
+
+    }.bind(this));
   }
   ,renderTab:function(item,idx) {
     var onPress= item.onPress ||  this.selectTab.bind(this,item,idx) ;

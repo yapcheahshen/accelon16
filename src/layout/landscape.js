@@ -41,7 +41,7 @@ var Landscape=React.createClass({
 			this.updateTab(this.state.selectedTab,nextProps.fullscreen);
 		}
 		if (nextProps.menu!==this.props.menu) {
-			nextState.selectedTab=null;
+			this.setState({selectedTab:null});
 		}
 	}
 	,paddingBottom:function(){

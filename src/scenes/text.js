@@ -48,7 +48,7 @@ var TextScene=React.createClass({
   ,onSetTextRange:function(rowid,sel){
 
   }
-  ,viewportStart:0
+  ,viewportStart:-1 //if set to 0, first load of text might not trigger onViewport
   ,viewportEnd:0
   ,onViewport:function(start,end) {
     if (this.viewportStart!==start||this.viewportEnd!==end) {
@@ -59,8 +59,9 @@ var TextScene=React.createClass({
   }
   ,getViewPort:function(){
     if (this.props.route.index!==this.props.navigator.getCurrentRoutes().length-1) return null ; //foreground only
-    return {db:this.props.route.db,uti:this.state.rows[this.viewportStart].uti
-    ,start:this.viewportStart,end:this.viewportEnd};
+    var vp=this.viewportStart;
+    if (vp<0) vp=0;
+    return {db:this.props.route.db,uti:this.state.rows[vp].uti,start:vp,end:this.viewportEnd};
   }
   //,shouldComponentUpdate:function(nextProps,nextState){
   //  return nextState.rows != this.state.rows ;
