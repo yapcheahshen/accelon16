@@ -48,7 +48,7 @@ var Translation=React.createClass({
 		this.context.store.unlistenAll(this);
 	}
 	,onViewport:function(vp){
-		this.fetchTranslation(parseInt(vp.uti));
+		if (vp && vp.uti) this.fetchTranslation(parseInt(vp.uti));
 	}
 	,renderRow:function(item,idx) {
 		return E(Text,{key:idx,style:{fontFamily:"DFKai-SB",fontSize:24,fontWeight:'200'}},item.text.trim());
