@@ -206,7 +206,7 @@ var TextMarkup=React.createClass({
       return E(View,{},E(Text,null,"Loading"));
     }
     var {name,scrollTo,isVisible}=this.props;
-    return E(this.props.component,{name,scrollTo,isVisible,
+    return E(this.props.component,{name,scrollTo,isVisible,db:this.props.db,
       reload:this.reload,markups:this.state.markups,selections:this.state.selections,
       onSelection:this.onSelection,rows:this.state.rows});
   }

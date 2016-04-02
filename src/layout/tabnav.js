@@ -50,7 +50,7 @@ var TabNav=React.createClass({
     if (dirty) this.forceUpdate();
   }
   ,selectTab:function(item){
-    var selected=(this.state.selectedTab==item.name)?"":item.name;
+    var selected=(this.state.selectedTab==item.id)?"":item.id;
 
     this.props.onTabSelected&&this.props.onTabSelected(selected?item:'',selected?item.idx:-1);
     if (selected) {
@@ -72,7 +72,7 @@ var TabNav=React.createClass({
     var onPress= item.onPress ||  this.selectTab.bind(this,item,idx) ;
 
     return  <TabNavigator.Item
-    selected={this.state.selectedTab ===item.name}
+    selected={this.state.selectedTab ===item.id}
     title={item.name} 
     key={idx}
     renderIcon={() => <Image style={{width:22,height:22}} source={item.icon} />}

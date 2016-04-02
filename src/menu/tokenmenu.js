@@ -9,13 +9,8 @@ var {
 var {getter}=require("../model");
 
 var Search=require("../search/search");
-var Markup=require("../markup/markup");
-var HomeView=React.createClass({
-	render:function(){
-	return React.createElement(View, {style:{flex:1,backgroundColor:'orange'}},
-		React.createElement(Text,{},"selected "+this.props.obj.idx));
-	}
-});
+var Markup=require("../markup/searchmarkup");
+var Dictionary=require("../scenes/dictionary");
 var copytext=function(){
 	console.log("copy text");
 }
@@ -30,8 +25,8 @@ var googleicon=require("../../images/google.png");
 var getMenu=function(obj){
 	var menu=[
 	{id:"search",name:"選取",component:<Search/>,icon:searchicon,flex:6},
-	{id:"dictionary",name:"字典",component:<HomeView/>,icon:dicticon,flex:3},
-	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
+	{id:"dictionary",name:"字典",component:<Dictionary/>,icon:dicticon,flex:3},
+	{id:"searchmarkup",name:"選取",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"copy",name:"複製",onPress:copytext,icon:copytexticon,flex:4},
 	{id:"google",name:"Google",onPress:google,icon:googleicon,flex:4},
 	];

@@ -1,7 +1,7 @@
 var {store,action,getter,registerGetter,unregisterGetter}=require("../model");
 
 var markups=[
-	{id:'m1',uti:"1@義因文顯",s:9,l:4,type:'link' ,target:"m1t"}
+	{id:'m1',uti:"1@義因文顯",s:9,l:4,type:'link' ,target:"m1t",text:"如是"}
 	,{id:'m6',uti:"1@義因文顯", s:6,l:2,type:'synonym'}
 	,{id:'m2',uti:"1@證信序",s:1,l:2,type:'synonym'}
 	,{id:'m3',uti:"1@證信序",s:7,l:2,type:'synonym2'}
@@ -39,6 +39,20 @@ var get=function(opts){
 	if (i>-1) return markups[i];
 }
 
+var list=function(text,type){
+	var out=[];
+	for (var i=0;i<markups.length;i++){
+		var m=markups[i];
+		if (text&&type) {
+			if (text===m.text && type===m.type) out.push(m);
+		} else if (text) {
+			if (text===m.text) out.push(m);
+		} else if (type) {
+			if (type===m.type) out.push(m);
+		}
+	}
+	return out;
+}
 var uniqueid=function(){
 	return 'm'+(Math.random()*10000000).toFixed();
 }
@@ -65,5 +79,6 @@ var add=function(opts) {
 
 
 registerGetter("getMarkup",get);
+registerGetter("listMarkup",list);
 registerGetter("getMarkupByFile",getByFile);
 module.exports={getByFile,get,add};

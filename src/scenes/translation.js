@@ -5,6 +5,7 @@ var {
 } =React;
 var E=React.createElement;
 var PT=React.PropTypes;
+var TextView=require("../components/textview");
 var db="ds"
 var Translation=React.createClass({
 	contextTypes:{
@@ -57,6 +58,7 @@ var Translation=React.createClass({
 		return E(View,{style:{flex:1,backgroundColor:"#CFCFCF"}},
 				E(View,{style:{height:1/PixelRatio.get(),backgroundColor:"#7f7f7f"}}),
 				E(ScrollView,{style:{flex:1}},this.state.rows.map(this.renderRow))
+				//E(TextView,{rows:this.state.rows.map(function(r){return r.text})})
 			);
 	}
 });

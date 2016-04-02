@@ -21,6 +21,7 @@ var TextView=React.createClass({
     ,unregisterGetter:PT.func
   }
   ,propTypes:{
+    db:PT.string.isRequired,
   	rows:PT.array.isRequired,
   	markups:PT.array.isRequired,
   	selections:PT.object.isRequired,

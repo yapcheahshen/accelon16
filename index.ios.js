@@ -46,7 +46,7 @@ var main=React.createClass({
   }
   ,unselectTab:function(){
     this.selectingTab=false;
-    var menu=this.selectingParagraph===-1?mainmenu:paragraphmenu;
+    var menu=this.selectingParagraph===-1?mainmenu:(this.selStart===-1?paragraphmenu:tokenmenu);
     if (menu!==this.state.menu) this.setState({menu}); //update menu
   }
   ,componentWillUnmount:function(){
@@ -56,12 +56,13 @@ var main=React.createClass({
     console.log(opts);
   }
   ,selectingToken:function(opts) {
+    this.selStart=opts.selStart;
     this.setState({menu:opts.selStart>-1?tokenmenu:paragraphmenu});
   }
   ,selectingParagraph:function(n){
     this.selectingParagraph=n;
     if (this.selectingTab) return; //do not change menu when tabnav is activated
-
+    if (n===-1) this.selStart=-1;
     this.setState({menu:n===-1?mainmenu:paragraphmenu});
   }
   ,getChildContext:function(){
