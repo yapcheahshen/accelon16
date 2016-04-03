@@ -13,7 +13,7 @@ var Search=React.createClass({
 		,getter:PT.func
 	}
 	,getInitialState:function(){
-		var q="世間";
+		var q="如是";
 		this.context.action("setQ",{q});
 		return {q};//
 	}
