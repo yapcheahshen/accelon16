@@ -19,8 +19,10 @@ var TextScene=React.createClass({
       fontSize=parseFloat(r)||fontSize;
     });
   }
-  ,onFontSize:function(fontsize) {
-    AsyncStorage.setItem("FONTSIZE",fontsize.toString());
+  ,onFontSize:function(_fontsize) {
+    fontSize=_fontsize;
+    this.forceUpdate();
+    AsyncStorage.setItem("FONTSIZE",fontSize.toString());
   }
   ,reload:function(route){
     route=route||this.props.route;

@@ -21,6 +21,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		24AFBC2A1CB41F3600AFA50B /* Default-568h.png in Resources */ = {isa = PBXBuildFile; fileRef = 24AFBC281CB41F3600AFA50B /* Default-568h.png */; };
+		24AFBC2B1CB41F3600AFA50B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 24AFBC291CB41F3600AFA50B /* Default-568h@2x.png */; };
 		24EA1B1E1C6D7C0F0043DB3B /* dfkai.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24EA1B1D1C6D7C0E0043DB3B /* dfkai.ttf */; };
 		24EA1B331C6F76360043DB3B /* kfs_ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 24EA1B301C6F76360043DB3B /* kfs_ios.m */; };
 		24EA1B341C6F76360043DB3B /* kfs_rct.m in Sources */ = {isa = PBXBuildFile; fileRef = 24EA1B321C6F76360043DB3B /* kfs_rct.m */; };
@@ -127,6 +129,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = accelon16/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = accelon16/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		24AFBC281CB41F3600AFA50B /* Default-568h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h.png"; path = "accelon16/Default-568h.png"; sourceTree = "<group>"; };
+		24AFBC291CB41F3600AFA50B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "accelon16/Default-568h@2x.png"; sourceTree = "<group>"; };
 		24EA1B1D1C6D7C0E0043DB3B /* dfkai.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = dfkai.ttf; sourceTree = "<group>"; };
 		24EA1B2F1C6F76360043DB3B /* kfs_ios.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kfs_ios.h; path = "../../ksana-react-native-module/ios/kfs_ios.h"; sourceTree = "<group>"; };
 		24EA1B301C6F76360043DB3B /* kfs_ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = kfs_ios.m; path = "../../ksana-react-native-module/ios/kfs_ios.m"; sourceTree = "<group>"; };
@@ -240,6 +244,8 @@
 		13B07FAE1A68108700A75B9A /* accelon16 */ = {
 			isa = PBXGroup;
 			children = (
+				24AFBC281CB41F3600AFA50B /* Default-568h.png */,
+				24AFBC291CB41F3600AFA50B /* Default-568h@2x.png */,
 				24EA1B2F1C6F76360043DB3B /* kfs_ios.h */,
 				24EA1B301C6F76360043DB3B /* kfs_ios.m */,
 				24EA1B311C6F76360043DB3B /* kfs_rct.h */,
@@ -521,8 +527,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24AFBC2A1CB41F3600AFA50B /* Default-568h.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				24EA1B1E1C6D7C0F0043DB3B /* dfkai.ttf in Resources */,
+				24AFBC2B1CB41F3600AFA50B /* Default-568h@2x.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

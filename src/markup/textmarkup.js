@@ -205,10 +205,10 @@ var TextMarkup=React.createClass({
     if (!this.state.ready) {
       return E(View,{},E(Text,null,"Loading"));
     }
-    var {name,scrollTo,isVisible}=this.props;
-    return E(this.props.component,{name,scrollTo,isVisible,db:this.props.db,
+    var {name,scrollTo,isVisible,onFontSize,fontSize}=this.props;
+    return E(this.props.component,{name,scrollTo,isVisible,db:this.props.db,fontSize,
       reload:this.reload,markups:this.state.markups,selections:this.state.selections,
-      onSelection:this.onSelection,rows:this.state.rows});
+      onSelection:this.onSelection,rows:this.state.rows,onFontSize});
   }
 });
 

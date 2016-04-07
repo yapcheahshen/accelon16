@@ -93,7 +93,7 @@ var TextView=React.createClass({
       if (size<10) size=10; else if (size>48) size=48;
       this.fontSize=size;
     }
-    this.props.onFontSize(this.fontSize); 
+    this.props.onFontSize && this.props.onFontSize(this.fontSize); 
     this.props.reload();
   }
   ,showToc:function(opts){
