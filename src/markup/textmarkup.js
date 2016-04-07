@@ -170,7 +170,7 @@ var TextMarkup=React.createClass({
     return selections;
   }
   ,onExternalMarkupChanged:function(affectedDB){
-    var {db,nfile}=this.props.route;
+    var {db,nfile}=this.props;
     if (!affectedDB[db]) return;//not my business
     var externalMarkups=this.context.getter("getMarkupByFile",{db,nfile});
     var markups=this.buildMarkups(externalMarkups,this.state.rows);
