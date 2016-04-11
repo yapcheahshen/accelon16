@@ -1,7 +1,7 @@
 var React = require('react-native');
 var {
   Text,
-  TouchableHighlight ,
+  TouchableOpacity ,
   View, 
 } = React;
 var E=React.createElement;
@@ -10,7 +10,7 @@ var Button = React.createClass({
     this.props.onPress&&this.props.onPress(this.props.param);
   },
   render: function() {
-    return E(TouchableHighlight,{underlayColor:"rgba(0,0,0,0.3)",onPress:this._handlePress},
+    return E(TouchableOpacity,{underlayColor:"rgba(0,0,0,0.3)",onPress:this._handlePress},
         E(View,{style:[styles.button,this.props.style]},
           E(Text,{style:[styles.buttonText,this.props.buttonStyle]},this.props.text))
     );

@@ -37,12 +37,17 @@ var NavigationBarRouteMapper={
     }
     ,Title:function(route,navigator,index,navstate) {
       var title=navigator.props.model.getTitle(route);
+
+      console.log("title",title)
       return E(Text,{style:styles.navBarTitleText},title);
     }
 }
 var Nav=React.createClass({
   propTypes:{
     model:PT.object.isRequired
+  }
+  ,contextTypes:{
+    store:PT.object.isRequired
   }
   ,getInitialState:function() {
     return {ready:false};
@@ -51,20 +56,24 @@ var Nav=React.createClass({
     return (nextProps.model!==this.props.model || nextState.ready!==this.state.ready)
   }
   ,componentWillMount:function(){ 
-
     this.props.model.init(function(){
       this.setState({ready:true});
       this.props.model.navigator=this.refs.nav;
     }.bind(this));
+
   }
+  ,componentDidMount:function(){
+    this.context.store.listen("refreshNav",this.refreshNav,this);
+  }
+  ,refreshNav:function(){
+    this.forceUpdate();
+  } 
   ,componentWillUnmount:function(){
+    this.context.store.unlistenAll();
     this.props.model.finalize();
   }
   ,renderScene:function(route,navigator) {
     return E(route.scene, {route:route,navigator:navigator,model:this.props.model});
-  }
-  ,propTypes:{
-    model:PT.object.isRequired
   }
 	,render:function(){
     if (!this.state.ready) return E(View);

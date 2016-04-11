@@ -17,8 +17,8 @@ var SearchMarkup=React.createClass({
 		return {q,markups:[{}]};//
 	}
 	,doSearch:function(q){
-		var markups=this.context.getter("listMarkup",this.state.q);
-		this.setState({markups});
+		var markups=this.context.getter("listMarkup",q);
+		this.setState({markups,q});
 	}
 	,componentDidMount:function(){
 		console.log("search markup tab mounted")

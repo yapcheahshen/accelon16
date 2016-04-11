@@ -18,7 +18,7 @@ var MarkupList=React.createClass({
 	}	
 	,renderRow:function(row,idx){
 		return E(TouchableOpacity ,{key:idx,onPress:this.goText.bind(this,idx)}
-			,E(Text,{style:styles.item},row.label));
+			,E(Text,{style:styles.item},row.text));
 	}
 	,render:function(){
 		return E(View,{},this.props.markups.map(this.renderRow));

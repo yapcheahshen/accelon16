@@ -11,7 +11,7 @@ var {getter,action}=require("../model");
 var Search=require("../search/search");
 var Bookmark=require("../scenes/bookmark");
 var Markup=require("../markup/markup");
-
+var Config=require("../scenes/config");
 var Translation=require("../scenes/translation");
 var HomeView=React.createClass({
   render:function(){
@@ -34,7 +34,7 @@ var getMenu=function(obj){
 	{id:"translation",name:"互文",component:<Translation/>,icon:linkicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
 	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,flex:6},
-	{id:"config",name:"設定",onPress:setFont,icon:settingsicon,flex:2}
+	{id:"config",name:"設定",component:<Config/>,icon:settingsicon,flex:4}
 	];
 	menu.forEach(function(m){m.badgeText=getter("getBadge",m.id)||""});
 	return menu;	

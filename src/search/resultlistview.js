@@ -32,7 +32,6 @@ var ResultListView=React.createClass({
 	}
 	,renderRow:function(rowdata,rid,idx) {
 		return E(TouchableOpacity ,{onPress:this.goText.bind(this,idx)},
-
 				E(View,null,
 				E(View,{style:styles.rowsep}),
 				E(Text,{style:{fontSize:this.props.fontSize,overflow:'hidden'}},

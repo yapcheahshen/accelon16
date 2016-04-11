@@ -9,9 +9,10 @@ var PT=React.PropTypes;
 var {SelectableRichText}=require("ksana-selectable-richtext");
 var RichTextPopupMenu=require("../menu/richtextpopupmenu");
 var TOCPopupMenu=require("../menu/tocpopupmenu");
+var ZoomScalePopup=require("../menu/zoomscale");
 var typedef=require("../typedef");
 
-
+var defaultFontSize=28;
 var TextView=React.createClass({
   contextTypes:{
     action:PT.func
@@ -31,7 +32,7 @@ var TextView=React.createClass({
   	l:PT.number,  //length of highlight
   	reload:PT.func.isRequired
   }
-  ,fontSize:28
+  ,fontSize:defaultFontSize
   ,componentWillMount:function(){
   	this.fontSize=this.props.fontSize||28;
   }
@@ -51,7 +52,6 @@ var TextView=React.createClass({
       var db=target.db||this.props.db ;
       this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l }); 
     }
-
   }
   ,onSetTextRange:function(rowid,sel){
 
@@ -62,7 +62,14 @@ var TextView=React.createClass({
     if (this.viewportStart!==start||this.viewportEnd!==end) {
       this.viewportStart=start;
       this.viewportEnd=end;
-      this.context.action("viewport",this.getViewPort());      
+      var viewport=this.getViewPort();
+      
+      this.context.action("viewport",this.getViewPort());
+
+      var uti=this.props.rows[this.viewportStart].uti;
+      var segname="/"+uti.substr(uti.lastIndexOf("@")+1);
+
+      this.context.action("setExtraTitle",segname);
     }
   }
   ,getViewPort:function(){
@@ -96,6 +103,14 @@ var TextView=React.createClass({
     this.props.onFontSize && this.props.onFontSize(this.fontSize); 
     this.props.reload();
   }
+  ,onZoomScale:function(){
+    clearTimeout(zstimer);
+    var zstimer=setTimeout(function(){
+      var di=this.context.getter("dimension");
+      var popup=E(ZoomScalePopup,{defaultFontSize});
+      this.context.action("showPopup",{popup,px:di.screenWidth/2-50,py:di.screenHeight/2-50});
+    }.bind(this),1000);
+  }
   ,showToc:function(opts){
     if (this.props.isVisible && this.props.isVisible()) return ; //foreground only
     if (!opts || !opts.popup)return;
@@ -105,7 +120,7 @@ var TextView=React.createClass({
     var vpos=this.props.rows[selecting].vpos; 
     var db=this.props.db;
     var popup= E(opts.popup,{popupX:3,type:"head",vpos , db});
-    this.context.action("showTocPopup",{popup});
+    this.context.action("showPopup",{popup});
   }
   ,scrollToUti:function(opts){
     //if (opts.route!==this.props.route) return;
@@ -142,7 +157,9 @@ var TextView=React.createClass({
               ,onFetchText:this.onFetchText
               ,popup:E(RichTextPopupMenu)
               ,onSelectToken:this.onSelectToken
-              ,onSelectParagraph:this.onSelectParagraph})
+              ,onSelectParagraph:this.onSelectParagraph
+              ,onZoomScale:this.onZoomScale
+            })
  	      );
   }
 

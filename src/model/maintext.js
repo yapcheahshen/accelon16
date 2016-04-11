@@ -123,6 +123,7 @@ var maintext={
 			cb();
 		});
 		store.listen("pushText",this.pushText,this);
+		store.listen("setExtraTitle",this.setExtraTitle,this);
 		store.listen("setQ",this.setQ,this);
 	}
 	,finalize:function(){
@@ -135,6 +136,12 @@ var maintext={
 	}
 	,setQ:function(opts){
 		this.q=opts.q;
+	}
+	,setExtraTitle:function(extra){
+		var routes=this.navigator.getCurrentRoutes();
+		var route=routes[routes.length-1];
+		route.extraTitle=extra;
+		action("refreshNav");
 	}
 	,pushText:function(opts){
 		//TODO fetch filenames
@@ -203,7 +210,7 @@ var maintext={
 	}
 	,getTitle:function(route) {
 		if (!route.filenames)return;
-		return route.filenames[route.nfile];
+		return route.filenames[route.nfile]+(route.extraTitle||"");
 	}
 	,initialRoute:textRoute
 	,initialRouteStack:[textRoute]
