@@ -29,7 +29,7 @@ var main=React.createClass({
     ,unregisterGetter:PT.func
   }
   ,selectingTab:false
-  ,selectingParagraph:-1
+  ,selParagraph:-1
   ,componentDidMount:function(){
     store.listen("selectingParagraph",this.selectingParagraph,this);
     store.listen("selectingToken",this.selectingToken,this);
@@ -46,7 +46,7 @@ var main=React.createClass({
   }
   ,unselectTab:function(){
     this.selectingTab=false;
-    var menu=this.selectingParagraph===-1?mainmenu:(this.selStart===-1?paragraphmenu:tokenmenu);
+    var menu=this.selParagraph===-1?mainmenu:(this.selStart===-1?paragraphmenu:tokenmenu);
     if (menu!==this.state.menu) this.setState({menu}); //update menu
   }
   ,componentWillUnmount:function(){
@@ -60,7 +60,7 @@ var main=React.createClass({
     this.setState({menu:opts.selStart>-1?tokenmenu:paragraphmenu});
   }
   ,selectingParagraph:function(n){
-    this.selectingParagraph=n;
+    this.selParagraph=n;
     if (this.selectingTab) return; //do not change menu when tabnav is activated
     if (n===-1) this.selStart=-1;
     this.setState({menu:n===-1?mainmenu:paragraphmenu});
