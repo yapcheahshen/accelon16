@@ -112,7 +112,7 @@ var TextView=React.createClass({
     }.bind(this),1000);
   }
   ,showToc:function(opts){
-    if (this.props.isVisible && this.props.isVisible()) return ; //foreground only
+    if (this.props.isVisible && !this.props.isVisible()) return ; //foreground only
     if (!opts || !opts.popup)return;
     var selecting=this.context.getter("selectedParagraph");
     if (!this.props.rows[selecting])return;
