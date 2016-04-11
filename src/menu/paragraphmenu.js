@@ -28,7 +28,7 @@ var showToc=function(){
 }
 var searchicon=require("../../images/find.png");
 var translationicon=require("../../images/translation.png");
-var markupicon=require("../../images/dhammagear3.png"); //should turn
+var markupicon=require("../../images/createmarkup.png"); //should turn
 var treeicon=require("../../images/map.png");
 var kewenicon=require("../../images/kewen.png");
 var getMenu=function(obj){

@@ -18,7 +18,7 @@ var google=function(){
 	console.log("google");
 }
 var searchicon=require("../../images/find.png");
-var markupicon=require("../../images/dhammagear2.png"); //should turn
+var markupicon=require("../../images/findmarkup.png"); //should turn
 var dicticon=require("../../images/dictionary.png");
 var copytexticon=require("../../images/copytext.png");
 var googleicon=require("../../images/google.png");
