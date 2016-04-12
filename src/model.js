@@ -23,7 +23,9 @@ var getter=function(name,opts,cb){ // sync getter
 		console.error("getter '"+name +"' not found");
 	}
 }
-
+var hasGetter=function(name) {
+	return (!!getters[name]);
+}
 var registerGetter=function(name,cb,opts){
 	opts=opts||{};
 	if (!cb && name) delete getters[name];
@@ -49,4 +51,4 @@ var store={
 	}
 }
 
-module.exports={ action, store, getter, registerGetter, unregisterGetter};
+module.exports={ action, store, getter, registerGetter, unregisterGetter, hasGetter};

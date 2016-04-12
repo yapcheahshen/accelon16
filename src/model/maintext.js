@@ -1,6 +1,6 @@
 /* singleton of maintext */
 
-var {store,action,getter,registerGetter,unregisterGetter}=require("../model");
+var {store,action,getter,hasGetter,registerGetter,unregisterGetter}=require("../model");
 var ksa=require("ksana-simple-api");
 var textscene=require("../scenes/text");
 var textRoute={id:'root', db:'dsl_jwn', nfile:1, index: 0 , scene: textscene };
@@ -8,6 +8,8 @@ var busy=false;//waiting for layout , prevent double click on next/prev button
 var timer1;
 
 var db_uti={};
+
+var AsyncStorage=require("react-native").AsyncStorage;
 
 var getSegments=function(opts,cb){
 	ksa.sibling({db:opts.db,nfile:opts.nfile},function(err,data){
@@ -18,6 +20,19 @@ var getSegments=function(opts,cb){
 	});
 }
 
+AsyncStorage.getItem("db_uti",function(err,data){
+	if (err) return;
+	try {
+		db_uti=JSON.parse(data||"{}");
+	} catch (e) {
+		console.log(e);
+		db_uti=[];
+	}	
+});
+
+var save_db_uti=function(){
+	AsyncStorage.setItem("db_uti",JSON.stringify(db_uti));
+}
 
 var getContents=function(opts,cb){
 	clearTimeout(timer1);
@@ -130,7 +145,10 @@ var maintext={
 		store.listen("viewport",this.onViewport,this);
 	}
 	,onViewport:function(vp) {
-		db_uti[vp.db]=vp.uti;
+		if (db_uti[vp.db]!==vp.uti) {
+			db_uti[vp.db]=vp.uti;
+			save_db_uti();
+		}
 	}
 	,getDB:function(){
 		var routes=this.navigator.getCurrentRoutes();
@@ -222,7 +240,8 @@ var maintext={
 		}
 	}
 	,getTitle:function(route) {
-		return route.title;
+		var position=hasGetter("viewport")?(1+getter("viewport").start)+"/"+getter("viewport").max:"";
+		return (route.title||"text_unique_id") + "("+(position||"now/all")+")";
 	}
 	,initialRoute:textRoute
 	,initialRouteStack:[textRoute]

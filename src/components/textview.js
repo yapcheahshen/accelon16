@@ -64,7 +64,7 @@ var TextView=React.createClass({
       this.viewportEnd=end;
       var viewport=this.getViewPort();
       
-      this.context.action("viewport",this.getViewPort());
+      this.context.action("viewport",viewport);
 
       var uti=this.props.rows[this.viewportStart].uti;
       this.context.action("setTextTitle",uti);
@@ -74,7 +74,8 @@ var TextView=React.createClass({
   	if (this.props.isVisible && !this.props.isVisible()) return null;
     var vp=this.viewportStart;
     if (vp<0) vp=0;
-    return {db:this.props.db,uti:this.props.rows[vp].uti,start:vp,end:this.viewportEnd};
+    var percent=vp/this.props.rows.length;
+    return {db:this.props.db,uti:this.props.rows[vp].uti,start:vp,end:this.viewportEnd,percent,max:this.props.rows.length};
   }
   ,componentDidMount:function(){
 

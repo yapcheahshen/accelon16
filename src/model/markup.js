@@ -42,6 +42,7 @@ AsyncStorage.getItem("markups",function(err,data){
 		console.log(e);
 		markups=[];
 	}
+	buildIndex();
 });
 
 var mindex={};
@@ -53,7 +54,6 @@ var buildIndex=function(){
 	}
 }
 
-buildIndex();
 
 var getByFile=function(opts){
 	var out=[];
