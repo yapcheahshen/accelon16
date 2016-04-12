@@ -228,15 +228,15 @@ var maintext={
 		resetMenu();
 	}
 	,leftButtonText:function(route){
-		return (route.index>0)?"Back": ((route.nfile>0)?"Prev":"") ;
+		return (route.index>0)?"← Back": ((route.nfile>0)?"↑Prev":"") ;
 
 	}
 	,rightButtonText:function(route){
 		if (route.index>0) {
-			return "Camp";
+			return "△Camp";
 		} else {
 			if (!route.filenames)return;
-			return (route.nfile+1<route.filenames.length)?"Next":"";
+			return (route.nfile+1<route.filenames.length)?"Next↓":"";
 		}
 	}
 	,getTitle:function(route) {
