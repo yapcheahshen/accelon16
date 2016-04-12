@@ -22,7 +22,6 @@ var Search=React.createClass({
 		this.context.action("setQ",{q});
 	}
 	,componentDidMount:function(){
-		console.log("search tab mounted")
 		this.context.store.listen("selectTab.search",this.onSearchTab,this);
 	}
 	,componentWillUnmount:function(){

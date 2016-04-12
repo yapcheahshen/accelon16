@@ -7,6 +7,8 @@ var textRoute={id:'root', db:'dsl_jwn', nfile:1, index: 0 , scene: textscene };
 var busy=false;//waiting for layout , prevent double click on next/prev button
 var timer1;
 
+var db_uti={};
+
 var getSegments=function(opts,cb){
 	ksa.sibling({db:opts.db,nfile:opts.nfile},function(err,data){
 		if(!err) {
@@ -40,9 +42,7 @@ var getDBFilenames=function(db,cb){
 	});
 }
 
-var getDB=function(){
-	return textRoute.db;
-}
+
 
 var prevFile=function(route,navigator){
 	var nfile=route.nfile;
@@ -114,9 +114,10 @@ var maintext={
 	init:function(cb){
 		registerGetter("contents",getContents);
 		registerGetter("segments",getSegments);
-		registerGetter("db",getDB);
+		registerGetter("db",this.getDB.bind(this));
 		registerGetter("toc",getTOC);
 		registerGetter("vpos2pos",vpos2pos);
+
 		getDBFilenames(textRoute.db,function(filenames){
 			textRoute.filenames=filenames;
 			//textRoute.markups=getter("getMarkupByFile",{db:textRoute.db,nfile:textRoute.nfile});
@@ -125,6 +126,16 @@ var maintext={
 		store.listen("pushText",this.pushText,this);
 		store.listen("setTextTitle",this.setTextTitle,this);
 		store.listen("setQ",this.setQ,this);
+
+		store.listen("viewport",this.onViewport,this);
+	}
+	,onViewport:function(vp) {
+		db_uti[vp.db]=vp.uti;
+	}
+	,getDB:function(){
+		var routes=this.navigator.getCurrentRoutes();
+		var route=routes[routes.length-1];
+		return route.db;
 	}
 	,finalize:function(){
 		unregisterGetter("contents");
@@ -151,14 +162,16 @@ var maintext={
 
 		getDBFilenames(opts.db,function(filenames){
 		//parse UTI , should move into ksana-simple-api
-			var {sid,nfile}=parseUti(opts.uti,filenames);
-			var r=routes[routes.length-1];
+			var r=routes[routes.length-1],targetuti;
+			var uti=opts.uti|| db_uti[opts.db] || opts.defaultuti ;
+			var {sid,nfile}=parseUti(uti,filenames);
 
 			if (isNaN(nfile)||nfile===-1) {
 				console.warn("invalid uti"+opts.uti);
 				return;
 			}
-			var targetuti=nfile+"@"+sid;
+			targetuti=nfile+"@"+sid;				
+
 
 			if (routes.length>1 && r.db===opts.db && r.scene===textscene && r.nfile===nfile) {
 				if (opts.replaceCamp && routes.length>1) {
