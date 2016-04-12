@@ -50,7 +50,7 @@ var Controls=React.createClass({
 				,button
 				,E(TextInput,{clearButtonMode,
 					style:[styles.labelInput,{marginRight}],value:this.state.text,
-					autoCorrect:false,
+					autoCorrect:false,autoCapitalize :'none',
 					onChangeText:this.onChangeText})
 				,saveButton
 				
@@ -73,10 +73,10 @@ var Bookmark=React.createClass({
 	,width:300
 	,deleteBookmark:function(n){
 		model.deleteBookmark(n);
+		this.setState({editing:-1,q:""});
 		this.onChanged();
 	}
 	,rows:[]
-
 	,getBookmarks:function(){
 		model.getBookmarks(function(rows){
 			this.rows=rows;
@@ -132,6 +132,8 @@ var Bookmark=React.createClass({
 		this.setState({editing:parseInt(n)});
 	}	
 	,onEditDone:function(n) {
+		n=parseInt(n);
+		if (n>-1) this.rows[n].active=false;
 		this.setState({editing:-1});
 	}
 	,render:function(){
@@ -149,8 +151,8 @@ var Bookmark=React.createClass({
 });
 var styles={
 	controls:{alignItems:'flex-end',flexDirection:'row',justifyContent:'flex-end'},
-	addbutton:{marginLeft:5,fontSize:38,color:'rgb(0,122,255)'},
-	setbutton:{marginLeft:5,fontSize:20,color:'rgb(0,122,255)'},
+	addbutton:{marginLeft:5,fontSize:30,color:'rgb(0,122,255)'},
+	setbutton:{marginLeft:5,marginBottom:5,fontSize:20,color:'rgb(0,122,255)'},
 	labelInput:{flex:1,marginLeft:5,marginTop:12,marginRight:5,fontSize:24,borderRadius:5,
 		borderColor:'rgb(128,128,128)',height:30,borderWidth:1/PixelRatio.get()},
 	container:{backgroundColor:'rgb(240,240,240)'},

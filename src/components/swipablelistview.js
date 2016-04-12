@@ -22,7 +22,6 @@ var SwipableListView=React.createClass({
 			this.rows=nextProps.rows;
 			this._updateDataSource(nextProps.rows);
 		}
-		console.log(this.rows)
 	}
 	,getInitialState:function(){
 		var ds=new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2});	
@@ -48,12 +47,7 @@ var SwipableListView=React.createClass({
 	,_handleClose :function(sectionID, rowID) {
 		//need to add this.props.onClose(this.props.sectionID,this.props.rowID);
 		//in react-native-swipeout
-		var rows=this.rows.slice();
-		rowID=parseInt(rowID);
-		rows[rowID]=JSON.parse(JSON.stringify(rows[rowID]));
-		rows[rowID].active=false;
-		this.rows=rows;
-		this._updateDataSource(rows);
+
 		this.props.onEditDone&&this.props.onEditDone(rowID);
 	}
 	, _updateDataSource: function(data) {
