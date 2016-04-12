@@ -45,6 +45,9 @@ var store={
 		listeners.push([element,event,cb]);
 	}
 	,unlistenAll:function(element){
+		if (!element) {
+			console.error("unlistenAll should specify this")
+		}
 		listeners=listeners.filter(function(listener){
 			return (listener[0]!==element) ;
 		});

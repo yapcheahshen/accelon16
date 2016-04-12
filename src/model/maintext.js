@@ -240,7 +240,11 @@ var maintext={
 		}
 	}
 	,getTitle:function(route) {
-		var position=hasGetter("viewport")?(1+getter("viewport").start)+"/"+getter("viewport").max:"";
+		var position="";
+		if (hasGetter("viewport")){
+			var vp=getter("viewport");
+			if (vp) position=(1+vp.start)+"/"+vp.max;
+		}
 		return (route.title||"text_unique_id") + "("+(position||"now/all")+")";
 	}
 	,initialRoute:textRoute

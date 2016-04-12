@@ -34,6 +34,9 @@ var TextMarkup=React.createClass({
     this.context.store.listen("markupMember",this.markupMember,this);
     this.context.store.listen("markupChanged",this.onExternalMarkupChanged,this);
   }
+  ,componentWillUnmount:function(){
+    this.context.store.unlistenAll(this);
+  }
   ,hits2markups:function(markups,rows){
     var hits,nhit=0,i,j;
     for (i=0;i<rows.length;i+=1) {

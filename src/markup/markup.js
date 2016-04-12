@@ -20,7 +20,7 @@ var MarkupEditor=React.createClass({
 		this.context.store.listen("markupMember",this.markupMember,this);
 	}
 	,componentWillUnmount:function(){
-		this.context.store.unlistenAll("markupMember");
+		this.context.store.unlistenAll(this);
 	}
 	,markupMember:function(member) {
 		this.setState({member});
