@@ -64,9 +64,11 @@ var Nav=React.createClass({
     this.context.store.listen("refreshNav",this.refreshNav,this);
   }
   ,refreshNav:function(){
+    if (this.unmounted)return;
     this.forceUpdate();
   } 
   ,componentWillUnmount:function(){
+    this.unmounted=true;
     this.context.store.unlistenAll();
     this.props.model.finalize();
   }

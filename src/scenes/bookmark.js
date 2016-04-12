@@ -40,6 +40,7 @@ var Controls=React.createClass({
 			saveButton=E(TouchableOpacity,{onPress:this.setBookmark}
 			,E(Text,{style:styles.setbutton},"Done"));
 			clearButtonMode="never";
+			marginRight=5;
 		} else {
 			button=E(TouchableOpacity,{onPress:this.addBookmark}
 			,E(Text,{style:styles.addbutton},"+"));

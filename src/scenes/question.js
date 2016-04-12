@@ -47,6 +47,7 @@ var Controls=React.createClass({
 			saveButton=E(TouchableOpacity,{onPress:this.setQuestion}
 			,E(Text,{style:styles.setbutton},"Done"));
 			clearButtonMode="never";
+			marginRight=5;
 		} else if (this.props.adding && this.state.text) {
 			button=E(TouchableOpacity,{onPress:this.addQuestion}
 			,E(Text,{style:styles.addbutton},"+"));
@@ -57,6 +58,7 @@ var Controls=React.createClass({
 				,button
 				,E(TextInput,{clearButtonMode,
 					style:[styles.labelInput,{marginRight}],value:this.state.text,
+					placeholder:"Type a Question",
 					autoCorrect:false,autoCapitalize :'none',
 					onChangeText:this.onChangeText})
 				,saveButton
