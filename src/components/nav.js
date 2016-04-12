@@ -37,8 +37,6 @@ var NavigationBarRouteMapper={
     }
     ,Title:function(route,navigator,index,navstate) {
       var title=navigator.props.model.getTitle(route);
-
-      console.log("title",title)
       return E(Text,{style:styles.navBarTitleText},title);
     }
 }

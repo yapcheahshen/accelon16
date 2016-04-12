@@ -67,9 +67,7 @@ var TextView=React.createClass({
       this.context.action("viewport",this.getViewPort());
 
       var uti=this.props.rows[this.viewportStart].uti;
-      var segname="/"+uti.substr(uti.lastIndexOf("@")+1);
-
-      this.context.action("setExtraTitle",segname);
+      this.context.action("setTextTitle",uti);
     }
   }
   ,getViewPort:function(){
