@@ -37,7 +37,7 @@ var TextScene=React.createClass({
   }
   ,render:function(){
     var {db,nfile,q,name,scrollTo,s,l,uti}=this.props.route;
-    return E(TextMarkup,{db,nfile,q,scrollTo,fontSize,component:TextView,
+    return E(TextMarkup,{db,nfile,q,s,l,scrollTo,fontSize,component:TextView,
       onFontSize:this.onFontSize,isVisible:this.isVisible});
   }
   

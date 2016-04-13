@@ -19,5 +19,5 @@ var downloadfile=function(fn,cb){
 	});
 }
 module.exports=function(cb){
-	downloadfile("dsl_jwn",function(){ downloadfile("ds",cb)});
+	downloadfile("dsl_jwn",()=>downloadfile("ds",()=>downloadfile("mpps",cb)));
 }

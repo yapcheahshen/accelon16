@@ -145,6 +145,7 @@ var maintext={
 		store.listen("viewport",this.onViewport,this);
 	}
 	,onViewport:function(vp) {
+		if (!vp)return;
 		if (db_uti[vp.db]!==vp.uti) {
 			db_uti[vp.db]=vp.uti;
 			save_db_uti();
