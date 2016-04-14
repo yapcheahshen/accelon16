@@ -154,7 +154,8 @@ var maintext={
 			console.error("markup not found "+mid);
 		}
 		if (typeof m.target==="string") {
-			action("pushText",m);
+			var target=getter("getMarkup",m.target);
+			if (target) action("pushText",target);
 		} else {
 			var popup=E(MultiTargetPopup,{fromtext:m.text,items:m.target});
 			action("showPopup",{popup});
