@@ -9,6 +9,7 @@ var PT=React.PropTypes;
 var {SelectableRichText}=require("ksana-selectable-richtext");
 var RichTextPopupMenu=require("../menu/richtextpopupmenu");
 var TOCPopupMenu=require("../menu/tocpopupmenu");
+var SelectMarkupPopupMenu=require("../menu/selectmarkup");
 var ZoomScalePopup=require("../menu/zoomscale");
 var typedef=require("../typedef");
 
@@ -40,18 +41,24 @@ var TextView=React.createClass({
     console.log(type)
   }
   ,onHyperlink:function(markups,para){
+
+    if (markups.length>1) {
+      markups=markups.map((m)=>this.props.markups[para][m]);
+      return E(SelectMarkupPopupMenu,{popupX:3,markups});
+    }
+
     var M=this.props.markups[para];
     var first=M[markups[0]];
 
     //TODO , handle multiple markup on same position
-    var target=this.context.getter("getMarkup",{id:first.target});
-    if (!target && first.type==="head") {
-      return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.db});
+    if (typeof first.target==="string") {
+      var target=this.context.getter("getMarkup",first.target);
+      if (!target && first.type==="head") {
+        return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.db});
+      }
     }
-    if (target) {
-      var db=target.db||this.props.db ;
-      this.context.action("pushText",{db , uti:target.uti , s:target.s, l:target.l }); 
-    }
+    
+    this.context.action("runmarkup",first.id);
   }
   ,onSetTextRange:function(rowid,sel){
 

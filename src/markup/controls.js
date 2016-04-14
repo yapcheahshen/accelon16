@@ -20,6 +20,7 @@ var Controls=React.createClass({
 	}
 	,onChangeText:function(label){
 		this.props.setLabel(label);
+	
 	}
 	,render:function(){
 		var landscape=this.context.getter("dimension").landscape;		

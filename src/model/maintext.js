@@ -6,8 +6,10 @@ var textscene=require("../scenes/text");
 var textRoute={id:'root', db:'dsl_jwn', nfile:1, index: 0 , scene: textscene };
 var busy=false;//waiting for layout , prevent double click on next/prev button
 var timer1;
-
+var E=require("react-native").createElement;
 var db_uti={};
+
+var MultiTargetPopup=require("../menu/multitarget");
 
 var AsyncStorage=require("react-native").AsyncStorage;
 
@@ -143,6 +145,20 @@ var maintext={
 		store.listen("setQ",this.setQ,this);
 
 		store.listen("viewport",this.onViewport,this);
+
+		store.listen("runmarkup",this.runmarkup,this);
+	}
+	,runmarkup:function(mid){
+		var m=getter("getMarkup",mid);
+		if (!m) {
+			console.error("markup not found "+mid);
+		}
+		if (typeof m.target==="string") {
+			action("pushText",m);
+		} else {
+			var popup=E(MultiTargetPopup,{fromtext:m.text,items:m.target});
+			action("showPopup",{popup});
+		}
 	}
 	,onViewport:function(vp) {
 		if (!vp)return;

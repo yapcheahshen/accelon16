@@ -12,7 +12,7 @@ var Button = React.createClass({
   render: function() {
     return E(TouchableOpacity,{underlayColor:"rgba(0,0,0,0.3)",onPress:this._handlePress},
         E(View,{style:[styles.button,this.props.style]},
-          E(Text,{style:[styles.buttonText,this.props.buttonStyle]},this.props.text))
+          E(Text,{style:[styles.buttonText,this.props.textStyle]},this.props.text))
     );
   }
 });

@@ -20,14 +20,14 @@ var RichTextPopupMenu=React.createClass({
 	}
 	,render:function(){
 		return E(View,{style:styles.popup}
-			,E(Button,{buttonStyle:styles.buttonStyle,onPress:this.selLengthPlusOne,text:">"})
-			,E(Button,{buttonStyle:styles.buttonStyle,onPress:this.selLengthPunc,text:">."})
-			,E(Button,{buttonStyle:styles.buttonStyle,onPress:this.saveSelection,text:"+"})
+			,E(Button,{textStyle:styles.textStyle,onPress:this.selLengthPlusOne,text:">"})
+			,E(Button,{textStyle:styles.textStyle,onPress:this.selLengthPunc,text:">."})
+			,E(Button,{textStyle:styles.textStyle,onPress:this.saveSelection,text:"+"})
 			);
 	}
 });
 var styles=StyleSheet.create({
-	buttonStyle:{fontSize:24}
+	textStyle:{fontSize:24}
 	,popup:{flexDirection:'row',height:44,justifyContent:"space-between",width:140,alignItems:"stretch"}
 });
 module.exports=RichTextPopupMenu;

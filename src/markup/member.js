@@ -11,6 +11,9 @@ var MarkupMember=React.createClass({
 	contextTypes:{
 		action:PT.func
 	}	
+	,propTypes:{
+		member:PT.array.isRequired
+	}
 	,deleteMember:function(rowId){
 		model.remove(rowId);
 	}
@@ -24,8 +27,9 @@ var MarkupMember=React.createClass({
 				}];	
 	}
 	,renderRow:function(rowData,sectionId,rowId) {
-		var lefticon=rowId==0?"":"→"; //full width space "　"
-		var righticon=rowId==0?"→":"";
+		var mlen=this.props.member.length;
+		var lefticon=(rowId==0)?"":"→"; //full width space "　"
+		var righticon=(rowId==0&&mlen>1)?"→":"";
 		return 	E(View,{style:styles.row},
 					E(Text,{}
 						,E(Text,{style:styles.icon},lefticon)

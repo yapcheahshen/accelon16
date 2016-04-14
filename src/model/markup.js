@@ -68,7 +68,7 @@ var getByFile=function(opts){
 }
 
 var get=function(opts){
-	var i=mindex[opts.id];
+	var i=mindex[opts];
 	if (i>-1) return markups[i];
 }
 
@@ -103,8 +103,10 @@ var add=function(opts) {
 		type:"link",label:opts.label, s:m.s, l:m.l, text:m.text
 	}});
 	
-	if (M.length>2) M[0].target= M.map(function(m){return m.id}).unshift();
-	else {
+	if (M.length>2) {
+		M[0].target= M.map(function(m){return m.id});
+		M[0].target.shift();
+	} else {
 		if (M.length===2) M[0].target=M[1].id;
 	}
 

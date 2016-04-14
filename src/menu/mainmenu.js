@@ -31,7 +31,7 @@ var bookmarkicon=require("../../images/bookmark.png");
 var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	var menu=[
-	{id:"question",name:"問題",component:<Question/>,icon:helpicon,badgeText:'',flex:6},
+	{id:"question",name:"問答",component:<Question/>,icon:helpicon,badgeText:'',flex:6},
 	{id:"translation",name:"互文",component:<Translation/>,icon:linkicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:6},
 	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,flex:6},
