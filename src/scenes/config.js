@@ -25,7 +25,7 @@ var Config=React.createClass({
 		this.context.store.listen("selectTab.config",this.onConfigTab,this);
 	}
 	,componentWillUnmount:function(){
-		this.context.store.unlistenAll();
+		this.context.store.unlistenAll(this);
 	}
 	,onConfigTab:function(){
 		this.forceUpdate();

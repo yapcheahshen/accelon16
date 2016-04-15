@@ -41,22 +41,22 @@ var TextView=React.createClass({
     console.log(type)
   }
   ,onHyperlink:function(markups,para){
-
+    var M;
     if (markups.length>1) {
-      markups=markups.map((m)=>this.props.markups[para][m]);
-      return E(SelectMarkupPopupMenu,{popupX:3,markups});
+      M=markups.map((m)=>this.props.markups[para][m]).filter((m)=>m.text);//filter out flashhint 
+      if (M.length>1) return E(SelectMarkupPopupMenu,{popupX:3,markups:M});
     }
 
-    var M=this.props.markups[para];
+    M=this.props.markups[para];
+    var M=M.filter((m)=>m.text);
+
     var first=M[markups[0]];
 
     //TODO , handle multiple markup on same position
-    if (typeof first.target==="string") {
-      var target=this.context.getter("getMarkup",first.target);
-      if (!target && first.type==="head") {
-        return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.db});
-      }
+    if (first.type==="head" && !first.target) {
+      return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.db});
     }
+
     this.context.action("jumptarget",first.id);
     
   }

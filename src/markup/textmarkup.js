@@ -108,7 +108,10 @@ var TextMarkup=React.createClass({
     var getter=this.context.getter,db=this.props.db,nfile=this.props.nfile,q=this.props.q;
     getter("segments",{db,nfile},function(segments){
       getter("contents",{db, uti:segments, q},function(data){
-        cb(data.map(function(d){return {uti:d.uti,text:d.text,hits:d.hits,tags:d.markups,vpos:d.vpos}}));
+        cb(data.map(function(d){
+          var text=d.text.replace(/\s*$/,'');
+          return {uti:d.uti,text,hits:d.hits,tags:d.markups,vpos:d.vpos}
+        }));
       });
     });
   }

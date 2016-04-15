@@ -14,7 +14,7 @@ var MarkupList=React.createClass({
 	}
 	,goText:function(i){
 		var item=this.props.markups[i];
-		this.context.action("pushText",{uti:item.uti,s:item.s,l:item.l,db:item.db,replace:true});
+		this.context.action("jumpmarkup",item.id);
 	}	
 	,renderRow:function(row,idx){
 		return E(TouchableOpacity ,{key:idx,onPress:this.goText.bind(this,idx)}

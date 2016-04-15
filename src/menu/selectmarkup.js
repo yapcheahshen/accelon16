@@ -14,7 +14,7 @@ var SelectMarkupPopupMenu=React.createClass({
 	getInitialState: function() {
 	  var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 	  return {
-	    dataSource: ds.cloneWithRows(this.props.markups),
+	    dataSource: ds.cloneWithRows(this.props.markups||[]),
 	  };
 	}
 	,contextTypes:{
@@ -37,7 +37,7 @@ var SelectMarkupPopupMenu=React.createClass({
 			var m=this.context.getter("getMarkup",target);
 			text=m.text;
 			onPress=this.jumpmarkup.bind(this,target);
-		} else {
+		} else if (target instanceof Array) {
 			text=target.length+" targets";
 			onPress=this.jumptarget.bind(this,mid);
 		}

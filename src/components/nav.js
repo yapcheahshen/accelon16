@@ -69,7 +69,7 @@ var Nav=React.createClass({
   } 
   ,componentWillUnmount:function(){
     this.unmounted=true;
-    this.context.store.unlistenAll();
+    this.context.store.unlistenAll(this);
     this.props.model.finalize();
   }
   ,renderScene:function(route,navigator) {
