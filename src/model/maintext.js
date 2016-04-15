@@ -156,7 +156,12 @@ var maintext={
 		}
 		action("pushText",m);		
 	}
-	,jumptarget:function(mid){
+	,jumptarget:function(opts){
+		opts=opts||{};
+		var mid;
+		if (typeof opts==="string") mid=opts
+		else mid=opts.id;
+
 		var m=getter("getMarkup",mid);
 		if (!m) {
 			console.error("markup not found "+mid);
@@ -166,7 +171,7 @@ var maintext={
 			if (target) action("pushText",target);
 		} else {
 			var popup=E(MultiTargetPopup,{fromtext:m.text,items:m.target});
-			action("showPopup",{popup});
+			action("showPopup",{popup,px:opts.x,py:opts.y});
 		}
 	}
 	,onViewport:function(vp) {

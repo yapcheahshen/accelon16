@@ -22,16 +22,17 @@ var SelectMarkupPopupMenu=React.createClass({
 		getter:PT.func
 	}
 	,propTypes:{
-		markups:PT.array.isRequired
-		,popupX:PT.number //desire popup x
+		markups:PT.array.isRequired,
+		x:PT.number,
+		y:PT.number,
 	}
-	,jumpmarkup:function(mid){
-		this.context.action("jumpmarkup",mid);
+	,jumpmarkup:function(id){
+		this.context.action("jumpmarkup",id);
 	}
-	,jumptarget:function(mid) {
-		this.context.action("jumptarget",mid);
+	,jumptarget:function(id) {
+		this.context.action("jumptarget",id);
 	}
-	,renderTargetLink:function(mid,text,target)  {
+	,renderTargetLink:function(id,text,target)  {
 		var text,onPress;
 		if (typeof target==="string") {
 			var m=this.context.getter("getMarkup",target);
@@ -39,7 +40,7 @@ var SelectMarkupPopupMenu=React.createClass({
 			onPress=this.jumpmarkup.bind(this,target);
 		} else if (target instanceof Array) {
 			text=target.length+" targets";
-			onPress=this.jumptarget.bind(this,mid);
+			onPress=this.jumptarget.bind(this,{id,px:this.props.x,py:this.props.y});
 		}
 		return E(Button,{textStyle:styles.target,onPress,text:text});
 	}

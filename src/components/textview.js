@@ -40,11 +40,11 @@ var TextView=React.createClass({
   ,onMarkup:function(type){
     console.log(type)
   }
-  ,onHyperlink:function(markups,para){
+  ,onHyperlink:function(markups,para,x,y){
     var M;
     if (markups.length>1) {
       M=markups.map((m)=>this.props.markups[para][m]).filter((m)=>m.text);//filter out flashhint 
-      if (M.length>1) return E(SelectMarkupPopupMenu,{popupX:3,markups:M});
+      if (M.length>1) return E(SelectMarkupPopupMenu,{popupX:3,x,y,markups:M});
     }
 
     M=this.props.markups[para];
@@ -57,7 +57,7 @@ var TextView=React.createClass({
       return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.db});
     }
 
-    this.context.action("jumptarget",first.id);
+    this.context.action("jumptarget",{id:first.id,x,y});
     
   }
   ,onSetTextRange:function(rowid,sel){
