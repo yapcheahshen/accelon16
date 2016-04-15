@@ -146,9 +146,17 @@ var maintext={
 
 		store.listen("viewport",this.onViewport,this);
 
-		store.listen("runmarkup",this.runmarkup,this);
+		store.listen("jumpmarkup",this.jumpmarkup,this);
+		store.listen("jumptarget",this.jumptarget,this);
 	}
-	,runmarkup:function(mid){
+	,jumpmarkup:function(mid){
+		var m=getter("getMarkup",mid);
+		if (!m) {
+			console.error("markup not found "+mid);
+		}
+		action("pushText",m);		
+	}
+	,jumptarget:function(mid){
 		var m=getter("getMarkup",mid);
 		if (!m) {
 			console.error("markup not found "+mid);

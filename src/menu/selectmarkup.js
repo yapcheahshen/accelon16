@@ -5,8 +5,6 @@ var {
 var E=React.createElement;
 var PT=React.PropTypes;
 
-var MultiTargetPopup=require("../menu/multitarget");
-
 //TODO: handle orientation
 var W=Dimensions.get("window").width;
 var H=Dimensions.get("window").height;
@@ -27,27 +25,26 @@ var SelectMarkupPopupMenu=React.createClass({
 		markups:PT.array.isRequired
 		,popupX:PT.number //desire popup x
 	}
-	,runmarkup:function(mid){
-		this.context.action("runmarkup",mid);
+	,jumpmarkup:function(mid){
+		this.context.action("jumpmarkup",mid);
 	}
-	,multitarget:function(fromtext,targets) {
-		var popup=E(MultiTargetPopup,{items:targets,fromtext});
-		this.context.action("showPopup",{popup});
+	,jumptarget:function(mid) {
+		this.context.action("jumptarget",mid);
 	}
-	,renderTargetLink:function(sourcetext,target)  {
+	,renderTargetLink:function(mid,text,target)  {
 		var text,onPress;
 		if (typeof target==="string") {
 			var m=this.context.getter("getMarkup",target);
 			text=m.text;
-			onPress=this.runmarkup.bind(this,target);
+			onPress=this.jumpmarkup.bind(this,target);
 		} else {
 			text=target.length+" targets";
-			onPress=this.multitarget.bind(this,sourcetext,target);
+			onPress=this.jumptarget.bind(this,mid);
 		}
 		return E(Button,{textStyle:styles.target,onPress,text:text});
 	}
 	,renderRow:function(rowData,col,idx){
-		var target=this.renderTargetLink(rowData.text,rowData.target);
+		var target=this.renderTargetLink(rowData.id,rowData.text,rowData.target);
 
 		return E(View,{style:styles.child},
 				E(Text,{style:[styles.item] },

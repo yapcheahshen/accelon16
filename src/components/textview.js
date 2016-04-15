@@ -57,8 +57,8 @@ var TextView=React.createClass({
         return E(TOCPopupMenu,{popupX:3,type:"head",vpos:first.vpos,db:this.props.db});
       }
     }
+    this.context.action("jumptarget",first.id);
     
-    this.context.action("runmarkup",first.id);
   }
   ,onSetTextRange:function(rowid,sel){
 

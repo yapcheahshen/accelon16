@@ -17,7 +17,7 @@ var MultiTarget=React.createClass({
 		items:PT.array.isRequired
 	}
 	,runmarkup:function(mid){
-		this.context.action("runmarkup",mid);
+		this.context.action("jumpmarkup",mid);
 	}
 	,renderRow:function(mid,key) {
 		var m=this.context.getter("getMarkup",mid);
