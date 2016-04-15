@@ -14,10 +14,14 @@ var TextScene=React.createClass({
     route:PT.object.isRequired
     ,navigator:PT.object.isRequired
   }
+  ,getInitialState:function(){
+    return {ready:false};
+  }
   ,componentWillMount:function(){
     AsyncStorage.getItem("FONTSIZE",function(err,r){
       fontSize=parseFloat(r)||fontSize;
-    });
+      this.setState({ready:true});
+    }.bind(this));
   }
   ,onFontSize:function(_fontsize) {
     fontSize=_fontsize;
@@ -36,6 +40,7 @@ var TextScene=React.createClass({
    return (this.props.route.index===this.props.navigator.getCurrentRoutes().length-1);
   }
   ,render:function(){
+    if (!this.state.ready) return E(View);
     var {db,nfile,q,name,scrollTo,s,l,uti}=this.props.route;
     return E(TextMarkup,{db,nfile,q,s,l,scrollTo,fontSize,component:TextView,
       onFontSize:this.onFontSize,isVisible:this.isVisible});

@@ -14,7 +14,7 @@ var MultiTargetPopup=require("../menu/multitarget");
 var AsyncStorage=require("react-native").AsyncStorage;
 
 var getSegments=function(opts,cb){
-	ksa.sibling({db:opts.db,nfile:opts.nfile},function(err,data){
+	ksa.sibling({db:opts.db,nfile:opts.nfile||0},function(err,data){
 		if(!err) {
 			cb(data.sibling.map((s)=>data.nfile+"@"+s));
 		}
@@ -22,10 +22,17 @@ var getSegments=function(opts,cb){
 	});
 }
 
+var restoreUTI=function(){
+	var uti=db_uti[textRoute.db];
+	textRoute.nfile=parseInt(uti);
+	textRoute.uti=uti;
+	//didn't scroll to this uti,as scrollToUti is perform by pushText
+}
 AsyncStorage.getItem("db_uti",function(err,data){
 	if (err) return;
 	try {
 		db_uti=JSON.parse(data||"{}");
+		restoreUTI();
 	} catch (e) {
 		console.log(e);
 		db_uti=[];
@@ -176,6 +183,9 @@ var maintext={
 	}
 	,onViewport:function(vp) {
 		if (!vp)return;
+		var routes=this.navigator.getCurrentRoutes();
+		if (routes.length!==1) return ;//only save camp viewport
+
 		if (db_uti[vp.db]!==vp.uti) {
 			db_uti[vp.db]=vp.uti;
 			save_db_uti();

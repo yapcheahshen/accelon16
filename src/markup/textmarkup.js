@@ -35,6 +35,7 @@ var TextMarkup=React.createClass({
     this.context.store.listen("markupChanged",this.onExternalMarkupChanged,this);
   }
   ,componentWillUnmount:function(){
+    this.unmounting=true;
     this.context.store.unlistenAll(this);
   }
   ,hits2markups:function(markups,rows){
@@ -118,6 +119,7 @@ var TextMarkup=React.createClass({
   ,reload:function(){
     this.setState({ready:false});
     this.getRows(function(rows){
+      if (this.unmounting) return;
       var externalMarkups=this.context.getter("getMarkupByFile",{db:this.props.db,nfile:this.props.nfile});
       var markups=this.buildMarkups(externalMarkups,rows);
       var utis=rows.map(function(r){return r.uti});
@@ -127,6 +129,7 @@ var TextMarkup=React.createClass({
   ,load:function(){
     var db=this.props.db,nfile=this.props.nfile;
     this.getRows(function(rows){
+      if (this.unmounting)return;
       var {uti,s,l,scrollTo}=this.props;
       var externalMarkups=this.context.getter("getMarkupByFile",{db,nfile});
       if (scrollTo) {
