@@ -136,7 +136,7 @@ var TextMarkup=React.createClass({
         externalMarkups.push({uti:scrollTo,s,l,type:"flashhint",ttl:3000});
       }
       var markups=this.buildMarkups(externalMarkups,rows);
-      var utis=rows.map(function(r){return uti});
+      var utis=rows.map(function(r){return r.uti});
       var member=this.context.getter("getMember",{db,nfile});
       var selections=this.member2selections(utis,member);
       this.setState({rows,markups,selections,member,ready:true});
