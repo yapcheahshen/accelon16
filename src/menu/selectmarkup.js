@@ -49,7 +49,7 @@ var SelectMarkupPopupMenu=React.createClass({
 
 		return E(View,{style:styles.child},
 				E(Text,{style:[styles.item] },
-					rowData.text.substr(0,5),'→'),target
+					(rowData.text||"").substr(0,5),'→'),target
 			);
 	}
 	,render:function(){

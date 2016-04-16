@@ -24,6 +24,7 @@ var setFont=function(){
 	var zs=getter("zoomScale");
 	action("setFontSize",-zs);
 }
+var searchicon=require("../../images/find.png");
 var helpicon=require("../../images/help.png");
 var linkicon=require("../../images/link.png");
 var markupicon=require("../../images/createmarkup.png");
@@ -31,10 +32,10 @@ var bookmarkicon=require("../../images/bookmark.png");
 var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	var menu=[
-	{id:"question",name:"問答",component:<Question/>,icon:helpicon,badgeText:'',flex:6},
+	{id:"search",name:"歷史",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
 	{id:"translation",name:"互文",component:<Translation/>,icon:linkicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:6},
-	{id:"bookmark",name:"書籤",component:<Bookmark/>,icon:bookmarkicon,flex:6},
+	{id:"question",name:"問答",component:<Question/>,icon:helpicon,badgeText:'',flex:6},
 	{id:"config",name:"設定",component:<Config/>,icon:settingsicon,flex:4}
 	];
 	menu.forEach(function(m){m.badgeText=getter("getBadge",m.id)||""});

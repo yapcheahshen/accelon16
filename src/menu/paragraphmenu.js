@@ -10,9 +10,10 @@ var {getter}=require("../model");
 var Search=require("../search/search");
 var Bookmark=require("../scenes/bookmark");
 var Markup=require("../markup/markup");
+var Config=require("../scenes/config");
 var action=require("../model").action;
 var TOCPopupMenu=require("./tocpopupmenu");
-
+var Question=require("../scenes/question");
 
 var HomeView=React.createClass({
   render:function(){
@@ -27,17 +28,18 @@ var showToc=function(){
 	action("showToc",{popup:TOCPopupMenu}); //listen by maintext
 }
 var searchicon=require("../../images/find.png");
-var translationicon=require("../../images/translation.png");
+var helpicon=require("../../images/help.png");
+var linkicon=require("../../images/link.png");
 var markupicon=require("../../images/createmarkup.png"); //should turn
 var treeicon=require("../../images/map.png");
-var kewenicon=require("../../images/kewen.png");
+var settingsicon=require("../../images/settings.png");
 var getMenu=function(obj){
 	var menu=[
 	{id:"search",name:"歷史",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
-	{id:"translation",name:"譯文",component:<Translation/>,icon:translationicon,flex:6},
+	{id:"translation",name:"譯文",component:<Translation/>,icon:linkicon,flex:6},
 	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:6},
-	{id:"tree",name:"自訂樹",component:<HomeView/>,icon:treeicon,flex:6},
-	{id:"kewen",name:"科判",onPress:showToc,icon:kewenicon,flex:6}
+	{id:"question",name:"問答",component:<Question/>,icon:helpicon,badgeText:'',flex:6},
+	{id:"config",name:"設定",component:<Config/>,icon:settingsicon,flex:4}
 
 	];
 	menu.forEach(function(m){m.badgeText=getter("getBadge",m.id)||""});

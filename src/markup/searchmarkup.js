@@ -21,7 +21,6 @@ var SearchMarkup=React.createClass({
 		this.setState({markups,q});
 	}
 	,componentDidMount:function(){
-		console.log("search markup tab mounted")
 		this.doSearch(this.state.q);
 		this.context.store.listen("selectTab.searchmarkup",this.onSearchMarkupTab,this);
 	}

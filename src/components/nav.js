@@ -55,6 +55,7 @@ var Nav=React.createClass({
   }
   ,componentWillMount:function(){ 
     this.props.model.init(function(){
+      if (this.unmounting)return;
       this.setState({ready:true});
       this.props.model.navigator=this.refs.nav;
     }.bind(this));
@@ -64,11 +65,11 @@ var Nav=React.createClass({
     this.context.store.listen("refreshNav",this.refreshNav,this);
   }
   ,refreshNav:function(){
-    if (this.unmounted)return;
+    if (this.unmounting)return;
     this.forceUpdate();
   } 
   ,componentWillUnmount:function(){
-    this.unmounted=true;
+    this.unmounting=true;
     this.context.store.unlistenAll(this);
     this.props.model.finalize();
   }
