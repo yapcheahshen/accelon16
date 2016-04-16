@@ -21,6 +21,9 @@ var MarkupList=React.createClass({
 			,E(Text,{style:styles.item},row.text));
 	}
 	,render:function(){
+		if (!this.props.markups.length) {
+			return E(Text,{},"Markup not found");
+		}
 		return E(View,{},this.props.markups.map(this.renderRow));
 	}
 });

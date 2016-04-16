@@ -71,8 +71,14 @@ var get=function(opts){
 	var i=mindex[opts];
 	if (i>-1) return markups[i];
 }
-
+var listAll=function(){
+	var db=getter("db");
+	return markups.filter(function(m){return m.db===db});
+}
 var list=function(label,type){
+	if (!label&&!type) {
+		return listAll();
+	}
 	var out=[];
 	for (var i=0;i<markups.length;i++){
 		var m=markups[i];

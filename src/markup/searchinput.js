@@ -27,7 +27,7 @@ var Search=React.createClass({
 	}
 	,render:function(){
     	return E(View,null,
-    		E(TextInput,{autoCorrect:false,
+    		E(TextInput,{autoCorrect:false,clearButtonMode:'while-editing',autoCapitalize :"none",
     			style:{height:40,borderWidth:1,borderColor:'gray'},
     			onChangeText:this.tofindChange, value:this.state.q}
    	 ))

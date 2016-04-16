@@ -35,7 +35,7 @@ var SearchMarkup=React.createClass({
 		}
 	}
 	,render:function(){
-		return E(View, {style:{flex:1,backgroundColor:'lightyellow'}},
+		return E(View, {style:{flex:1,backgroundColor:'rgb(240,240,240)'}},
 		E(SearchInput,{tofindChanged:this.doSearch,q:this.state.q}),
 		E(MarkupList,{markups:this.state.markups}));
 	}

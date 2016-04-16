@@ -17,7 +17,7 @@ var TOCPopupMenu=require("./tocpopupmenu");
 var HomeView=React.createClass({
   render:function(){
     return React.createElement(View, {style:{flex:1,backgroundColor:'yellow',height:50}},
-    	React.createElement(Text,{},"abc\nasdfasf\naasfsadfs"));
+    	React.createElement(Text,{},"Not Implement yet"));
   }
 })
 
@@ -35,9 +35,9 @@ var getMenu=function(obj){
 	var menu=[
 	{id:"search",name:"歷史",component:<Search/>,icon:searchicon,badgeText:'',flex:6},
 	{id:"translation",name:"譯文",component:<Translation/>,icon:translationicon,flex:6},
-	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:4},
-	{id:"tree",name:"自訂樹",component:<HomeView/>,icon:treeicon,flex:4},
-	{id:"kewen",name:"科判",onPress:showToc,icon:kewenicon,flex:4}
+	{id:"markup",name:"標記",component:<Markup/>,icon:markupicon,flex:6},
+	{id:"tree",name:"自訂樹",component:<HomeView/>,icon:treeicon,flex:6},
+	{id:"kewen",name:"科判",onPress:showToc,icon:kewenicon,flex:6}
 
 	];
 	menu.forEach(function(m){m.badgeText=getter("getBadge",m.id)||""});
